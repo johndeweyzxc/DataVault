@@ -1,6 +1,5 @@
 package com.example.datavault
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -11,7 +10,6 @@ class ContentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_content)
         val firebaseInstance = FirebaseAuth.getInstance()
-        val mainActivity = Intent(this, MainActivity::class.java)
 
         firebaseInstance.addAuthStateListener { auth ->
             val user = auth.currentUser
