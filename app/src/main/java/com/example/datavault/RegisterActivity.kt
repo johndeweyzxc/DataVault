@@ -31,7 +31,7 @@ class RegisterActivity : AppCompatActivity() {
         val tvRegisterLoginInstead = findViewById<TextView>(R.id.tvRegisterLoginInstead)
 
         btnRegisterAccount.setOnClickListener {
-            Auth(firebaseInstance).signUp(
+            SignInWithEmail().signUp(
                 this, etRegisterEmail, etRegisterPassword, etRegisterConfirmPassword)
         }
 
