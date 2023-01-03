@@ -3,9 +3,9 @@ package com.example.datavault
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -17,10 +17,12 @@ class MainActivity : AppCompatActivity() {
         val contentActivity = Intent(this, ContentActivity::class.java)
         val registerActivity = Intent(this, RegisterActivity::class.java)
 
-        val signUp = findViewById<TextView>(R.id.signUp)
-        val emailInput = findViewById<EditText>(R.id.emailInput)
-        val passwordInput = findViewById<EditText>(R.id.passwordInput)
-        val loginBtn = findViewById<Button>(R.id.loginButton)
+        val etLoginEmail = findViewById<EditText>(R.id.etLoginEmail)
+        val etLoginPassword = findViewById<EditText>(R.id.etLoginPassword)
+        val tvLoginForgotPassword = findViewById<TextView>(R.id.tvLoginForgotPassword)
+        val btnLogin = findViewById<AppCompatButton>(R.id.btnLogin)
+        val tvLoginSignUp = findViewById<TextView>(R.id.tvLoginSignUp)
+        val btnLoginWithGoogle = findViewById<AppCompatButton>(R.id.btnLoginWithGoogle)
 
         firebaseInstance.addAuthStateListener { auth ->
             val user = auth.currentUser
@@ -30,11 +32,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        loginBtn.setOnClickListener {
-            Auth(firebaseInstance).signIn(this, emailInput, passwordInput)
+        btnLogin.setOnClickListener {
+            Auth(firebaseInstance).signIn(this, etLoginEmail, etLoginPassword)
         }
 
-        signUp.setOnClickListener {
+        tvLoginSignUp.setOnClickListener {
             startActivity(registerActivity)
         }
     }

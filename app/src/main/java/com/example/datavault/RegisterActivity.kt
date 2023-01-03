@@ -4,9 +4,9 @@ package com.example.datavault
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import com.google.firebase.auth.FirebaseAuth
 
 class RegisterActivity : AppCompatActivity() {
@@ -25,18 +25,18 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        val signUp = findViewById<TextView>(R.id.loginInstead)
-        val email = findViewById<EditText>(R.id.createEmail)
-        val password = findViewById<EditText>(R.id.createPassword)
-        val confirmPassword = findViewById<EditText>(R.id.confirmPassword)
+        val etRegisterEmail = findViewById<EditText>(R.id.etRegisterEmail)
+        val etRegisterPassword = findViewById<EditText>(R.id.etRegisterPassword)
+        val etRegisterConfirmPassword = findViewById<EditText>(R.id.etRegisterConfirmPassword)
+        val btnRegisterAccount = findViewById<AppCompatButton>(R.id.btnRegisterAccount)
+        val tvRegisterLoginInstead = findViewById<TextView>(R.id.tvRegisterLoginInstead)
 
-        val createAccount = findViewById<Button>(R.id.createAccount)
-
-        createAccount.setOnClickListener {
-            Auth(firebaseInstance).signUp(this, email, password, confirmPassword)
+        btnRegisterAccount.setOnClickListener {
+            Auth(firebaseInstance).signUp(
+                this, etRegisterEmail, etRegisterPassword, etRegisterConfirmPassword)
         }
 
-        signUp.setOnClickListener {
+        tvRegisterLoginInstead.setOnClickListener {
             finish()
         }
     }
