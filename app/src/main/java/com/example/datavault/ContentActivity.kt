@@ -1,5 +1,6 @@
 package com.example.datavault
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -18,7 +19,9 @@ class ContentActivity : AppCompatActivity() {
             val user = auth.currentUser
             if (user == null) {
                 // User is not signed in
-                finish()
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
             }
         }
 
@@ -31,11 +34,12 @@ class ContentActivity : AppCompatActivity() {
         val tvDisplayName = findViewById<TextView>(R.id.tvContentDisplayName)
         val name = intent.getStringExtra("name")
         val email = intent.getStringExtra("email")
+        val provider = intent.getStringExtra("provider")
         tvDisplayName.text = email
 
         val signOutBtn = findViewById<Button>(R.id.signOut)
         signOutBtn.setOnClickListener {
-            SignInWithEmail().signOutUser()
+            firebaseInstance.signOut()
             GoogleSignIn.getClient(this, gso).signOut()
         }
     }

@@ -1,11 +1,11 @@
 package com.example.datavault
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
             val userName = user.displayName
             intent.putExtra("email", userEmail)
             intent.putExtra("name", userName)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
     }
@@ -50,8 +51,9 @@ class MainActivity : AppCompatActivity() {
             val user = auth.currentUser
             if (user != null) {
                 // User just signed in
-                contentActivity.putExtra("name", user.displayName)
                 contentActivity.putExtra("email", user.email)
+                contentActivity.putExtra("name", user.displayName)
+                contentActivity.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(contentActivity)
             }
         }

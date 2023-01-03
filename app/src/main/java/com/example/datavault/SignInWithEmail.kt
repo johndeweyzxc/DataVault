@@ -11,10 +11,6 @@ class SignInWithEmail {
 
     private var firebaseInstanceAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    fun signOutUser() {
-        firebaseInstanceAuth.signOut()
-    }
-
     private fun showToast(context: Context, message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
