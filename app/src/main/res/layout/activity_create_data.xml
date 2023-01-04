@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_marginLeft="32dp"
+    android:layout_marginRight="32dp">
+
+    <EditText
+        android:id="@+id/createAppName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="App name"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/input_login"
+        android:padding="12sp" />
+
+    <EditText
+        android:id="@+id/createUserName"
+        android:hint="Username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/input_login"
+        android:padding="12sp"/>
+
+    <EditText
+        android:id="@+id/createEmail"
+        android:hint="Email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/input_login"
+        android:padding="12sp"/>
+
+    <EditText
+        android:id="@+id/createPassword"
+        android:hint="Password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/input_login"
+        android:padding="12sp"/>
+
+    <EditText
+        android:id="@+id/createPhoneNumber"
+        android:hint="Phone Number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/input_login"
+        android:padding="12sp"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/createButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Save Data"
+        android:textColor="@color/white"
+        android:letterSpacing="0.1"
+        android:background="@drawable/button_login"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

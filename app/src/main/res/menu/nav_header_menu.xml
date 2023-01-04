@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:id="@+id/menuAbout"
+            android:title="About"/>
+
+        <item
+            android:id="@+id/menuData"
+            android:title="Data" />
+
+        <item
+            android:id="@+id/menuPrivacyPolicy"
+            android:title="Privacy Policy"/>
+
+        <item
+            android:id="@+id/menuTermsOfUse"
+            android:title="Terms of Use"/>
+
+        <item
+            android:id="@+id/menuDarkMode"
+            android:title="Dark Mode"/>
+
+        <item
+            android:id="@+id/menuSignOut"
+            android:title="SignOut" />
+
+</menu>

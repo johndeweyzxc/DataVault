@@ -16,6 +16,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -54,4 +55,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     // Also add the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.4.0'
+    // Declare the dependency for the Cloud Firestore library
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+
+    // Add google material design
+    implementation 'com.google.android.material:material:1.8.0-alpha03'
+
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 }

@@ -20,19 +20,6 @@ class MainActivity : AppCompatActivity() {
     private var firebaseInstanceAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    private fun updateUI(user: FirebaseUser?) {
-        // Checks if user is already logged in with google
-        if (user != null) {
-            val intent = Intent(applicationContext, ContentActivity::class.java)
-            val userEmail = user.email
-            val userName = user.displayName
-            intent.putExtra("email", userEmail)
-            intent.putExtra("name", userName)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Configure Google Sign In
@@ -76,6 +63,19 @@ class MainActivity : AppCompatActivity() {
 
         tvLoginSignUp.setOnClickListener {
             startActivity(registerActivity)
+        }
+    }
+
+    private fun updateUI(user: FirebaseUser?) {
+        // Checks if user is already logged in with google
+        if (user != null) {
+            val intent = Intent(applicationContext, ContentActivity::class.java)
+            val userEmail = user.email
+            val userName = user.displayName
+            intent.putExtra("email", userEmail)
+            intent.putExtra("name", userName)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
         }
     }
 
