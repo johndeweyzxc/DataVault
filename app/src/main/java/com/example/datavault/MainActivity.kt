@@ -1,10 +1,14 @@
 package com.example.datavault
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -19,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     private var firebaseInstanceAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,9 +61,28 @@ class MainActivity : AppCompatActivity() {
             SignInWithEmail().signIn(this, etLoginEmail, etLoginPassword)
         }
 
+        activityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+            ActivityResultCallback { ActivityResult ->
+                // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+                if (ActivityResult.resultCode == RESULT_OK && ActivityResult.data != null) {
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(ActivityResult.data)
+                    try {
+                        // Google Sign In was successful, authenticate with Firebase
+                        val account = task.getResult(ApiException::class.java)!!
+                        Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+                        firebaseAuthWithGoogle(account.idToken!!)
+                    } catch (e: ApiException) {
+                        // Google Sign In failed, update UI appropriately
+                        Log.w(TAG, "Google sign in failed", e)
+                    }
+                }
+            }
+        )
+
         btnLoginWithGoogle.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
-            startActivityForResult(signInIntent, RC_SIGN_IN)
+            activityResultLauncher.launch(signInIntent)
         }
 
         tvLoginSignUp.setOnClickListener {
@@ -86,25 +110,6 @@ class MainActivity : AppCompatActivity() {
         updateUI(currentUser)
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)!!
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e)
-            }
-        }
-    }
-
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         firebaseInstanceAuth.signInWithCredential(credential)
@@ -120,10 +125,5 @@ class MainActivity : AppCompatActivity() {
                     updateUI(null)
                 }
             }
-    }
-
-    companion object {
-        const val TAG = "GoogleActivity"
-        const val RC_SIGN_IN = 9001
     }
 }
