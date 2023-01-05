@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
         <item
             android:id="@+id/menuAbout"
-            android:title="About"/>
+            android:title="About"
+            android:icon="@drawable/ic_menu_about"/>
 
         <item
             android:id="@+id/menuData"
-            android:title="Data" />
+            android:title="Data Manager"
+            android:icon="@drawable/ic_menu_data"/>
 
-        <item
-            android:id="@+id/menuPrivacyPolicy"
-            android:title="Privacy Policy"/>
+        <item android:title="Privacy and Terms of Use">
+                <menu>
+                        <item
+                            android:id="@+id/menuPrivacyPolicy"
+                            android:title="Privacy Policy"
+                            android:icon="@drawable/ic_menu_privacy"/>
 
-        <item
-            android:id="@+id/menuTermsOfUse"
-            android:title="Terms of Use"/>
+                        <item
+                            android:id="@+id/menuTermsOfUse"
+                            android:title="Terms of Use"
+                            android:icon="@drawable/ic_menu_terms"/>
+                </menu>
+        </item>
 
-        <item
-            android:id="@+id/menuDarkMode"
-            android:title="Dark Mode"/>
+        <item android:title="Application Settings">
+                <menu>
+                        <item
+                            android:id="@+id/menuSettings"
+                            android:title="Settings"
+                            android:icon="@drawable/ic_menu_settings"/>
+                        <item
+                            android:id="@+id/menuDarkMode"
+                            android:title="Dark Mode"
+                            android:icon="@drawable/ic_menu_dark_mode"/>
 
-        <item
-            android:id="@+id/menuSignOut"
-            android:title="SignOut" />
-
+                        <item
+                            android:id="@+id/menuSignOut"
+                            android:title="SignOut"
+                            android:icon="@drawable/ic_menu_logout"/>
+                </menu>
+        </item>
 </menu>

@@ -1,3 +1,5 @@
+//file:noinspection SpellCheckingInspection
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -50,16 +52,18 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     // Add the dependency for the Firebase Authentication library
     implementation 'com.google.firebase:firebase-auth'
-
     // Add the dependency for the Firebase Authentication library
     implementation 'com.google.firebase:firebase-auth-ktx'
     // Also add the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.4.0'
-    // Declare the dependency for the Cloud Firestore library
+    // Declare the dependency for the Firebase Firestore library
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
     // Add google material design
-    implementation 'com.google.android.material:material:1.8.0-alpha03'
+    implementation 'com.google.android.material:material:1.8.0-beta01'
 
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    // Add glide dependency for image loading and caching library
+    // https://github.com/bumptech/glide
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
 }

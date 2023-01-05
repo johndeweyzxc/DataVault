@@ -1,35 +1,35 @@
 package com.example.datavault
 
-import android.content.ContentValues.TAG
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class ContentActivity : AppCompatActivity() {
 
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var dataAdapter: DataAdapter
     private lateinit var firebaseInstance: FirebaseAuth
+    private lateinit var currentUser: FirebaseUser
     private lateinit var gso: GoogleSignInOptions
     private val dataRef = Firebase.firestore.collection("dataVault")
 
@@ -38,6 +38,7 @@ class ContentActivity : AppCompatActivity() {
         setContentView(R.layout.activity_content)
         // Get the instance of firebase auth to check authentication
         firebaseInstance = FirebaseAuth.getInstance()
+        currentUser = firebaseInstance.currentUser!!
 
         // Create an empty mutable list of data
         dataAdapter = DataAdapter(mutableListOf(), HashMap())
@@ -54,9 +55,7 @@ class ContentActivity : AppCompatActivity() {
         // Set the navigation drawer and set click listeners on menu items
         setListenersOnNavMenu()
         setDrawerLayout()
-
-        val name = intent.getStringExtra("name")
-        val email = intent.getStringExtra("email")
+        updateNavHeader()
 
         val rvMainScrollableView = findViewById<RecyclerView>(R.id.rvMainScrollableView)
         rvMainScrollableView.adapter = dataAdapter
@@ -79,6 +78,35 @@ class ContentActivity : AppCompatActivity() {
         // Toggle is now ready to be use
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun updateNavHeader() {
+        val navView = findViewById<NavigationView>(R.id.navView)
+        val headerView: View = navView.getHeaderView(0)
+        val avatar: ImageView = headerView.findViewById(R.id.ivNavHeaderAvatar)
+        val name: TextView = headerView.findViewById(R.id.tvNavHeaderUsername)
+        val email: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
+
+        if (currentUser.displayName == null) {
+            // Get name from the email if user used different authentication provider
+            val createName = currentUser.email.toString().split("@")
+            name.text = createName.first()
+        } else {
+            // User used google as authentication provider
+            name.text = currentUser.displayName
+        }
+
+        email.text = currentUser.email
+
+        if (currentUser.photoUrl == null) {
+            // Set a default avatar if the user used different authentication provider
+            avatar.setBackgroundResource(R.drawable.ic_launcher_background)
+            avatar.foreground = ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground)
+        } else {
+            // User used google as authentication provider
+            // Use Glide to load user image in the image view
+            Glide.with(this).load(currentUser.photoUrl).into(avatar);
+        }
     }
 
     private fun setListenersOnNavMenu() {

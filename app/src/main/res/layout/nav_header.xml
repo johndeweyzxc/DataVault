@@ -1,18 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/navHeader"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navHeader"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="wrap_content"
+    android:padding="22dp"
     android:background="@color/white">
 
+    <ImageView
+        android:id="@+id/ivNavHeaderAvatar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <TextView
-        android:id="@+id/tvHeaderUserName"
+        android:id="@+id/tvNavHeaderUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="@+id/ivNavHeaderAvatar"
+        app:layout_constraintStart_toStartOf="@+id/ivNavHeaderAvatar"
+        app:layout_constraintTop_toBottomOf="@+id/ivNavHeaderAvatar" />
+
+    <TextView
+        android:id="@+id/tvNavHeaderUserEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginTop="5dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/tvNavHeaderUsername"
+        app:layout_constraintStart_toStartOf="@+id/tvNavHeaderUsername"
+        app:layout_constraintTop_toBottomOf="@+id/tvNavHeaderUsername" />
 </androidx.constraintlayout.widget.ConstraintLayout>
