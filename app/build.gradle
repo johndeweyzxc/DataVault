@@ -67,3 +67,21 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
 }
+
+task deleteGoogleServicesJson(type: Delete) {
+    delete files("$rootDir/app/google-services.json")
+}
+
+task switchToDebug(type: Copy) {
+    def sourceDir = "$rootDir/app/firebaseApiKey/debug/google-services.json"
+    def destDir = "$rootDir/app"
+    from sourceDir
+    into destDir
+}
+
+task switchToRelease(type: Copy) {
+    def sourceDir = "$rootDir/app/firebaseApiKey/release/google-services.json"
+    def destDir = "$rootDir/app"
+    from sourceDir
+    into destDir
+}
