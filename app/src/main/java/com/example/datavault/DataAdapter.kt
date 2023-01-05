@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.DocumentChange
 
@@ -16,12 +17,18 @@ class DataAdapter (
         val tvDataAppName: TextView = itemView.findViewById(R.id.tvDataAppName)
         val tvDataUserName: TextView = itemView.findViewById(R.id.tvDataUserName)
         val tvDataEmail: TextView = itemView.findViewById(R.id.tvDataEmail)
+        val tvDocId: TextView = itemView.findViewById(R.id.tvDocId)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.data_container, parent, false)
 
+        itemView.setOnClickListener {
+            val tvDocId: TextView = itemView.findViewById(R.id.tvDocId)
+            val applicationName: DataModel = data[uidHashMap[tvDocId.text.toString()]!!]
+            Toast.makeText(parent.context, applicationName.appName, Toast.LENGTH_SHORT).show()
+        }
         return DataViewHolder(itemView)
     }
 
@@ -46,7 +53,7 @@ class DataAdapter (
     fun onAddData(dataItem: DataModel, docId: String) {
         data.add(dataItem)
         uidHashMap[docId] = data.indexOf(dataItem)
-        notifyItemInserted(data.size - 1)
+        notifyItemInserted(data.indexOf(dataItem))
     }
 
     fun onDeleteData(docId: String) {
@@ -74,7 +81,7 @@ class DataAdapter (
             tvDataAppName.text = currentData.appName
             tvDataUserName.text = currentData.userName
             tvDataEmail.text = currentData.email
-
+            tvDocId.text = currentData.docId
         }
     }
 

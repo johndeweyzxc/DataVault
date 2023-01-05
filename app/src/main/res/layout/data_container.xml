@@ -29,4 +29,10 @@
         android:layout_height="wrap_content"
         android:text="johndewey02003@gmail.com"/>
 
+    <TextView
+        android:id="@+id/tvDocId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
 </androidx.appcompat.widget.LinearLayoutCompat>
