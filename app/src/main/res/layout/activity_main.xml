@@ -18,7 +18,7 @@
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center">
 
@@ -27,11 +27,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/input_login"
-                android:hint="Email"
+                android:hint="@string/login_edit_text_email"
                 android:padding="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/passwordInput"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:autofillHints=""
+                android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/etLoginPassword"
@@ -40,19 +42,20 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/input_login"
-                android:hint="Password"
+                android:hint="@string/login_edit_text_password"
                 android:inputType="textPassword"
                 android:padding="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:autofillHints="" />
 
             <TextView
                 android:id="@+id/tvLoginForgotPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Forgot your password?"
+                android:text="@string/login_text_view_forgot_password"
                 android:textColor="@color/light_blue_600"
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp"/>
@@ -63,7 +66,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_login"
                 android:letterSpacing="0.2"
-                android:text="Login"
+                android:text="@string/login_button_text"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -77,13 +81,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="I don't have an account"/>
+                    android:text="@string/login_text_view_not_have_account"/>
                 <TextView
                     android:id="@+id/tvLoginSignUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="Sign Up"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/login_text_view_sign_up"
                     android:textStyle="bold"
                     android:textColor="@color/light_blue_600"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -106,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:text="Or"/>
+                    android:text="@string/login_text_view_login_with"/>
                 <View
                     android:id="@+id/divider2"
                     android:layout_width="0dp"
@@ -120,9 +124,10 @@
                 android:id="@+id/btnLoginWithGoogle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/google_icon"
-                android:text="LOGIN WITH GOOGLE"
+                android:drawableStart="@drawable/google_icon"
+                android:text="@string/login_button_text_google"
                 android:textAllCaps="false"
+                android:textStyle="bold"
                 android:letterSpacing="0.1"
                 android:padding="8dp"
                 android:layout_marginTop="8dp"

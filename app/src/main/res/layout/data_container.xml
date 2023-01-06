@@ -13,21 +13,21 @@
         android:id="@+id/tvDataAppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Facebook"
+        android:text="@string/data_container_text_view_facebook"
         android:textSize="28sp" />
 
     <TextView
         android:id="@+id/tvDataUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="johndewey.altura1"
+        android:text="@string/data_container_text_view_username"
         android:textSize="18sp"
         android:layout_marginTop="5dp"/>
     <TextView
         android:id="@+id/tvDataEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="johndewey02003@gmail.com"/>
+        android:text="@string/data_container_text_view_email"/>
 
     <TextView
         android:id="@+id/tvDocId"

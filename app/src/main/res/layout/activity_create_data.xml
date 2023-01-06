@@ -11,53 +11,63 @@
         android:id="@+id/createAppName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="App name"
+        android:hint="@string/create_edit_text_hint_application_name"
         android:layout_marginTop="10dp"
         android:background="@drawable/input_login"
-        android:padding="12sp" />
+        android:padding="12sp"
+        android:autofillHints=""
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/createUserName"
-        android:hint="Username"
+        android:hint="@string/create_edit_text_hint_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/input_login"
-        android:padding="12sp"/>
+        android:padding="12sp"
+        android:autofillHints=""
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/createEmail"
-        android:hint="Email"
+        android:hint="@string/create_edit_text_hint_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/input_login"
-        android:padding="12sp"/>
+        android:padding="12sp"
+        android:autofillHints=""
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/createPassword"
-        android:hint="Password"
+        android:hint="@string/create_edit_text_hint_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/input_login"
-        android:padding="12sp"/>
+        android:padding="12sp"
+        android:autofillHints=""
+        android:inputType="textPassword" />
 
     <EditText
         android:id="@+id/createPhoneNumber"
-        android:hint="Phone Number"
+        android:hint="@string/create_edit_text_hint_phone_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/input_login"
-        android:padding="12sp"/>
+        android:padding="12sp"
+        android:autofillHints=""
+        android:inputType="phone" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/createButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Save Data"
+        android:text="@string/create_data_button_text_save_data"
         android:textColor="@color/white"
         android:letterSpacing="0.1"
         android:background="@drawable/button_login"/>

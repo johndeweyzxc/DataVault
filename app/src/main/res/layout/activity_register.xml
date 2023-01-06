@@ -16,7 +16,7 @@
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center">
 
@@ -25,11 +25,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/input_login"
-                android:hint="Email"
+                android:hint="@string/register_edit_text_email"
                 android:padding="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/passwordInput"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:autofillHints=""
+                android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/etRegisterPassword"
@@ -38,13 +40,14 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/input_login"
-                android:hint="Password"
+                android:hint="@string/register_edit_text_password"
                 android:inputType="textPassword"
                 android:padding="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:autofillHints="" />
 
             <EditText
                 android:id="@+id/etRegisterConfirmPassword"
@@ -52,13 +55,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/input_login"
-                android:hint="Confirm Password"
+                android:hint="@string/register_edit_text_confirm_password"
                 android:inputType="textPassword"
                 android:padding="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:autofillHints="" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnRegisterAccount"
@@ -66,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_login"
                 android:letterSpacing="0.2"
-                android:text="Create an Account"
+                android:text="@string/register_button"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -82,14 +86,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="I have an account"/>
+                    android:text="@string/register_text_view_have_account"/>
                 <TextView
                     android:id="@+id/tvRegisterLoginInstead"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Login Instead"
+                    android:text="@string/register_text_view_login_instead"
                     android:textStyle="bold"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
                     android:textColor="@color/light_blue_600"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>
