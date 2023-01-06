@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/create_edit_text_hint_application_name"
         android:layout_marginTop="10dp"
-        android:background="@drawable/input_login"
+        android:background="@drawable/edit_text_border"
         android:padding="12sp"
         android:autofillHints=""
         android:inputType="text" />
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/input_login"
+        android:background="@drawable/edit_text_border"
         android:padding="12sp"
         android:autofillHints=""
         android:inputType="text" />
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/input_login"
+        android:background="@drawable/edit_text_border"
         android:padding="12sp"
         android:autofillHints=""
         android:inputType="textEmailAddress" />
@@ -46,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/input_login"
+        android:background="@drawable/edit_text_border"
         android:padding="12sp"
         android:autofillHints=""
         android:inputType="textPassword" />
@@ -57,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/input_login"
+        android:background="@drawable/edit_text_border"
         android:padding="12sp"
         android:autofillHints=""
         android:inputType="phone" />
@@ -70,6 +70,6 @@
         android:text="@string/create_data_button_text_save_data"
         android:textColor="@color/white"
         android:letterSpacing="0.1"
-        android:background="@drawable/button_login"/>
+        android:background="@drawable/button_background"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

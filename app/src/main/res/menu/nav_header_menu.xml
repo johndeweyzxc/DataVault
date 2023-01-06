@@ -4,44 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-        <item
-            android:id="@+id/menuAbout"
-            android:title="About"
-            android:icon="@drawable/ic_menu_about"/>
+        <item android:title="@string/nav_menu_application" >
+                <menu>
+                        <item
+                            android:id="@+id/menuAbout"
+                            android:title="@string/nav_menu_about"
+                            android:icon="@drawable/ic_menu_about"/>
 
-        <item
-            android:id="@+id/menuData"
-            android:title="Data Manager"
-            android:icon="@drawable/ic_menu_data"/>
+                        <item
+                            android:id="@+id/menuData"
+                            android:title="@string/nav_menu_data_manager"
+                            android:icon="@drawable/ic_menu_data"/>
+                </menu>
+        </item>
 
-        <item android:title="Privacy and Terms of Use">
+        <item android:title="@string/nav_menu_privacy_terms">
                 <menu>
                         <item
                             android:id="@+id/menuPrivacyPolicy"
-                            android:title="Privacy Policy"
+                            android:title="@string/nav_menu_privacy"
                             android:icon="@drawable/ic_menu_privacy"/>
 
                         <item
                             android:id="@+id/menuTermsOfUse"
-                            android:title="Terms of Use"
+                            android:title="@string/nav_menu_terms"
                             android:icon="@drawable/ic_menu_terms"/>
                 </menu>
         </item>
 
-        <item android:title="Application Settings">
+        <item android:title="@string/nav_menu_application_settings">
                 <menu>
                         <item
                             android:id="@+id/menuSettings"
-                            android:title="Settings"
+                            android:title="@string/nav_menu_strings"
                             android:icon="@drawable/ic_menu_settings"/>
                         <item
                             android:id="@+id/menuDarkMode"
-                            android:title="Dark Mode"
+                            android:title="@string/nav_menu_dark_mode"
                             android:icon="@drawable/ic_menu_dark_mode"/>
-
                         <item
                             android:id="@+id/menuSignOut"
-                            android:title="SignOut"
+                            android:title="@string/nav_menu_sign_out"
                             android:icon="@drawable/ic_menu_logout"/>
                 </menu>
         </item>
