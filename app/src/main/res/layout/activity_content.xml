@@ -7,22 +7,26 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnAddData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_add_icon"
-            app:tint="@color/grey_200"
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="25dp"
             android:backgroundTint="@color/orange_700"
+            android:clickable="true"
             android:contentDescription="@string/content_floating_button"
-            android:focusable="true" />
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_content_add_icon"
+            app:tint="@color/grey_200" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMainScrollableView"
@@ -38,7 +42,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_header_menu"
+        app:menu="@menu/nav_menu"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true" />
+        android:fitsSystemWindows="true"/>
+
 </androidx.drawerlayout.widget.DrawerLayout>

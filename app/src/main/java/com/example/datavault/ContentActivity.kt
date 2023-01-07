@@ -35,6 +35,7 @@ class ContentActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_DataVault_Content)
         setContentView(R.layout.activity_content)
         // Get the instance of firebase auth to check authentication
         firebaseInstance = FirebaseAuth.getInstance()
@@ -53,9 +54,9 @@ class ContentActivity : AppCompatActivity() {
         setAuthListener()
 
         // Set the navigation drawer and set click listeners on menu items
-        setListenersOnNavMenu()
-        setDrawerLayout()
-        updateNavHeader()
+         setListenersOnNavMenu()
+         setDrawerLayout()
+         updateNavHeader()
 
         val rvMainScrollableView = findViewById<RecyclerView>(R.id.rvMainScrollableView)
         rvMainScrollableView.adapter = dataAdapter
@@ -105,7 +106,7 @@ class ContentActivity : AppCompatActivity() {
         } else {
             // User used google as authentication provider
             // Use Glide to load user image in the image view
-            Glide.with(this).load(currentUser.photoUrl).into(avatar);
+            Glide.with(this).load(currentUser.photoUrl).into(avatar)
         }
     }
 

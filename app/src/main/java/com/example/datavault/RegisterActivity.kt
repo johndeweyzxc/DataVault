@@ -3,40 +3,61 @@ package com.example.datavault
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
+import com.example.datavault.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 
 class RegisterActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityRegisterBinding
+    private val firebaseInstance: FirebaseAuth = FirebaseAuth.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
-        val firebaseInstance = FirebaseAuth.getInstance()
-        val contentActivity = Intent(this, ContentActivity::class.java)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setupAuthenticationListener()
 
+        binding.registerToolBar.setNavigationOnClickListener {
+            finish()
+        }
+
+        binding.etRegisterEmail.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && binding.ilRegisterEmail.helperText?.isNotEmpty() == true) {
+                binding.ilRegisterEmail.helperText = null
+            }
+        }
+
+        binding.etRegisterPassword.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && binding.ilRegisterPassword.helperText?.isNotEmpty() == true) {
+                binding.ilRegisterPassword.helperText = null
+            }
+        }
+
+        binding.etRegisterConfirmPassword.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && binding.ilRegisterConfirmPassword.helperText?.isNotEmpty() == true) {
+                binding.ilRegisterConfirmPassword.helperText = null
+            }
+        }
+
+        binding.btnRegisterAccount.setOnClickListener {
+            SignInWithEmail().signUp(
+                binding.etRegisterEmail, binding.ilRegisterEmail, binding.etRegisterPassword,
+                binding.ilRegisterPassword, binding.etRegisterConfirmPassword,
+                binding.ilRegisterConfirmPassword)
+        }
+
+        binding.tvRegisterLoginInstead.setOnClickListener {
+            finish()
+        }
+    }
+
+    private fun setupAuthenticationListener() {
         firebaseInstance.addAuthStateListener { auth ->
             val user = auth.currentUser
             if (user != null) {
                 // User just created a new account
-                startActivity(contentActivity)
+                startActivity(Intent(this, ContentActivity::class.java))
             }
-        }
-
-        val etRegisterEmail = findViewById<EditText>(R.id.etRegisterEmail)
-        val etRegisterPassword = findViewById<EditText>(R.id.etRegisterPassword)
-        val etRegisterConfirmPassword = findViewById<EditText>(R.id.etRegisterConfirmPassword)
-        val btnRegisterAccount = findViewById<AppCompatButton>(R.id.btnRegisterAccount)
-        val tvRegisterLoginInstead = findViewById<TextView>(R.id.tvRegisterLoginInstead)
-
-        btnRegisterAccount.setOnClickListener {
-            SignInWithEmail().signUp(
-                this, etRegisterEmail, etRegisterPassword, etRegisterConfirmPassword)
-        }
-
-        tvRegisterLoginInstead.setOnClickListener {
-            finish()
         }
     }
 }

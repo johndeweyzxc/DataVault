@@ -1,64 +1,80 @@
 package com.example.datavault
 
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.util.Log
-import android.widget.EditText
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 
-class SignInWithEmail {
+class SignInWithEmail : AppCompatActivity() {
 
     private var firebaseInstanceAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    private fun showToast(context: Context, message: String?) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-    }
+    fun signUp(email: TextInputEditText, emailParent: TextInputLayout,
+               password: TextInputEditText, passwordParent: TextInputLayout,
+               confirmPassword: TextInputEditText, confirmParent: TextInputLayout) {
+        emailParent.helperText = null
+        passwordParent.helperText = null
+        confirmParent.helperText = null
 
-    fun signUp(context: Context, email: EditText, password: EditText, confirmPassword: EditText) {
         val emailText = email.text.toString()
         val passwordText = password.text.toString()
         val confirmText = confirmPassword.text.toString()
 
-        if (emailText.isEmpty() || passwordText.isEmpty()) {
-            showToast(context, "Some input fields are empty")
-            return
+        when {
+            emailText.isEmpty() -> {
+                emailParent.helperText = "*Email cannot be empty"; return
+            }
+            passwordText.isEmpty() -> {
+                passwordParent.helperText = "*Password cannot be empty"; return
+            }
+            confirmText.isEmpty() -> {
+                confirmParent.helperText = "*Email cannot be empty"; return
+            }
+            passwordText != confirmText -> {
+                confirmParent.helperText = "*Password did not match"; return
+            }
         }
-
-        email.text.clear()
-        password.text.clear()
-        confirmPassword.text.clear()
 
         firebaseInstanceAuth.createUserWithEmailAndPassword(emailText, passwordText)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    showToast(context, "Successfully signed up")
+                    signIn(email, null, password, null)
+                    email.text?.clear(); password.text?.clear(); confirmPassword.text?.clear()
                 } else {
                     Log.d(TAG, "[LOG] signUp(): ${task.exception}")
-                    showToast(context, task.exception?.message)
                 }
             }
     }
 
-    fun signIn(context: Context, email: EditText, password: EditText) {
+    fun signIn(email: TextInputEditText, emailParent: TextInputLayout?,
+               password: TextInputEditText, passwordParent: TextInputLayout?) {
+
         val emailText = email.text.toString()
         val passwordText = password.text.toString()
 
-        if (emailText.isEmpty() || passwordText.isEmpty()) {
-            showToast(context, "Email and password cannot be empty")
-            return
-        }
+        if (passwordParent != null || emailParent != null) {
+            emailParent?.helperText = null
+            passwordParent?.helperText = null
 
-        email.text.clear()
-        password.text.clear()
+            when {
+                emailText.isEmpty() -> {
+                    emailParent?.helperText = "*Email cannot be empty"; return
+                }
+                passwordText.isEmpty() -> {
+                    passwordParent?.helperText = "*Password cannot be empty"; return
+                }
+
+            }
+        }
 
         firebaseInstanceAuth.signInWithEmailAndPassword(emailText, passwordText)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    showToast(context, "Successfully logged in")
+                    email.text?.clear(); password.text?.clear()
                 } else {
                     Log.d(TAG, "[LOG] signIn(): ${task.exception}")
-                    showToast(context, task.exception?.message)
                 }
             }
     }
