@@ -7,7 +7,7 @@
     android:layout_marginTop="15dp"
     android:orientation="vertical"
     android:padding="10dp"
-    android:background="@drawable/activity_container_border">
+    android:background="@drawable/content_container_border">
 
     <TextView
         android:id="@+id/tvDataAppName"
