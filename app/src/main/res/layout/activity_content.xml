@@ -17,10 +17,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_add_icon"
-            app:tint="@color/white"
+            app:tint="@color/grey_200"
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="25dp"
-            android:backgroundTint="@color/deep_orange_600"
+            android:backgroundTint="@color/orange_700"
             android:contentDescription="@string/content_floating_button"
             android:focusable="true" />
 

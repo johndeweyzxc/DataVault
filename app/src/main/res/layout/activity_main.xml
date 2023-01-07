@@ -58,17 +58,19 @@
                 android:text="@string/login_text_view_forgot_password"
                 android:textColor="@color/light_blue_600"
                 android:textStyle="bold"
+                android:gravity="center"
                 android:layout_marginBottom="16dp"/>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_background"
+                android:elevation="2dp"
                 android:letterSpacing="0.2"
                 android:text="@string/login_button_text"
                 android:textStyle="bold"
-                android:textColor="@color/white"
+                android:textColor="@color/grey_200"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/passwordInput" />
@@ -119,7 +121,6 @@
                     android:layout_gravity="center"
                     android:background="?android:attr/listDivider" />
             </androidx.appcompat.widget.LinearLayoutCompat>
-
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLoginWithGoogle"
                 android:layout_width="match_parent"
@@ -129,10 +130,9 @@
                 android:textAllCaps="false"
                 android:textStyle="bold"
                 android:letterSpacing="0.1"
-                android:padding="8dp"
+                android:padding="12dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/login_with_google"
-                />
+                android:background="@drawable/login_with_google"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>
 
