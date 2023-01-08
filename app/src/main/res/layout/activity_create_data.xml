@@ -1,75 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:layout_marginLeft="32dp"
-    android:layout_marginRight="32dp">
+    tools:context=".CreateDataActivity">
 
-    <EditText
-        android:id="@+id/createAppName"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/createAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/create_edit_text_hint_application_name"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/edit_text_border"
-        android:padding="12sp"
-        android:autofillHints=""
-        android:inputType="text" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/createUserName"
-        android:hint="@string/create_edit_text_hint_username"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/createToolBar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_register_back"
+            app:navigationIconTint="@color/grey_200"
+            app:title="Create a data" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/edit_text_border"
-        android:padding="12sp"
-        android:autofillHints=""
-        android:inputType="text" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createAppBar"
+        android:fillViewport="true">
 
-    <EditText
-        android:id="@+id/createEmail"
-        android:hint="@string/create_edit_text_hint_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/edit_text_border"
-        android:padding="12sp"
-        android:autofillHints=""
-        android:inputType="textEmailAddress" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="32dp">
 
-    <EditText
-        android:id="@+id/createPassword"
-        android:hint="@string/create_edit_text_hint_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/edit_text_border"
-        android:padding="12sp"
-        android:autofillHints=""
-        android:inputType="textPassword" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/createIlAppname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/create_edit_text_hint_application_name"
+                app:startIconDrawable="@drawable/ic_create_app_name"
+                app:endIconDrawable="@drawable/ic_create_clear_button"
+                app:endIconMode="custom"
+                app:helperTextEnabled="true"
+                app:helperTextTextColor="@color/red_400"
+                android:layout_marginBottom="10dp"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
 
-    <EditText
-        android:id="@+id/createPhoneNumber"
-        android:hint="@string/create_edit_text_hint_phone_number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/edit_text_border"
-        android:padding="12sp"
-        android:autofillHints=""
-        android:inputType="phone" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/createEtAppname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textSize="16sp"
+                    android:inputType="text" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/createButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/create_data_button_text_save_data"
-        android:textColor="@color/grey_900"
-        android:letterSpacing="0.1"
-        android:background="@drawable/button_background"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/createIlUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/create_edit_text_hint_username"
+                app:startIconDrawable="@drawable/ic_create_username"
+                app:endIconDrawable="@drawable/ic_create_clear_button"
+                app:endIconMode="custom"
+                app:helperTextEnabled="true"
+                app:helperTextTextColor="@color/red_400"
+                android:layout_marginBottom="10dp"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/createEtUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textSize="16sp"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/createIlEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/create_edit_text_hint_email"
+                app:startIconDrawable="@drawable/ic_create_email"
+                app:endIconDrawable="@drawable/ic_create_clear_button"
+                app:endIconMode="custom"
+                app:helperTextEnabled="true"
+                app:helperTextTextColor="@color/red_400"
+                android:layout_marginBottom="10dp"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/createEtEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textSize="16sp"
+                    android:inputType="textEmailAddress" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/createIlPhonenumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/create_edit_text_hint_phone_number"
+                app:startIconDrawable="@drawable/ic_create_phone_number"
+                app:endIconDrawable="@drawable/ic_create_clear_button"
+                app:endIconMode="custom"
+                app:helperTextEnabled="true"
+                app:helperTextTextColor="@color/red_400"
+                android:layout_marginBottom="10dp"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/createEtPhonenumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textSize="16sp"
+                    android:inputType="phone" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/createIlPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/create_edit_text_hint_password"
+                app:startIconDrawable="@drawable/ic_create_password"
+                app:endIconMode="password_toggle"
+                app:helperTextEnabled="true"
+                app:helperTextTextColor="@color/red_400"
+                android:layout_marginBottom="15dp"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/createEtPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textSize="16sp"
+                    android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/createBackButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/create_data_button_back"
+                    android:textAllCaps="false"
+                    android:padding="12dp"
+                    android:textColor="@color/red_400"
+                    android:fontFamily="@font/roboto_mono_medium"
+                    android:textSize="16sp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/red_400"
+                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    />
+
+                <Button
+                    android:id="@+id/createSaveDataButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/create_data_button_text_save_data"
+                    android:textAllCaps="false"
+                    android:padding="12dp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/roboto_mono_medium"
+                    android:textSize="16sp"
+                    android:backgroundTint="@color/light_blue_600"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/light_blue_600"
+                    app:icon="@drawable/ic_create_save_data"
+                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

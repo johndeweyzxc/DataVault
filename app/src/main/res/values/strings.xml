@@ -9,6 +9,7 @@
     <string name="create_edit_text_hint_password">Password</string>
     <string name="create_edit_text_hint_phone_number">Phone Number</string>
     <string name="create_data_button_text_save_data">Save Data</string>
+    <string name="create_data_button_back">Back</string>
     <string name="login_edit_text_email">Email</string>
     <string name="login_edit_text_password">Password</string>
     <string name="login_text_view_forgot_password">Forgot your password?</string>

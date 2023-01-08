@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
+import com.example.datavault.databinding.ActivityCreateDataBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -16,42 +16,65 @@ import java.util.UUID
 
 class CreateDataActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityCreateDataBinding
     private val dataVaultRef = Firebase.firestore.collection("dataVault")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_data)
+        binding = ActivityCreateDataBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val createAppName = findViewById<EditText>(R.id.createAppName)
-        val createUserName = findViewById<EditText>(R.id.createUserName)
-        val createEmail = findViewById<EditText>(R.id.createEmail)
-        val createPassword = findViewById<EditText>(R.id.createPassword)
-        val createPhoneNumber = findViewById<EditText>(R.id.createPhoneNumber)
-        val createButton = findViewById<AppCompatButton>(R.id.createButton)
+        binding.createIlAppname.setEndIconOnClickListener { binding.createEtAppname.text?.clear() }
+        binding.createIlUsername.setEndIconOnClickListener { binding.createEtUsername.text?.clear() }
+        binding.createIlEmail.setEndIconOnClickListener { binding.createEtEmail.text?.clear() }
+        binding.createIlPhonenumber.setEndIconOnClickListener { binding.createEtPassword.text?.clear() }
 
-        createButton.setOnClickListener {
-            if (createAppName.text.isEmpty()) {
-                Toast.makeText(
-                    this, "App name must have a value!", Toast.LENGTH_SHORT
-                ).show()
-                return@setOnClickListener
-            }
+        binding.createToolBar.setOnClickListener { finish() }
+        binding.createBackButton.setOnClickListener { finish() }
 
-            val dataItem = DataModel(
-                createAppName.text.toString(),
-                createUserName.text.toString(),
-                createEmail.text.toString(),
-                createPassword.text.toString(),
-                createPhoneNumber.text.toString(),
-                UUID.randomUUID().toString(),
-            )
-            uploadData(dataItem)
+        binding.createSaveDataButton.setOnClickListener {
+            binding.createIlAppname.helperText = null
+            binding.createIlUsername.helperText = null
+            binding.createIlEmail.helperText = null
+            binding.createIlPhonenumber.helperText = null
+            binding.createIlPassword.helperText = null
+            if (checkForBlackOrNull() == -1) { return@setOnClickListener; }
+            uploadData()
         }
     }
 
-    private fun uploadData(dataModel: DataModel) = CoroutineScope(Dispatchers.IO).launch {
+    private fun checkForBlackOrNull(): Int {
+        val appName: EditText = binding.createEtAppname
+        val userName: EditText = binding.createEtUsername
+        val email: EditText = binding.createEtEmail
+        val phoneNumber: EditText = binding.createEtPhonenumber
+        val password: EditText = binding.createEtPassword
+
+        when {
+            appName.text.isNullOrBlank() -> {binding.createIlAppname.helperText = "*App name is required"; return -1 }
+            userName.text.isNullOrBlank() -> {binding.createIlUsername.helperText = "*User name is required"; return -1}
+            email.text.isNullOrBlank() -> {binding.createIlEmail.helperText = "*Email is required"; return -1}
+            phoneNumber.text.isNullOrBlank() -> {
+                binding.createIlPhonenumber.helperText = "*Phone number is required"; return -1
+            }
+            password.text.isNullOrBlank() -> {binding.createIlPassword.helperText = "Password is required"; return -1}
+        }
+
+        return 0
+    }
+
+    private fun uploadData() = CoroutineScope(Dispatchers.IO).launch {
+        val dataItem = DataModel(
+            binding.createEtAppname.text.toString(),
+            binding.createEtUsername.text.toString(),
+            binding.createEtEmail.text.toString(),
+            binding.createEtPassword.text.toString(),
+            binding.createEtPhonenumber.text.toString(),
+            UUID.randomUUID().toString(),
+        )
+
         try {
-            dataVaultRef.add(dataModel).await()
+            dataVaultRef.add(dataItem).await()
             withContext(Dispatchers.Main) {
                 Toast.makeText(
                     this@CreateDataActivity,

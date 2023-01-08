@@ -9,14 +9,12 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.datavault.databinding.ActivityContentBinding
+import com.example.datavault.databinding.DataContainerBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentChange
@@ -26,6 +24,8 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class ContentActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityContentBinding
+    private lateinit var layoutBinding: DataContainerBinding
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var dataAdapter: DataAdapter
     private lateinit var firebaseInstance: FirebaseAuth
@@ -36,21 +36,16 @@ class ContentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_DataVault_Content)
-        setContentView(R.layout.activity_content)
-        // Get the instance of firebase auth to check authentication
-        firebaseInstance = FirebaseAuth.getInstance()
-        currentUser = firebaseInstance.currentUser!!
+        binding = ActivityContentBinding.inflate(layoutInflater)
+        layoutBinding = DataContainerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Create an empty mutable list of data
+        // Create an empty mutable list of data for the recycler view
         dataAdapter = DataAdapter(mutableListOf(), HashMap())
 
-        // Configure Google Sign In
-        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
+        configureGoogleSignIn()
 
-        // Check if user logs out then return to login activity
+        // Set up firebase authentication listeners
         setAuthListener()
 
         // Set the navigation drawer and set click listeners on menu items
@@ -58,35 +53,43 @@ class ContentActivity : AppCompatActivity() {
          setDrawerLayout()
          updateNavHeader()
 
-        val rvMainScrollableView = findViewById<RecyclerView>(R.id.rvMainScrollableView)
-        rvMainScrollableView.adapter = dataAdapter
-        rvMainScrollableView.layoutManager = LinearLayoutManager(this)
+        setRecyclerViewAdapter()
 
         // Subscribe to realtime updates
         subscribeToRealtimeUpdates()
 
-        val btnAddData = findViewById<FloatingActionButton>(R.id.btnAddData)
-        btnAddData.setOnClickListener {
+        binding.btnAddData.setOnClickListener {
             val intent = Intent(this, CreateDataActivity::class.java)
             startActivity(intent)
         }
     }
 
+    private fun configureGoogleSignIn() {
+        // Configure Google Sign In
+        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+    }
+
+    private fun setRecyclerViewAdapter() {
+        binding.rvMainScrollableView.adapter = dataAdapter
+        binding.rvMainScrollableView.layoutManager = LinearLayoutManager(this)
+    }
+
     private fun setDrawerLayout() {
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
-        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
-        drawerLayout.addDrawerListener(toggle)
+        toggle = ActionBarDrawerToggle(this, binding.drawerLayout, R.string.open, R.string.close)
+        binding.drawerLayout.addDrawerListener(toggle)
         // Toggle is now ready to be use
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun updateNavHeader() {
-        val navView = findViewById<NavigationView>(R.id.navView)
-        val headerView: View = navView.getHeaderView(0)
+        val headerView: View = binding.navView.getHeaderView(0)
         val avatar: CircleImageView = headerView.findViewById(R.id.ivNavHeaderAvatar)
-        val name: TextView = headerView.findViewById(R.id.tvNavHeaderUsername)
-        val email: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
+        val name: TextView = layoutBinding.tvDataUserName
+        val email: TextView = layoutBinding.tvDataEmail
 
         if (currentUser.displayName == null) {
             // Get name from the email if user used different authentication provider
@@ -110,8 +113,7 @@ class ContentActivity : AppCompatActivity() {
     }
 
     private fun setListenersOnNavMenu() {
-        val navView = findViewById<NavigationView>(R.id.navView)
-        navView.setNavigationItemSelectedListener {
+        binding.navView.setNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.menuAbout -> {
                     Toast.makeText(applicationContext, "Clicked About!", Toast.LENGTH_SHORT)
@@ -127,6 +129,10 @@ class ContentActivity : AppCompatActivity() {
     }
 
     private fun setAuthListener() {
+        // Get the instance of firebase auth to check authentication
+        firebaseInstance = FirebaseAuth.getInstance()
+        currentUser = firebaseInstance.currentUser!!
+
         firebaseInstance.addAuthStateListener { auth ->
             val user = auth.currentUser
             if (user == null) {

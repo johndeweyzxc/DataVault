@@ -28,6 +28,10 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ContentActivity" />
         <activity android:name=".CreateDataActivity" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

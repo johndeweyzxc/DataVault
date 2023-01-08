@@ -32,6 +32,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/nav_header_text_view_name"
             android:textColor="@color/grey_800"
+            android:fontFamily="@font/roboto_medium"
             android:textSize="22sp" />
 
         <TextView
@@ -40,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/nav_header_text_view_email"
+            android:fontFamily="@font/roboto_medium"
             android:textSize="16sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
