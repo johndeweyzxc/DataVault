@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -23,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import de.hdodenhof.circleimageview.CircleImageView
 
 class ContentActivity : AppCompatActivity() {
 
@@ -84,7 +84,7 @@ class ContentActivity : AppCompatActivity() {
     private fun updateNavHeader() {
         val navView = findViewById<NavigationView>(R.id.navView)
         val headerView: View = navView.getHeaderView(0)
-        val avatar: ImageView = headerView.findViewById(R.id.ivNavHeaderAvatar)
+        val avatar: CircleImageView = headerView.findViewById(R.id.ivNavHeaderAvatar)
         val name: TextView = headerView.findViewById(R.id.tvNavHeaderUsername)
         val email: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
 
@@ -101,7 +101,6 @@ class ContentActivity : AppCompatActivity() {
 
         if (currentUser.photoUrl == null) {
             // Set a default avatar if the user used different authentication provider
-            avatar.setBackgroundResource(R.drawable.ic_launcher_background)
             avatar.foreground = ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground)
         } else {
             // User used google as authentication provider

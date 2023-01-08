@@ -67,6 +67,9 @@ dependencies {
     // https://github.com/bumptech/glide
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
+
+    // Add dependency for creating circle image view
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }
 
 task deleteGoogleServicesJson(type: Delete) {
