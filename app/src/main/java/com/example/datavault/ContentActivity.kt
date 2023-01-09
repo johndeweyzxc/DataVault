@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.datavault.databinding.ActivityContentBinding
-import com.example.datavault.databinding.DataContainerBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -25,7 +24,6 @@ import de.hdodenhof.circleimageview.CircleImageView
 class ContentActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityContentBinding
-    private lateinit var layoutBinding: DataContainerBinding
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var dataAdapter: DataAdapter
     private lateinit var firebaseInstance: FirebaseAuth
@@ -37,7 +35,6 @@ class ContentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_DataVault_Content)
         binding = ActivityContentBinding.inflate(layoutInflater)
-        layoutBinding = DataContainerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Create an empty mutable list of data for the recycler view
@@ -88,16 +85,15 @@ class ContentActivity : AppCompatActivity() {
     private fun updateNavHeader() {
         val headerView: View = binding.navView.getHeaderView(0)
         val avatar: CircleImageView = headerView.findViewById(R.id.ivNavHeaderAvatar)
-        val name: TextView = layoutBinding.tvDataUserName
-        val email: TextView = layoutBinding.tvDataEmail
+        val username: TextView = headerView.findViewById(R.id.tvNavHeaderUsername)
+        val email: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
 
         if (currentUser.displayName == null) {
-            // Get name from the email if user used different authentication provider
+            // Get name from the email if user used sign in with email and password
             val createName = currentUser.email.toString().split("@")
-            name.text = createName.first()
+            username.text = createName.first()
         } else {
-            // User used google as authentication provider
-            name.text = currentUser.displayName
+            username.text = currentUser.displayName
         }
 
         email.text = currentUser.email

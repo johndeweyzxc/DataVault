@@ -48,7 +48,8 @@
                 android:layout_marginBottom="10dp"
                 android:hint="@string/register_edit_text_email"
                 app:startIconDrawable="@drawable/ic_login_email"
-                app:endIconMode="clear_text"
+                app:endIconDrawable="@drawable/ic_create_clear_button"
+                app:endIconMode="custom"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
                 app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
@@ -57,6 +58,7 @@
                     android:id="@+id/etRegisterEmail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textSize="16sp"
                     android:inputType="textEmailAddress"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,6 +78,7 @@
                     android:id="@+id/etRegisterPassword"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textSize="16sp"
                     android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,6 +98,7 @@
                     android:id="@+id/etRegisterConfirmPassword"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textSize="16sp"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,6 +112,7 @@
                 android:textColor="@color/grey_200"
                 android:textStyle="bold"
                 android:padding="12dp"
+                android:textSize="16sp"
                 android:elevation="10dp"
                 app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
                 style="@style/Widget.MaterialComponents.Button"/>
@@ -121,6 +126,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="14sp"
                     android:text="@string/register_text_view_have_account" />
 
                 <TextView
@@ -128,6 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
+                    android:textSize="14sp"
                     android:text="@string/register_text_view_login_instead"
                     android:textColor="@color/light_blue_600"
                     android:textStyle="bold" />

@@ -21,6 +21,8 @@ class RegisterActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.ilRegisterEmail.setEndIconOnClickListener { binding.etRegisterEmail.text?.clear() }
+
         binding.etRegisterEmail.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.ilRegisterEmail.helperText?.isNotEmpty() == true) {
                 binding.ilRegisterEmail.helperText = null

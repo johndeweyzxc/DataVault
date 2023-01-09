@@ -3,6 +3,7 @@ package com.example.datavault
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -22,12 +23,15 @@ class DataAdapter (
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.data_container, parent, false)
+            .inflate(R.layout.card_data_container, parent, false)
 
-        itemView.setOnClickListener {
+        itemView.findViewById<ImageView>(R.id.ivDataEditIcon).setOnClickListener {
             val tvDocId: TextView = itemView.findViewById(R.id.tvDocId)
             val applicationName: DataModel = data[uidHashMap[tvDocId.text.toString()]!!]
             Toast.makeText(parent.context, applicationName.appName, Toast.LENGTH_SHORT).show()
+        }
+        itemView.findViewById<ImageView>(R.id.ivDataFavoriteIcon).setOnClickListener {
+            Toast.makeText(parent.context, "Added to favorites", Toast.LENGTH_SHORT).show()
         }
         return DataViewHolder(itemView)
     }

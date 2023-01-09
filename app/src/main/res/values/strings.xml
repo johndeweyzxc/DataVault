@@ -27,6 +27,16 @@
     <string name="data_container_text_view_facebook">Facebook</string>
     <string name="data_container_text_view_username">johndewey.123</string>
     <string name="data_container_text_view_email">johndewey02003@gmail.com</string>
+    <string name="data_edit_description">Edit the data</string>
+    <string name="data_favorite_description">Add this data to Favorites</string>
+    <string name="data_get_password_button">Get Password</string>
+    <string name="data_delete_description">Delete the data</string>
+    <string name="data_copy_username">Username</string>
+    <string name="data_copy_password">Password</string>
+    <string name="data_tap_chips_to_copy">Tap the chips to copy</string>
+    <string name="data_copy_email">email</string>
+    <string name="data_field_header_username">Username</string>
+    <string name="data_field_header_email">Email</string>
     <string name="nav_header_image_view">Photo of the user</string>
     <string name="nav_header_text_view_name">John Dewey</string>
     <string name="nav_header_text_view_email">johndewey@email.com</string>
