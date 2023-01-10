@@ -5,6 +5,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.datavault.databinding.ActivityCreateDataBinding
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.util.UUID
+import java.util.*
 
 class CreateDataActivity : AppCompatActivity() {
 
@@ -71,6 +72,8 @@ class CreateDataActivity : AppCompatActivity() {
             binding.createEtPassword.text.toString(),
             binding.createEtPhonenumber.text.toString(),
             UUID.randomUUID().toString(),
+            Timestamp(Date()),
+            Timestamp(Date()),
         )
 
         try {

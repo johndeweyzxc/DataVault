@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentChange
 
 class DataAdapter (
@@ -43,6 +44,8 @@ class DataAdapter (
         val password = queryData.document.get("password")
         val phoneNumber = queryData.document.get("phoneNumber")
         val docId = queryData.document.get("docId")
+        val createdAt = queryData.document.get("createdAt")
+        val updatedAt = queryData.document.get("updatedAt")
 
         return DataModel(
             appName as String,
@@ -51,29 +54,41 @@ class DataAdapter (
             password as String,
             phoneNumber as String,
             docId as String,
+            createdAt as Timestamp?,
+            updatedAt as Timestamp?,
         )
     }
 
     fun onAddData(dataItem: DataModel, docId: String) {
         data.add(dataItem)
-        uidHashMap[docId] = data.indexOf(dataItem)
-        notifyItemInserted(data.indexOf(dataItem))
+        uidHashMap[docId] = itemCount - 1
+        notifyItemInserted(itemCount - 1)
     }
 
     fun onDeleteData(docId: String) {
         val dataIndex: Int? = uidHashMap[docId]
         if (dataIndex != null) {
-            data.removeAt(dataIndex)
-            uidHashMap.remove(docId)
-            notifyItemRemoved(dataIndex)
+            if (uidHashMap.containsKey(docId)) {
+                uidHashMap.remove(docId)
+            }
+
+            // Check if the index is not null to prevent IndexOutOfBoundsException
+            if (itemCount > dataIndex) {
+                data.removeAt(dataIndex)
+                notifyItemRemoved(dataIndex)
+            }
         }
     }
 
     fun onModifyData(updatedItem: DataModel, docId: String) {
         val dataIndex: Int? = uidHashMap[docId]
         if (dataIndex != null) {
-            data[dataIndex] = updatedItem
-            notifyItemChanged(dataIndex)
+
+            // Check if the index is not null to prevent IndexOutOfBoundsException
+            if (itemCount > dataIndex) {
+                data[dataIndex] = updatedItem
+                notifyItemChanged(dataIndex)
+            }
         }
     }
 

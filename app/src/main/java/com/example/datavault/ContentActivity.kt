@@ -29,7 +29,9 @@ class ContentActivity : AppCompatActivity() {
     private lateinit var firebaseInstance: FirebaseAuth
     private lateinit var currentUser: FirebaseUser
     private lateinit var gso: GoogleSignInOptions
-    private val dataRef = Firebase.firestore.collection("dataVault")
+    private val dataRef = Firebase.firestore.collection("dataVault").orderBy(
+        "createdAt"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
