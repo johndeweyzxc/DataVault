@@ -64,6 +64,7 @@
                         android:contentDescription="@string/data_edit_description"
                         android:src="@drawable/ic_data_edit" />
                     <ImageView
+                        android:id="@+id/ivDataDeleteIcon"
                         android:layout_width="20dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"

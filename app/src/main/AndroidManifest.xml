@@ -28,6 +28,7 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ContentActivity" />
         <activity android:name=".CreateDataActivity" />
+        <activity android:name=".EditDataActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

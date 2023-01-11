@@ -65,7 +65,7 @@ class CreateDataActivity : AppCompatActivity() {
     }
 
     private fun uploadData() = CoroutineScope(Dispatchers.IO).launch {
-        val dataItem = DataModel(
+        val dataItem = DataModelUpload(
             binding.createEtAppname.text.toString(),
             binding.createEtUsername.text.toString(),
             binding.createEtEmail.text.toString(),

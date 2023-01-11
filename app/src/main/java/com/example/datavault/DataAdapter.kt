@@ -1,5 +1,6 @@
 package com.example.datavault
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,20 +21,15 @@ class DataAdapter (
         val tvDataUserName: TextView = itemView.findViewById(R.id.tvDataUserName)
         val tvDataEmail: TextView = itemView.findViewById(R.id.tvDataEmail)
         val tvDocId: TextView = itemView.findViewById(R.id.tvDocId)
+        val ivDataEditIcon: ImageView = itemView.findViewById(R.id.ivDataEditIcon)
+        val ivDataDeleteIcon: ImageView = itemView.findViewById(R.id.ivDataDeleteIcon)
+        val ivDataFavoriteIcon: ImageView = itemView.findViewById(R.id.ivDataFavoriteIcon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.card_data_container, parent, false)
 
-        itemView.findViewById<ImageView>(R.id.ivDataEditIcon).setOnClickListener {
-            val tvDocId: TextView = itemView.findViewById(R.id.tvDocId)
-            val applicationName: DataModel = data[uidHashMap[tvDocId.text.toString()]!!]
-            Toast.makeText(parent.context, applicationName.appName, Toast.LENGTH_SHORT).show()
-        }
-        itemView.findViewById<ImageView>(R.id.ivDataFavoriteIcon).setOnClickListener {
-            Toast.makeText(parent.context, "Added to favorites", Toast.LENGTH_SHORT).show()
-        }
         return DataViewHolder(itemView)
     }
 
@@ -44,6 +40,7 @@ class DataAdapter (
         val password = queryData.document.get("password")
         val phoneNumber = queryData.document.get("phoneNumber")
         val docId = queryData.document.get("docId")
+        val fireStoreDocId = queryData.document.id
         val createdAt = queryData.document.get("createdAt")
         val updatedAt = queryData.document.get("updatedAt")
 
@@ -54,6 +51,7 @@ class DataAdapter (
             password as String,
             phoneNumber as String,
             docId as String,
+            fireStoreDocId,
             createdAt as Timestamp?,
             updatedAt as Timestamp?,
         )
@@ -101,6 +99,23 @@ class DataAdapter (
             tvDataUserName.text = currentData.userName
             tvDataEmail.text = currentData.email
             tvDocId.text = currentData.docId
+            ivDataEditIcon.setOnClickListener {
+                val dataContent: DataModel = data[uidHashMap[tvDocId.text.toString()]!!]
+                val intent = Intent(itemView.context, EditDataActivity::class.java)
+                intent.putExtra("fireStoreDocId", dataContent.fireStoreDocId)
+                intent.putExtra("appName", dataContent.appName)
+                intent.putExtra("userName", dataContent.userName)
+                intent.putExtra("email", dataContent.email)
+                intent.putExtra("password", dataContent.password)
+                intent.putExtra("phoneNumber", dataContent.phoneNumber)
+                itemView.context.startActivity(intent)
+            }
+            ivDataFavoriteIcon.setOnClickListener {
+                Toast.makeText(holder.itemView.context, "Added to favorites", Toast.LENGTH_SHORT).show()
+            }
+            ivDataDeleteIcon.setOnClickListener {
+                Toast.makeText(holder.itemView.context, "Deleted this data", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
