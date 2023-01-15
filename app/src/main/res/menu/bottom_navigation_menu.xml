@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottomNavMenuHome"
+        android:icon="@drawable/ic_bottom_nav_home"
+        android:title="Home"
+        android:enabled="true" />
+    <item
+        android:id="@+id/bottomNavMenuFavorites"
+        android:icon="@drawable/ic_bottom_nav_favorite"
+        android:title="Favorites"
+        android:enabled="true" />
+    <item
+        android:id="@+id/bottomNavMenuSearch"
+        android:icon="@drawable/ic_bottom_nav_search"
+        android:title="Search"
+        android:enabled="true" />
+</menu>

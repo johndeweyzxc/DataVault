@@ -7,7 +7,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.ViewModelProvider
 import com.example.datavault.databinding.ActivityCreateDataBinding
+import com.example.datavault.models.DataModelWrite
+import com.example.datavault.viewModels.CreateDataViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
@@ -42,8 +46,14 @@ class CreateDataActivity : AppCompatActivity() {
 
         // Set the reference of views from the layout.
         bindViews()
-        // After setting the reference of the views, set up click listeners on the view.
         setClickListenersOnViews()
+//        val viewModel = ViewModelProvider(this)[CreateDataViewModel::class.java]
+//
+//        etAppName.setText(viewModel.appNameValue)
+//
+//        etAppName.addTextChangedListener {
+//            viewModel.appNameValue = etAppName.text.toString()
+//        }
     }
 
     private fun bindViews() {
@@ -101,7 +111,7 @@ class CreateDataActivity : AppCompatActivity() {
             .document(FirebaseAuth.getInstance().currentUser!!.uid)
             .collection("data")
 
-        val dataItem = DataModelUpload(
+        val dataItem = DataModelWrite(
             etAppName.text.toString(),
             etUserName.text.toString(),
             etEmail.text.toString(),
