@@ -14,14 +14,13 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.datavault.adapters.DataAdapter
+import com.example.datavault.adapters.SeedAdapter
 import com.example.datavault.databinding.ActivityContentBinding
-import com.example.datavault.fragments.DataFragment
-import com.example.datavault.fragments.DataFragmentFactory
+import com.example.datavault.fragments.HomeFragment
 import com.example.datavault.fragments.FavoritesFragment
 import com.example.datavault.fragments.SearchFragment
-import com.example.datavault.models.DataModelConverter
-import com.example.datavault.models.DataModelRetrieve
+import com.example.datavault.schema.DataModelConverter
+import com.example.datavault.schema.SeedSchema
 import com.example.datavault.viewModels.ContentViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -37,11 +36,11 @@ import de.hdodenhof.circleimageview.CircleImageView
 class ContentActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ContentViewModel
-    private lateinit var dataFactory: DataFragmentFactory
-    private lateinit var dataFragment: DataFragment
+    private lateinit var homeFactory: HomeFragmentFactory
+    private lateinit var homeFragment: HomeFragment
 
     private lateinit var binding: ActivityContentBinding
-    private lateinit var dataAdapter: DataAdapter
+    private lateinit var seedAdapter: SeedAdapter
 
     private lateinit var toggle: ActionBarDrawerToggle
 
@@ -50,15 +49,15 @@ class ContentActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this)[ContentViewModel::class.java]
-        dataAdapter = DataAdapter(viewModel.listDataModel, viewModel.mapDataModel)
-        dataFactory = DataFragmentFactory(dataAdapter)
+        seedAdapter = SeedAdapter(viewModel.listDataModel, viewModel.mapDataModel)
+        homeFactory = HomeFragmentFactory(seedAdapter)
 
-        supportFragmentManager.fragmentFactory = dataFactory
+        supportFragmentManager.fragmentFactory = homeFactory
 
         super.onCreate(savedInstanceState)
 
-        dataFragment = supportFragmentManager.fragmentFactory.instantiate(
-            classLoader, DataFragment::class.java.name) as DataFragment
+        homeFragment = supportFragmentManager.fragmentFactory.instantiate(
+            classLoader, HomeFragment::class.java.name) as HomeFragment
 
         setTheme(R.style.Theme_DataVault_Content)
         binding = ActivityContentBinding.inflate(layoutInflater)
@@ -143,7 +142,7 @@ class ContentActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Clicked About!", Toast.LENGTH_SHORT)
                         .show()
                 }
-                R.id.menuData -> {
+                R.id.menuSeed -> {
                     // Add click listener
                 }
                 R.id.menuPrivacyPolicy -> {
@@ -190,7 +189,7 @@ class ContentActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.bottomNavMenuHome -> {
                     supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.flContentFragment, DataFragment(dataAdapter))
+                        replace(R.id.flContentFragment, HomeFragment(seedAdapter))
                         commit()
                     }
                     return@setOnItemSelectedListener true
@@ -228,11 +227,11 @@ class ContentActivity : AppCompatActivity() {
                 when (changes.type) {
                     DocumentChange.Type.ADDED -> {
                         // Convert DocumentChange! to DataModel
-                        val dataModel: DataModelRetrieve = DataModelConverter().convertToModel(changes)
+                        val dataModel: SeedSchema = DataModelConverter().convertToModel(changes)
                         // Modify the data in the view model
                         val addedPos: Int = viewModel.addData(dataModel, dataModel.docId)
                         if (addedPos != -1) {
-                            dataAdapter.notifyItemInserted(addedPos)
+                            seedAdapter.notifyItemInserted(addedPos)
                             Log.i("DEV.LOG.INFO",
                                 "Added new document [${dataModel.appName}] from firestore snapshot"
                             )
@@ -240,21 +239,21 @@ class ContentActivity : AppCompatActivity() {
                     }
                     DocumentChange.Type.MODIFIED -> {
                         // Convert DocumentChange! to DataModel
-                        val dataModel: DataModelRetrieve = DataModelConverter().convertToModel(changes)
+                        val dataModel: SeedSchema = DataModelConverter().convertToModel(changes)
                         // Modify the data in the view model
                         val modifiedPos: Int = viewModel.modifyData(dataModel, dataModel.docId)
                         if (modifiedPos != -1) {
-                            dataAdapter.notifyItemChanged(modifiedPos)
+                            seedAdapter.notifyItemChanged(modifiedPos)
                             Log.i("DEV.LOG.INFO", "Document [${dataModel.appName}] has been modified")
                         }
                     }
                     DocumentChange.Type.REMOVED -> {
                         // Convert DocumentChange! to DataModel
-                        val dataModel: DataModelRetrieve = DataModelConverter().convertToModel(changes)
+                        val dataModel: SeedSchema = DataModelConverter().convertToModel(changes)
                         // Modify the data in the view model
                         val deletedPos: Int = viewModel.deleteData(dataModel.docId)
                         if (deletedPos != -1) {
-                            dataAdapter.notifyItemRemoved(deletedPos)
+                            seedAdapter.notifyItemRemoved(deletedPos)
                             Log.i("DEV.LOG.INFO", "Document [${dataModel.appName}] has been deleted")
                         }
                     }
@@ -265,7 +264,7 @@ class ContentActivity : AppCompatActivity() {
 
     private fun setFirstFragment() {
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flContentFragment, DataFragment(dataAdapter))
+            replace(R.id.flContentFragment, HomeFragment(seedAdapter))
             commit()
         }
     }

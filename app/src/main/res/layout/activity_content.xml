@@ -23,7 +23,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout="@layout/fragment_data" />
+            tools:layout="@layout/fragment_home" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnAddData"
@@ -59,7 +59,7 @@
         android:id="@+id/navView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:headerLayout="@layout/nav_header"
+        app:headerLayout="@layout/navigation_header"
         app:menu="@menu/top_navigation_menu"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"

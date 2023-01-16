@@ -1,14 +1,14 @@
 package com.example.datavault.viewModels
 
 import androidx.lifecycle.ViewModel
-import com.example.datavault.models.DataModelRetrieve
+import com.example.datavault.schema.SeedSchema
 
 class ContentViewModel: ViewModel() {
 
-    var listDataModel = mutableListOf<DataModelRetrieve>()
+    var listDataModel = mutableListOf<SeedSchema>()
     var mapDataModel = HashMap<String, Int>()
 
-    fun addData(dataItem: DataModelRetrieve, docId: String): Int {
+    fun addData(dataItem: SeedSchema, docId: String): Int {
         // Cannot add duplicate documents
         if (mapDataModel.containsKey(docId)) {
             return -1
@@ -39,7 +39,7 @@ class ContentViewModel: ViewModel() {
         return dataIndex as Int
     }
 
-    fun modifyData(updatedItem: DataModelRetrieve, docId: String): Int {
+    fun modifyData(updatedItem: SeedSchema, docId: String): Int {
         // Document does not exists
         if (!mapDataModel.containsKey(docId)) {
             return -1

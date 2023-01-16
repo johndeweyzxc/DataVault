@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.datavault.databinding.ActivityEditDataBinding
-import com.example.datavault.models.DataModelWrite
+import com.example.datavault.databinding.ActivityEditSeedBinding
+import com.example.datavault.schema.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
@@ -18,7 +18,7 @@ import java.util.*
 
 class EditDataActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityEditDataBinding
+    private lateinit var binding: ActivityEditSeedBinding
     private lateinit var documentRef: DocumentReference
     private lateinit var fireStoreDocId: String
     private lateinit var userId: String
@@ -41,7 +41,7 @@ class EditDataActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityEditDataBinding.inflate(layoutInflater)
+        binding = ActivityEditSeedBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         fireStoreDocId = intent.getStringExtra("fireStoreDocId").toString()
@@ -120,7 +120,7 @@ class EditDataActivity : AppCompatActivity() {
             return
         }
 
-        val dataModel = DataModelWrite(
+        val dataModel = SeedSchemaUpload(
             etAppName.text.toString(),
             etUserName.text.toString(),
             etEmail.text.toString(),

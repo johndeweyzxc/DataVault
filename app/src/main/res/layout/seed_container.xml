@@ -46,11 +46,11 @@
                     android:layout_weight="1"
                     android:scrollbars="none">
                     <TextView
-                        android:id="@+id/tvDataAppName"
+                        android:id="@+id/tvSeedAppName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_mono_medium"
-                        android:text="@string/data_container_text_view_facebook"
+                        android:text="@string/seed_container_text_view_facebook"
                         android:textColor="@color/grey_900"
                         android:textSize="22sp"
                         android:textStyle="bold" />
@@ -63,28 +63,28 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/ivDataFavoriteIcon"
+                        android:id="@+id/ivSeedFavoriteIcon"
                         android:layout_width="24dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
-                        android:contentDescription="@string/data_favorite_description"
-                        android:src="@drawable/ic_data_favorite_border" />
+                        android:contentDescription="@string/seed_favorite_description"
+                        android:src="@drawable/ic_seed_favorite_border" />
 
                     <ImageView
-                        android:id="@+id/ivDataEditIcon"
+                        android:id="@+id/ivSeedEditIcon"
                         android:layout_width="24dp"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/data_edit_description"
-                        android:src="@drawable/ic_data_edit" />
+                        android:contentDescription="@string/seed_edit_description"
+                        android:src="@drawable/ic_seed_edit" />
 
                     <ImageView
-                        android:id="@+id/ivDataDeleteIcon"
+                        android:id="@+id/ivSeedDeleteIcon"
                         android:layout_width="24dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:contentDescription="@string/data_delete_description"
-                        android:src="@drawable/ic_data_delete" />
+                        android:contentDescription="@string/seed_delete_description"
+                        android:src="@drawable/ic_seed_delete" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -100,16 +100,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/roboto_medium"
-                android:text="@string/data_field_header_username"
+                android:text="@string/seed_field_header_username"
                 android:textColor="@color/light_blue_600"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/tvDataUserName"
+                android:id="@+id/tvSeedUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_medium"
-                android:text="@string/data_container_text_view_username"
+                android:text="@string/seed_container_text_view_username"
                 android:textColor="@color/grey_600"
                 android:textSize="16sp" />
 
@@ -118,17 +118,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/roboto_medium"
-                android:text="@string/data_field_header_email"
+                android:text="@string/seed_field_header_email"
                 android:textColor="@color/red_400"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/tvDataEmail"
+                android:id="@+id/tvSeedEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/roboto_medium"
-                android:text="@string/data_container_text_view_email"
+                android:text="@string/seed_container_text_view_email"
                 android:textColor="@color/grey_600"
                 android:textSize="16sp" />
 
@@ -155,26 +155,26 @@
                     app:singleLine="true">
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chipDataUsername"
+                        android:id="@+id/chipSeedUsername"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/data_copy_username"
+                        android:text="@string/seed_copy_username"
                         android:fontFamily="@font/roboto_medium"
                         app:chipBackgroundColor="@color/white"
                         app:chipStrokeWidth="1dp"
                         app:chipStrokeColor="@color/grey_400"
-                        app:chipIcon="@drawable/ic_data_content_copy"
+                        app:chipIcon="@drawable/ic_seed_content_copy"
                         app:chipIconSize="15dp"
                         app:iconStartPadding="5dp" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chipDataPassword"
+                        android:id="@+id/chipSeedPassword"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
-                        android:text="@string/data_copy_password"
-                        app:chipIcon="@drawable/ic_data_content_copy"
+                        android:text="@string/seed_copy_password"
+                        app:chipIcon="@drawable/ic_seed_content_copy"
                         android:fontFamily="@font/roboto_medium"
                         app:chipBackgroundColor="@color/white"
                         app:chipStrokeWidth="1dp"
@@ -183,11 +183,11 @@
                         app:iconStartPadding="5dp" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chipDataEmail"
+                        android:id="@+id/chipSeedEmail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/data_copy_email"
-                        app:chipIcon="@drawable/ic_data_content_copy"
+                        android:text="@string/seed_copy_email"
+                        app:chipIcon="@drawable/ic_seed_content_copy"
                         android:fontFamily="@font/roboto_medium"
                         app:chipBackgroundColor="@color/white"
                         app:chipStrokeWidth="1dp"
@@ -202,7 +202,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/data_tap_chips_to_copy"
+                android:text="@string/seed_tap_chips_to_copy"
                 android:textSize="12sp"
                 android:textStyle="italic" />
 

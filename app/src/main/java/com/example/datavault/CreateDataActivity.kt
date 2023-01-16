@@ -7,8 +7,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.datavault.databinding.ActivityCreateDataBinding
-import com.example.datavault.models.DataModelWrite
+import com.example.datavault.databinding.ActivityCreateSeedBinding
+import com.example.datavault.schema.SeedSchemaUpload
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
@@ -20,7 +20,7 @@ import java.util.*
 
 class CreateDataActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityCreateDataBinding
+    private lateinit var binding: ActivityCreateSeedBinding
 
     private lateinit var etAppName: EditText
     private lateinit var etUserName: EditText
@@ -38,7 +38,7 @@ class CreateDataActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCreateDataBinding.inflate(layoutInflater)
+        binding = ActivityCreateSeedBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         bindViews()
@@ -101,7 +101,7 @@ class CreateDataActivity : AppCompatActivity() {
             .document(FirebaseAuth.getInstance().currentUser!!.uid)
             .collection("data")
 
-        val dataItem = DataModelWrite(
+        val dataItem = SeedSchemaUpload(
             etAppName.text.toString(),
             etUserName.text.toString(),
             etEmail.text.toString(),
