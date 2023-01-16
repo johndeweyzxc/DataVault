@@ -7,11 +7,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
 import com.example.datavault.databinding.ActivityCreateDataBinding
 import com.example.datavault.models.DataModelWrite
-import com.example.datavault.viewModels.CreateDataViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
@@ -44,16 +41,8 @@ class CreateDataActivity : AppCompatActivity() {
         binding = ActivityCreateDataBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Set the reference of views from the layout.
         bindViews()
         setClickListenersOnViews()
-//        val viewModel = ViewModelProvider(this)[CreateDataViewModel::class.java]
-//
-//        etAppName.setText(viewModel.appNameValue)
-//
-//        etAppName.addTextChangedListener {
-//            viewModel.appNameValue = etAppName.text.toString()
-//        }
     }
 
     private fun bindViews() {
@@ -107,7 +96,8 @@ class CreateDataActivity : AppCompatActivity() {
     }
 
     private fun uploadData() {
-        val collectionRef: CollectionReference = Firebase.firestore.collection("generatedUserData")
+        val collectionRef: CollectionReference = Firebase.firestore.collection(
+            "generatedUserData")
             .document(FirebaseAuth.getInstance().currentUser!!.uid)
             .collection("data")
 
@@ -123,17 +113,26 @@ class CreateDataActivity : AppCompatActivity() {
         )
 
         collectionRef.add(dataItem).addOnSuccessListener {
-            Toast.makeText(this@CreateDataActivity, "Successfully saved the data.", Toast.LENGTH_LONG)
-                .show()
+                Toast.makeText(
+                    this@CreateDataActivity,
+                    "Successfully saved the data.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
             .addOnCanceledListener {
-                Toast.makeText(this@CreateDataActivity, "Canceled saving data", Toast.LENGTH_LONG)
-                    .show()
+                Toast.makeText(
+                    this@CreateDataActivity,
+                    "Canceled saving data",
+                    Toast.LENGTH_LONG
+                ).show()
             }
             .addOnFailureListener {
-                Toast.makeText(this@CreateDataActivity, "Failed to save data", Toast.LENGTH_LONG)
-                    .show()
-                }
+                Toast.makeText(
+                    this@CreateDataActivity,
+                    "Failed to save data",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
     }
 
     private fun closeActiveKeyboard() {

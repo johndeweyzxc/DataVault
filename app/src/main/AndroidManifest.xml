@@ -25,18 +25,10 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".RegisterActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ContentActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ContentActivity" />
         <activity android:name=".CreateDataActivity" />
-        <activity
-            android:name=".EditDataActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-
+        <activity android:name=".EditDataActivity" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

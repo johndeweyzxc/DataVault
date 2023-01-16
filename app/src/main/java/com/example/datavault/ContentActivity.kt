@@ -1,7 +1,6 @@
 package com.example.datavault
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -13,7 +12,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.datavault.adapters.DataAdapter
@@ -22,10 +20,9 @@ import com.example.datavault.fragments.DataFragment
 import com.example.datavault.fragments.DataFragmentFactory
 import com.example.datavault.fragments.FavoritesFragment
 import com.example.datavault.fragments.SearchFragment
-import com.example.datavault.models.DataModelRetrieve
 import com.example.datavault.models.DataModelConverter
+import com.example.datavault.models.DataModelRetrieve
 import com.example.datavault.viewModels.ContentViewModel
-import com.example.datavault.viewModels.CreateDataViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.navigation.NavigationView
@@ -39,6 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class ContentActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: ContentViewModel
     private lateinit var dataFactory: DataFragmentFactory
     private lateinit var dataFragment: DataFragment
 
@@ -51,7 +49,7 @@ class ContentActivity : AppCompatActivity() {
     private lateinit var currentUser: FirebaseUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val viewModel = ViewModelProvider(this)[ContentViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ContentViewModel::class.java]
         dataAdapter = DataAdapter(viewModel.listDataModel, viewModel.mapDataModel)
         dataFactory = DataFragmentFactory(dataAdapter)
 
@@ -77,8 +75,6 @@ class ContentActivity : AppCompatActivity() {
         setNavigationDrawer()
         // Set the bottom navigation menu
         setBottomNavigation()
-        // Initialize the adapter to be use by the recycler view.
-        // dataAdapter = DataAdapter(viewModel.listDataModel, viewModel.mapDataModel)
         // Listen to realtime updates from a target collection in firestore firebase.
         subscribeToRealtimeUpdates(viewModel)
         // This shows the first default fragment which is DataFragment.
@@ -219,12 +215,6 @@ class ContentActivity : AppCompatActivity() {
         }
     }
 
-//    private fun initializeDataAdapter() {
-//        dataAdapter = DataAdapter()
-//        dataAdapter.listOfDataModel = mutableListOf()
-//        dataAdapter.uidMapOfDataModel = HashMap()
-//    }
-
     private fun subscribeToRealtimeUpdates(viewModel: ContentViewModel) {
         val dataRef: CollectionReference = Firebase.firestore.collection("generatedUserData")
             .document(currentUser.uid)
@@ -237,25 +227,36 @@ class ContentActivity : AppCompatActivity() {
             for (changes in querySnapshot?.documentChanges!!) {
                 when (changes.type) {
                     DocumentChange.Type.ADDED -> {
+                        // Convert DocumentChange! to DataModel
                         val dataModel: DataModelRetrieve = DataModelConverter().convertToModel(changes)
-                        Toast.makeText(applicationContext, "Added new item", Toast.LENGTH_SHORT).show()
+                        // Modify the data in the view model
                         val addedPos: Int = viewModel.addData(dataModel, dataModel.docId)
                         if (addedPos != -1) {
                             dataAdapter.notifyItemInserted(addedPos)
+                            Log.i("DEV.LOG.INFO",
+                                "Added new document [${dataModel.appName}] from firestore snapshot"
+                            )
                         }
-                        // dataAdapter.onAddData(dataModel, dataModel.docId)
                     }
                     DocumentChange.Type.MODIFIED -> {
+                        // Convert DocumentChange! to DataModel
                         val dataModel: DataModelRetrieve = DataModelConverter().convertToModel(changes)
+                        // Modify the data in the view model
                         val modifiedPos: Int = viewModel.modifyData(dataModel, dataModel.docId)
-                        dataAdapter.notifyItemChanged(modifiedPos)
-                        // dataAdapter.onModifyData(dataModel, dataModel.docId)
+                        if (modifiedPos != -1) {
+                            dataAdapter.notifyItemChanged(modifiedPos)
+                            Log.i("DEV.LOG.INFO", "Document [${dataModel.appName}] has been modified")
+                        }
                     }
                     DocumentChange.Type.REMOVED -> {
+                        // Convert DocumentChange! to DataModel
                         val dataModel: DataModelRetrieve = DataModelConverter().convertToModel(changes)
+                        // Modify the data in the view model
                         val deletedPos: Int = viewModel.deleteData(dataModel.docId)
-                        dataAdapter.notifyItemRemoved(deletedPos)
-                        // dataAdapter.onDeleteData(dataModel.docId)
+                        if (deletedPos != -1) {
+                            dataAdapter.notifyItemRemoved(deletedPos)
+                            Log.i("DEV.LOG.INFO", "Document [${dataModel.appName}] has been deleted")
+                        }
                     }
                 }
             }

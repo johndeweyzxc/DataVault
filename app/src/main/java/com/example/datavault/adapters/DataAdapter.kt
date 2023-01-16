@@ -1,5 +1,6 @@
 package com.example.datavault.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,9 +8,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.datavault.EditDataActivity
 import com.example.datavault.R
-import com.example.datavault.components.DeleteDataDialog
 import com.example.datavault.models.DataModelRetrieve
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class DataAdapter(
     private var listOfDataModel: MutableList<DataModelRetrieve>,
@@ -42,6 +47,7 @@ class DataAdapter(
     }
 
     private fun updateContentOfView(holder: DataViewHolder, currentData: DataModelRetrieve) {
+
         holder.apply {
             tvDataAppName.text = currentData.appName
             tvDataUserName.text = currentData.userName
@@ -54,50 +60,50 @@ class DataAdapter(
                 ).show()
             }
             ivDataEditIcon.setOnClickListener {
-                Toast.makeText(
-                    holder.itemView.context, "Editing this data",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val intent = Intent(itemView.context, EditDataActivity::class.java)
+                intent.putExtra("fireStoreDocId", currentData.fireStoreDocId)
+                itemView.context.startActivity(intent)
             }
             ivDataDeleteIcon.setOnClickListener {
                 val indexPos: Int = uidMapOfDataModel[tvDocId.text.toString()]!!
                 val dataContent: DataModelRetrieve = listOfDataModel[indexPos]
-                DeleteDataDialog().notifyUser(itemView.context, dataContent)
+                val currentUser = FirebaseAuth.getInstance().currentUser
+                val userId = currentUser?.uid
+
+                MaterialAlertDialogBuilder(itemView.context)
+                    .setTitle("Deleting ${dataContent.appName}")
+                    .setMessage("Do you really want to delete ${dataContent.appName}?")
+                    .setNeutralButton("CANCEL") { dialog, _ ->
+                        dialog.cancel()
+                        return@setNeutralButton
+                    }
+                    .setPositiveButton("DELETE") {_, _ ->
+                        if (userId != null) {
+                            fireStoreDeleteData(itemView, userId, dataContent.fireStoreDocId)
+                        }
+                        return@setPositiveButton
+                    }.show()
             }
         }
     }
 
-//    fun onAddData(dataItem: DataModelRetrieve, docId: String) {
-//        listOfDataModel.add(dataItem)
-//        // Use docId as the key
-//        uidMapOfDataModel[docId] = itemCount - 1
-//        notifyItemInserted(itemCount - 1)
-//    }
-//
-//    fun onDeleteData(docId: String) {
-//        val dataIndex: Int? = uidMapOfDataModel[docId]
-//        if (dataIndex != null) {
-//            if (uidMapOfDataModel.containsKey(docId)) {
-//                uidMapOfDataModel.remove(docId)
-//            }
-//
-//            // Check if the index is not null to prevent IndexOutOfBoundsException
-//            if (itemCount > dataIndex) {
-//                listOfDataModel.removeAt(dataIndex)
-//                notifyItemRemoved(dataIndex)
-//            }
-//        }
-//    }
-//
-//    fun onModifyData(updatedItem: DataModelRetrieve, docId: String) {
-//        val dataIndex: Int? = uidMapOfDataModel[docId]
-//        if (dataIndex != null) {
-//
-//            // Check if the index is not null to prevent IndexOutOfBoundsException
-//            if (itemCount > dataIndex) {
-//                listOfDataModel[dataIndex] = updatedItem
-//                notifyItemChanged(dataIndex)
-//            }
-//        }
-//    }
+    private fun fireStoreDeleteData(itemView: View, userId: String, firestoreDocId: String) {
+        Firebase.firestore.collection("generatedUserData")
+            .document(userId)
+            .collection("data")
+            .document(firestoreDocId)
+            .delete()
+            .addOnSuccessListener {
+                Toast.makeText(
+                    itemView.context, "Successfully deleted the data",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(
+                    itemView.context, "Failed to delete data",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
 }

@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var firebaseInstance: FirebaseAuth
+    private var currentUser: FirebaseUser? = null
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
@@ -29,18 +30,28 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        configureGoogleSignIn()
+        setFirebaseInstances()
         setupAuthenticationListener()
+        configureGoogleSignIn()
         setClickListeners()
     }
 
-    override fun onStart() {
-        super.onStart()
-        updateUI(firebaseInstance.currentUser)
+    private fun setFirebaseInstances() {
+        firebaseInstance = FirebaseAuth.getInstance()
+        currentUser = firebaseInstance.currentUser
+    }
+
+    private fun setupAuthenticationListener() {
+        firebaseInstance.addAuthStateListener { auth ->
+            if (auth.currentUser != null) {
+                val intent = Intent(this, ContentActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+        }
     }
 
     private fun configureGoogleSignIn() {
-        firebaseInstance = FirebaseAuth.getInstance()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -50,31 +61,22 @@ class MainActivity : AppCompatActivity() {
 
         // Set up activity result launcher for getting result from an activiy
         activityResultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { ActivityResult ->
+            ActivityResultContracts.StartActivityForResult()) { ActivityResult ->
             // Result returned from launching the intent from google sign in api
-            if (ActivityResult.resultCode == RESULT_OK && ActivityResult.data != null) {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(ActivityResult.data)
-                try {
-                    val account = task.getResult(ApiException::class.java)!!
-                    firebaseAuthWithGoogle(account.idToken!!)
-                } catch (e: ApiException) {
-                    Toast.makeText(applicationContext,
-                        "Failed getting result from google sign in", Toast.LENGTH_LONG
-                    ).show()
-                }
+            if (ActivityResult.resultCode != RESULT_OK || ActivityResult.data == null) {
+                return@registerForActivityResult
             }
-        }
-    }
 
-    private fun setupAuthenticationListener() {
-        firebaseInstance.addAuthStateListener { auth ->
-            if (auth.currentUser != null) {
-                val intent = Intent(this, ContentActivity::class.java)
-                intent.putExtra("email", auth.currentUser!!.email)
-                intent.putExtra("name", auth.currentUser!!.displayName)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+            val task = GoogleSignIn.getSignedInAccountFromIntent(ActivityResult.data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                Toast.makeText(
+                    applicationContext,
+                    "Failed getting result from google sign in",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -83,7 +85,6 @@ class MainActivity : AppCompatActivity() {
         val loginButton: Button = binding.btnLogin
         val loginWithGoogleButton: Button = binding.btnLoginWithGoogle
         val loginSignUpTextView: TextView = binding.tvLoginSignUp
-
         loginButton.setOnClickListener {
             SignInWithEmail().signIn(
                 binding.etLoginEmail,
@@ -92,19 +93,11 @@ class MainActivity : AppCompatActivity() {
                 binding.ilLoginPassword,
             )
         }
-        loginWithGoogleButton.setOnClickListener { activityResultLauncher.launch(googleSignInClient.signInIntent) }
-        loginSignUpTextView.setOnClickListener { startActivity( Intent(this, RegisterActivity::class.java)) }
-    }
-
-    private fun updateUI(user: FirebaseUser?) {
-        if (user != null) {
-            val intent = Intent(applicationContext, ContentActivity::class.java)
-            val userEmail = user.email
-            val userName = user.displayName
-            intent.putExtra("email", userEmail)
-            intent.putExtra("name", userName)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+        loginWithGoogleButton.setOnClickListener {
+            activityResultLauncher.launch(googleSignInClient.signInIntent)
+        }
+        loginSignUpTextView.setOnClickListener {
+            startActivity( Intent(this, RegisterActivity::class.java))
         }
     }
 
@@ -113,11 +106,16 @@ class MainActivity : AppCompatActivity() {
         firebaseInstance.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    updateUI(firebaseInstance.currentUser)
-                    Toast.makeText(applicationContext, "Successfully signed in with google", Toast.LENGTH_LONG)
+                    Toast.makeText(
+                        applicationContext,
+                        "Successfully signed in with google",
+                        Toast.LENGTH_LONG)
                         .show()
                 } else {
-                    Toast.makeText(applicationContext, "Failed signing in with google", Toast.LENGTH_LONG)
+                    Toast.makeText(
+                        applicationContext,
+                        "Failed signing in with google",
+                        Toast.LENGTH_LONG)
                         .show()
                 }
             }

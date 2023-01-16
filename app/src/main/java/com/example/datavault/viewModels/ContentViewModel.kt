@@ -9,41 +9,47 @@ class ContentViewModel: ViewModel() {
     var mapDataModel = HashMap<String, Int>()
 
     fun addData(dataItem: DataModelRetrieve, docId: String): Int {
+        // Cannot add duplicate documents
         if (mapDataModel.containsKey(docId)) {
             return -1
         }
-
         listDataModel.add(dataItem)
         // Use docId as the key
         mapDataModel[docId] = itemCount() - 1
-        // notifyItemInserted(itemCount() - 1)
         return itemCount() - 1
     }
 
     fun deleteData(docId: String): Int {
+        // Document does not exists
+        if (!mapDataModel.containsKey(docId)) {
+            return -1
+        }
+
         val dataIndex: Int? = mapDataModel[docId]
         if (dataIndex != null) {
+            // Remove the key in map when deleting a document.
             if (mapDataModel.containsKey(docId)) {
                 mapDataModel.remove(docId)
             }
-
             // Check if the index is not null to prevent IndexOutOfBoundsException
             if (itemCount() > dataIndex) {
                 listDataModel.removeAt(dataIndex)
-                // notifyItemRemoved(dataIndex)
             }
         }
         return dataIndex as Int
     }
 
     fun modifyData(updatedItem: DataModelRetrieve, docId: String): Int {
+        // Document does not exists
+        if (!mapDataModel.containsKey(docId)) {
+            return -1
+        }
+
         val dataIndex: Int? = mapDataModel[docId]
         if (dataIndex != null) {
-
             // Check if the index is not null to prevent IndexOutOfBoundsException
             if (itemCount() > dataIndex) {
                 listDataModel[dataIndex] = updatedItem
-                // notifyItemChanged(dataIndex)
             }
         }
         return dataIndex as Int

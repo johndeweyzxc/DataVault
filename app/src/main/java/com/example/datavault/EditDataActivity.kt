@@ -1,19 +1,27 @@
 package com.example.datavault
 
+import android.content.Context
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.datavault.databinding.ActivityEditDataBinding
+import com.example.datavault.models.DataModelWrite
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.*
 
 class EditDataActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditDataBinding
     private lateinit var documentRef: DocumentReference
+    private lateinit var fireStoreDocId: String
+    private lateinit var userId: String
 
     private lateinit var ilAppName: TextInputLayout
     private lateinit var ilUserName: TextInputLayout
@@ -27,15 +35,17 @@ class EditDataActivity : AppCompatActivity() {
     private lateinit var etPassword: TextInputEditText
     private lateinit var etPhoneNumber: TextInputEditText
 
+    private lateinit var createdAt: Timestamp
+    private lateinit var updatedAt: Timestamp
+    private lateinit var docId: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditDataBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.editToolBar.setOnClickListener { finish() }
-        binding.editBackButton.setOnClickListener { finish() }
-
-        val fireStoreDocId = intent.getStringExtra("fireStoreDocId") as String
+        fireStoreDocId = intent.getStringExtra("fireStoreDocId").toString()
+        userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
         documentRef = Firebase.firestore.collection("generatedUserData")
             .document(FirebaseAuth.getInstance().currentUser!!.uid)
             .collection("data")
@@ -48,9 +58,13 @@ class EditDataActivity : AppCompatActivity() {
         // This set the default value of the document to input edit text.
         setDefaultValues()
 
+        binding.editToolBar.setOnClickListener { finish() }
+        binding.editBackButton.setOnClickListener { finish() }
+
         binding.editSaveChangesButton.setOnClickListener {
-            if (checkForBlackOrNull() == 0) {
+            if (checkForBlankOrNull() == 0) {
                 updateData()
+                closeActiveKeyboard()
             }
         }
     }
@@ -77,21 +91,19 @@ class EditDataActivity : AppCompatActivity() {
     }
 
     private fun setDefaultValues() {
-        val dataAppName: String? = intent.getStringExtra("appName")
-        val dataUserName: String? = intent.getStringExtra("userName")
-        val dataEmail: String? = intent.getStringExtra("email")
-        val dataPassword: String? = intent.getStringExtra("password")
-        val dataPhoneNumber: String? = intent.getStringExtra("phoneNumber")
-
-        etAppName.setText(dataAppName)
-        etUserName.setText(dataUserName)
-        etEmail.setText(dataEmail)
-        etPassword.setText(dataPassword)
-        etPhoneNumber.setText(dataPhoneNumber)
-
+        documentRef.get().addOnSuccessListener {
+            etAppName.setText(it.data?.get("appName").toString())
+            etUserName.setText(it.data?.get("userName").toString())
+            etEmail.setText(it.data?.get("email").toString())
+            etPassword.setText(it.data?.get("password").toString())
+            etPhoneNumber.setText(it.data?.get("phoneNumber").toString())
+            docId = it.data?.get("docId").toString()
+            createdAt = it.data?.get("createdAt") as Timestamp
+            updatedAt = Timestamp(Date())
+        }
     }
 
-    private fun checkForBlackOrNull(): Int {
+    private fun checkForBlankOrNull(): Int {
         when {
             etAppName.text.isNullOrBlank() -> {ilAppName.helperText = "*App name is required"; return -1 }
             etUserName.text.isNullOrBlank() -> {ilUserName.helperText = "*User name is required"; return -1}
@@ -104,6 +116,44 @@ class EditDataActivity : AppCompatActivity() {
     }
 
     private fun updateData() {
+        if (checkForBlankOrNull() == -1) {
+            return
+        }
 
+        val dataModel = DataModelWrite(
+            etAppName.text.toString(),
+            etUserName.text.toString(),
+            etEmail.text.toString(),
+            etPassword.text.toString(),
+            etPhoneNumber.text.toString(),
+            docId,
+            createdAt,
+            updatedAt
+        )
+
+        Firebase.firestore.collection("generatedUserData")
+            .document(userId)
+            .collection("data")
+            .document(fireStoreDocId)
+            .set(dataModel)
+            .addOnSuccessListener {
+                Toast.makeText(
+                    applicationContext,
+                    "Successfully saved changes",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(
+                    applicationContext,
+                    "Failed to save changes",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
+
+    private fun closeActiveKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 }
