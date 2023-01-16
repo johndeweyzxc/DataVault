@@ -3,6 +3,7 @@ package com.example.datavault
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.datavault.auth.SignInWIthEmail
 import com.example.datavault.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -42,10 +43,11 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         binding.btnRegisterAccount.setOnClickListener {
-            SignInWithEmail().signUp(
+            SignInWIthEmail().signUp(
                 binding.etRegisterEmail, binding.ilRegisterEmail, binding.etRegisterPassword,
                 binding.ilRegisterPassword, binding.etRegisterConfirmPassword,
-                binding.ilRegisterConfirmPassword)
+                binding.ilRegisterConfirmPassword
+            )
         }
 
         binding.tvRegisterLoginInstead.setOnClickListener {

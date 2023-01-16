@@ -1,19 +1,18 @@
-package com.example.datavault
+package com.example.datavault.auth
 
-import android.content.ContentValues.TAG
+import android.content.ContentValues
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 
-class SignInWithEmail : AppCompatActivity() {
+class SignInWIthEmail {
 
-    private var firebaseInstanceAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
-    fun signUp(email: TextInputEditText, emailParent: TextInputLayout,
-               password: TextInputEditText, passwordParent: TextInputLayout,
-               confirmPassword: TextInputEditText, confirmParent: TextInputLayout) {
+    fun signUp(
+        email: TextInputEditText, emailParent: TextInputLayout,
+        password: TextInputEditText, passwordParent: TextInputLayout,
+        confirmPassword: TextInputEditText, confirmParent: TextInputLayout
+    ) {
         emailParent.helperText = null
         passwordParent.helperText = null
         confirmParent.helperText = null
@@ -37,13 +36,13 @@ class SignInWithEmail : AppCompatActivity() {
             }
         }
 
-        firebaseInstanceAuth.createUserWithEmailAndPassword(emailText, passwordText)
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(emailText, passwordText)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     signIn(email, null, password, null)
                     email.text?.clear(); password.text?.clear(); confirmPassword.text?.clear()
                 } else {
-                    Log.d(TAG, "[LOG] signUp(): ${task.exception}")
+                    Log.d(ContentValues.TAG, "[LOG] signUp(): ${task.exception}")
                 }
             }
     }
@@ -69,12 +68,12 @@ class SignInWithEmail : AppCompatActivity() {
             }
         }
 
-        firebaseInstanceAuth.signInWithEmailAndPassword(emailText, passwordText)
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(emailText, passwordText)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     email.text?.clear(); password.text?.clear()
                 } else {
-                    Log.d(TAG, "[LOG] signIn(): ${task.exception}")
+                    Log.d(ContentValues.TAG, "[LOG] signIn(): ${task.exception}")
                 }
             }
     }
