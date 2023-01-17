@@ -10,21 +10,22 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.datavault.adapters.SeedAdapter
+import com.example.datavault.adapters.ViewPagerAdapter
 import com.example.datavault.databinding.ActivityContentBinding
 import com.example.datavault.fragments.HomeFragment
-import com.example.datavault.fragments.FavoritesFragment
-import com.example.datavault.fragments.SearchFragment
 import com.example.datavault.schema.DataModelConverter
 import com.example.datavault.schema.SeedSchema
 import com.example.datavault.viewModels.ContentViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
@@ -65,6 +66,26 @@ class ContentActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
+        val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, lifecycle, seedAdapter)
+        binding.viewPager.adapter = viewPagerAdapter
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) {tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = "Home"
+                    tab.icon = AppCompatResources.getDrawable(applicationContext, R.drawable.ic_bottom_nav_home)
+                }
+                1 -> {
+                    tab.text = "Favorites"
+                    tab.icon = AppCompatResources.getDrawable(applicationContext, R.drawable.ic_bottom_nav_favorite)
+                }
+                2 -> {
+                    tab.text = "Find"
+                    tab.icon = AppCompatResources.getDrawable(applicationContext, R.drawable.ic_bottom_nav_search)
+                }
+            }
+        }.attach()
+
         // Set the firebase instances to get current user.
         setFirebaseInstance()
         // Check authentication, whenever the user clicks log out, it will sign out the user in firebase
@@ -72,17 +93,10 @@ class ContentActivity : AppCompatActivity() {
         setFirebaseAuthListeners()
         // Set the Navigation drawer on the top right corner of the screen.
         setNavigationDrawer()
-        // Set the bottom navigation menu
-        setBottomNavigation()
         // Listen to realtime updates from a target collection in firestore firebase.
         subscribeToRealtimeUpdates(viewModel)
         // This shows the first default fragment which is DataFragment.
-        setFirstFragment()
-
-        binding.btnAddData.setOnClickListener {
-            val intent = Intent(this, CreateDataActivity::class.java)
-            startActivity(intent)
-        }
+        // setFirstFragment()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -184,36 +198,6 @@ class ContentActivity : AppCompatActivity() {
         }
     }
 
-    private fun setBottomNavigation() {
-        binding.contentBottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.bottomNavMenuHome -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.flContentFragment, HomeFragment(seedAdapter))
-                        commit()
-                    }
-                    return@setOnItemSelectedListener true
-                }
-                R.id.bottomNavMenuFavorites -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.flContentFragment, FavoritesFragment())
-                        commit()
-                    }
-                    return@setOnItemSelectedListener true
-                }
-                R.id.bottomNavMenuSearch -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.flContentFragment, SearchFragment())
-                        commit()
-                    }
-                    return@setOnItemSelectedListener true
-                } else -> {
-                return@setOnItemSelectedListener false
-            }
-            }
-        }
-    }
-
     private fun subscribeToRealtimeUpdates(viewModel: ContentViewModel) {
         val dataRef: CollectionReference = Firebase.firestore.collection("generatedUserData")
             .document(currentUser.uid)
@@ -262,11 +246,11 @@ class ContentActivity : AppCompatActivity() {
         }
     }
 
-    private fun setFirstFragment() {
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flContentFragment, HomeFragment(seedAdapter))
-            commit()
-        }
-    }
+//    private fun setFirstFragment() {
+//        supportFragmentManager.beginTransaction().apply {
+//            replace(R.id.flContentFragment, HomeFragment(seedAdapter))
+//            commit()
+//        }
+//    }
 }
 

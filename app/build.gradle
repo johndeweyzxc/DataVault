@@ -71,6 +71,9 @@ dependencies {
 
     // Add dependency for creating circle image view
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // Dependency for view pager
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 }
 
 task deleteGoogleServicesJson(type: Delete) {

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.datavault.EditDataActivity
 import com.example.datavault.R
 import com.example.datavault.schema.SeedSchema
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -18,10 +19,12 @@ import com.google.firebase.ktx.Firebase
 
 class SeedAdapter(
     private var listOfDataModel: MutableList<SeedSchema>,
-    private var uidMapOfDataModel: HashMap<String, Int>
+    private var uidMapOfDataModel: HashMap<String, Int>,
+    private val maxCardElevation: Float = 8.0F
 ) : RecyclerView.Adapter<SeedAdapter.SeedViewHolder>() {
 
     class SeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cardViewSeed: MaterialCardView = itemView.findViewById(R.id.cardViewSeed)
         val tvSeedAppName: TextView = itemView.findViewById(R.id.tvSeedAppName)
         val tvSeedUserName: TextView = itemView.findViewById(R.id.tvSeedUserName)
         val tvSeedEmail: TextView = itemView.findViewById(R.id.tvSeedEmail)
@@ -49,6 +52,7 @@ class SeedAdapter(
     private fun updateContentOfView(holder: SeedViewHolder, currentData: SeedSchema) {
 
         holder.apply {
+            cardViewSeed.cardElevation = maxCardElevation
             tvSeedAppName.text = currentData.appName
             tvSeedUserName.text = currentData.userName
             tvSeedEmail.text = currentData.email
