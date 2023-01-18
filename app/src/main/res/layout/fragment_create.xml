@@ -4,205 +4,161 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateDataActivity">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/createAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/createToolBar"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_register_back"
-            app:navigationIconTint="@color/grey_200"
-            app:title="Create a data" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+    tools:context=".fragments.CreateFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createAppBar"
-        android:fillViewport="true">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="vertical"
             android:padding="32dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/createIlAppname"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:hint="@string/create_edit_text_hint_application_name"
-                app:startIconDrawable="@drawable/ic_create_app_name"
                 app:endIconDrawable="@drawable/ic_create_clear_button"
                 app:endIconMode="custom"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
-                android:layout_marginBottom="10dp"
                 app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                app:startIconDrawable="@drawable/ic_create_app_name">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/createEtAppname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
-                    android:textSize="16sp"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/createIlUsername"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:hint="@string/create_edit_text_hint_username"
-                app:startIconDrawable="@drawable/ic_create_username"
                 app:endIconDrawable="@drawable/ic_create_clear_button"
                 app:endIconMode="custom"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
-                android:layout_marginBottom="10dp"
                 app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                app:startIconDrawable="@drawable/ic_create_username">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/createEtUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
-                    android:textSize="16sp"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/createIlEmail"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:hint="@string/create_edit_text_hint_email"
-                app:startIconDrawable="@drawable/ic_create_email"
                 app:endIconDrawable="@drawable/ic_create_clear_button"
                 app:endIconMode="custom"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
-                android:layout_marginBottom="10dp"
                 app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                app:startIconDrawable="@drawable/ic_create_email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/createEtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
-                    android:textSize="16sp"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/createIlPhonenumber"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:hint="@string/create_edit_text_hint_phone_number"
-                app:startIconDrawable="@drawable/ic_create_phone_number"
                 app:endIconDrawable="@drawable/ic_create_clear_button"
                 app:endIconMode="custom"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
-                android:layout_marginBottom="10dp"
                 app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                app:startIconDrawable="@drawable/ic_create_phone_number">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/createEtPhonenumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
-                    android:textSize="16sp"
-                    android:inputType="phone" />
+                    android:inputType="phone"
+                    android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/createIlPassword"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
                 android:hint="@string/create_edit_text_hint_password"
-                app:startIconDrawable="@drawable/ic_create_password"
                 app:endIconMode="password_toggle"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
-                android:layout_marginBottom="15dp"
                 app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                app:startIconDrawable="@drawable/ic_create_password">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/createEtPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
-                    android:textSize="16sp"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/createSaveDataButton"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <Button
-                    android:id="@+id/createBackButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/create_data_button_back"
-                    android:textAllCaps="false"
-                    android:padding="12dp"
-                    android:textColor="@color/red_400"
-                    android:fontFamily="@font/roboto_mono_medium"
-                    android:textSize="16sp"
-                    app:strokeWidth="2dp"
-                    app:strokeColor="@color/red_400"
-                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    />
-
-                <Button
-                    android:id="@+id/createSaveDataButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="@string/create_data_button_text_save_data"
-                    android:textAllCaps="false"
-                    android:padding="12dp"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/roboto_mono_medium"
-                    android:textSize="16sp"
-                    android:backgroundTint="@color/light_blue_600"
-                    app:strokeWidth="2dp"
-                    app:strokeColor="@color/light_blue_600"
-                    app:icon="@drawable/ic_create_save_data"
-                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
-                    style="@style/Widget.MaterialComponents.Button.Icon"
-                    />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:backgroundTint="@color/light_blue_600"
+                android:fontFamily="@font/roboto_mono_medium"
+                android:padding="12dp"
+                android:text="@string/create_data_button_text_save_data"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:icon="@drawable/ic_create_save_data"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
+                app:strokeColor="@color/light_blue_600"
+                app:strokeWidth="2dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>

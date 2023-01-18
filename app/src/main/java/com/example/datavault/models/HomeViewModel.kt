@@ -1,9 +1,9 @@
-package com.example.datavault.viewModels
+package com.example.datavault.models
 
 import androidx.lifecycle.ViewModel
 import com.example.datavault.schema.SeedSchema
 
-class ContentViewModel: ViewModel() {
+class HomeViewModel: ViewModel() {
 
     var listDataModel = mutableListOf<SeedSchema>()
     var mapDataModel = HashMap<String, Int>()

@@ -1,15 +1,17 @@
-package com.example.datavault
+package com.example.datavault.fragments
 
 import android.content.Context
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.example.datavault.databinding.ActivityCreateSeedBinding
+import com.example.datavault.databinding.FragmentCreateBinding
 import com.example.datavault.schema.SeedSchemaUpload
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -18,9 +20,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 
-class CreateDataActivity : AppCompatActivity() {
+class CreateFragment : Fragment() {
 
-    private lateinit var binding: ActivityCreateSeedBinding
+    private lateinit var binding: FragmentCreateBinding
 
     private lateinit var etAppName: EditText
     private lateinit var etUserName: EditText
@@ -36,13 +38,18 @@ class CreateDataActivity : AppCompatActivity() {
 
     private lateinit var saveDataButton: Button
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityCreateSeedBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentCreateBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         bindViews()
         setClickListenersOnViews()
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun bindViews() {
@@ -62,16 +69,10 @@ class CreateDataActivity : AppCompatActivity() {
     }
 
     private fun setClickListenersOnViews() {
-        val toolBarBackButton: MaterialToolbar = binding.createToolBar
-        val backButton: Button = binding.createBackButton
-
         ilAppName.setEndIconOnClickListener { binding.createEtAppname.text?.clear() }
         ilUserName.setEndIconOnClickListener { binding.createEtUsername.text?.clear() }
         ilEmail.setEndIconOnClickListener { binding.createEtEmail.text?.clear() }
         ilPhoneNumber.setEndIconOnClickListener { binding.createEtPassword.text?.clear() }
-
-        toolBarBackButton.setOnClickListener { finish() }
-        backButton.setOnClickListener { finish() }
 
         saveDataButton.setOnClickListener {
             clearHelperText()
@@ -79,7 +80,6 @@ class CreateDataActivity : AppCompatActivity() {
             closeActiveKeyboard()
             uploadData()
             clearEditText()
-            finish()
         }
     }
 
@@ -91,7 +91,6 @@ class CreateDataActivity : AppCompatActivity() {
             etPhoneNumber.text.isNullOrBlank() -> {ilPhoneNumber.helperText = "*Phone number is required"; return -1 }
             etPassword.text.isNullOrBlank() -> {ilPassword.helperText = "Password is required"; return -1}
         }
-
         return 0
     }
 
@@ -113,31 +112,33 @@ class CreateDataActivity : AppCompatActivity() {
         )
 
         collectionRef.add(dataItem).addOnSuccessListener {
-                Toast.makeText(
-                    this@CreateDataActivity,
-                    "Successfully saved the data.",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            Toast.makeText(
+                requireActivity(), "Successfully saved the data.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
             .addOnCanceledListener {
                 Toast.makeText(
-                    this@CreateDataActivity,
-                    "Canceled saving data",
+                    requireActivity(), "Canceled saving data",
                     Toast.LENGTH_LONG
                 ).show()
             }
             .addOnFailureListener {
                 Toast.makeText(
-                    this@CreateDataActivity,
-                    "Failed to save data",
+                    requireActivity(), "Failed to save data",
                     Toast.LENGTH_LONG
                 ).show()
             }
     }
 
     private fun closeActiveKeyboard() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        val imm = requireActivity().getSystemService(
+            Context.INPUT_METHOD_SERVICE
+        ) as InputMethodManager
+
+        imm.hideSoftInputFromWindow(
+            requireActivity().currentFocus?.windowToken, 0
+        )
     }
 
     private fun clearEditText() {

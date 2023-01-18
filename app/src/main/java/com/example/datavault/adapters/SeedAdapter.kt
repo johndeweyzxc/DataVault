@@ -1,15 +1,15 @@
 package com.example.datavault.adapters
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.datavault.EditDataActivity
 import com.example.datavault.R
+import com.example.datavault.fragments.EditSeedFragment
 import com.example.datavault.schema.SeedSchema
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -20,8 +20,11 @@ import com.google.firebase.ktx.Firebase
 class SeedAdapter(
     private var listOfDataModel: MutableList<SeedSchema>,
     private var uidMapOfDataModel: HashMap<String, Int>,
-    private val maxCardElevation: Float = 8.0F
+    private val fragmentManger: FragmentManager,
+    private val frameLayoutId: Int
 ) : RecyclerView.Adapter<SeedAdapter.SeedViewHolder>() {
+
+    private val maxCardElevation: Float = 8.0F
 
     class SeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardViewSeed: MaterialCardView = itemView.findViewById(R.id.cardViewSeed)
@@ -64,9 +67,11 @@ class SeedAdapter(
                 ).show()
             }
             ivSeedEditIcon.setOnClickListener {
-                val intent = Intent(itemView.context, EditDataActivity::class.java)
-                intent.putExtra("fireStoreDocId", currentData.fireStoreDocId)
-                itemView.context.startActivity(intent)
+                fragmentManger.beginTransaction().apply {
+                    add(frameLayoutId, EditSeedFragment(currentData.fireStoreDocId))
+                    addToBackStack("EditSeedFragment")
+                    commit()
+                }
             }
             ivSeedDeleteIcon.setOnClickListener {
                 val indexPos: Int = uidMapOfDataModel[tvDocId.text.toString()]!!

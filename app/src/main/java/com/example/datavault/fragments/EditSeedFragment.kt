@@ -1,11 +1,14 @@
-package com.example.datavault
+package com.example.datavault.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.example.datavault.databinding.ActivityEditSeedBinding
+import androidx.fragment.app.Fragment
+import com.example.datavault.databinding.FragmentEditSeedBinding
 import com.example.datavault.schema.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -16,11 +19,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 
-class EditDataActivity : AppCompatActivity() {
+class EditSeedFragment(private val fireStoreDocId: String) : Fragment() {
 
-    private lateinit var binding: ActivityEditSeedBinding
+    private lateinit var binding: FragmentEditSeedBinding
     private lateinit var documentRef: DocumentReference
-    private lateinit var fireStoreDocId: String
     private lateinit var userId: String
 
     private lateinit var ilAppName: TextInputLayout
@@ -39,41 +41,33 @@ class EditDataActivity : AppCompatActivity() {
     private lateinit var updatedAt: Timestamp
     private lateinit var docId: String
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityEditSeedBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentEditSeedBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
-        fireStoreDocId = intent.getStringExtra("fireStoreDocId").toString()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
         documentRef = Firebase.firestore.collection("generatedUserData")
-            .document(FirebaseAuth.getInstance().currentUser!!.uid)
+            .document(userId)
             .collection("data")
             .document(fireStoreDocId)
+        super.onViewCreated(view, savedInstanceState)
+    }
 
+    override fun onStart() {
         // Set the reference of edit text and input layouts from the view.
         referenceEditTextsAndInputLayouts()
         // Set the end icon click listeners.
         inputEndIconListener()
         // This set the default value of the document to input edit text.
         setDefaultValues()
-
-        binding.editToolBar.setOnClickListener { finish() }
-        binding.editBackButton.setOnClickListener { finish() }
-
-        binding.editSaveChangesButton.setOnClickListener {
-            if (checkForBlankOrNull() == 0) {
-                updateData()
-                closeActiveKeyboard()
-            }
-        }
-    }
-
-    private fun inputEndIconListener() {
-        ilAppName.setEndIconOnClickListener { etAppName.text?.clear() }
-        ilUserName.setEndIconOnClickListener { etUserName.text?.clear() }
-        ilEmail.setEndIconOnClickListener { etEmail.text?.clear() }
-        ilPhoneNumber.setEndIconOnClickListener { etPhoneNumber.text?.clear() }
+        // Sets the click listener for the button
+        setButtonListeners()
+        super.onStart()
     }
 
     private fun referenceEditTextsAndInputLayouts() {
@@ -90,6 +84,13 @@ class EditDataActivity : AppCompatActivity() {
         etPassword = binding.editEtPassword
     }
 
+    private fun inputEndIconListener() {
+        ilAppName.setEndIconOnClickListener { etAppName.text?.clear() }
+        ilUserName.setEndIconOnClickListener { etUserName.text?.clear() }
+        ilEmail.setEndIconOnClickListener { etEmail.text?.clear() }
+        ilPhoneNumber.setEndIconOnClickListener { etPhoneNumber.text?.clear() }
+    }
+
     private fun setDefaultValues() {
         documentRef.get().addOnSuccessListener {
             etAppName.setText(it.data?.get("appName").toString())
@@ -100,6 +101,22 @@ class EditDataActivity : AppCompatActivity() {
             docId = it.data?.get("docId").toString()
             createdAt = it.data?.get("createdAt") as Timestamp
             updatedAt = Timestamp(Date())
+        }
+    }
+
+    private fun setButtonListeners() {
+        binding.editToolBar.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+        binding.editBackButton.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+
+        binding.editSaveChangesButton.setOnClickListener {
+            if (checkForBlankOrNull() == 0) {
+                updateData()
+                closeActiveKeyboard()
+            }
         }
     }
 
@@ -138,22 +155,26 @@ class EditDataActivity : AppCompatActivity() {
             .set(dataModel)
             .addOnSuccessListener {
                 Toast.makeText(
-                    applicationContext,
-                    "Successfully saved changes",
+                    requireActivity(), "Successfully saved changes",
                     Toast.LENGTH_SHORT
                 ).show()
             }
             .addOnFailureListener {
                 Toast.makeText(
-                    applicationContext,
-                    "Failed to save changes",
+                    requireActivity(), "Failed to save changes",
                     Toast.LENGTH_SHORT
                 ).show()
             }
     }
 
     private fun closeActiveKeyboard() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        val imm = requireActivity().getSystemService(
+            Context.INPUT_METHOD_SERVICE
+        ) as InputMethodManager
+
+        imm.hideSoftInputFromWindow(
+            requireActivity().currentFocus?.windowToken, 0
+        )
     }
+
 }

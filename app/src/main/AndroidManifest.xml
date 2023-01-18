@@ -12,8 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DataVault"
         tools:targetApi="31">
+
         <activity
-            android:name=".MainActivity"
+            android:name=".AuthActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,10 +27,11 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".ContentActivity" />
-        <activity android:name=".CreateDataActivity" />
-        <activity android:name=".EditDataActivity" />
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize"/>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

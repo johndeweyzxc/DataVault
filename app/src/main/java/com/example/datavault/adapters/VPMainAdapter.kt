@@ -3,11 +3,9 @@ package com.example.datavault.adapters
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.datavault.fragments.FavoritesFragment
-import com.example.datavault.fragments.HomeFragment
-import com.example.datavault.fragments.SearchFragment
+import com.example.datavault.fragments.*
 
-class ViewPagerAdapter(
+class VPMainAdapter(
     fragmentManager: FragmentManager,
     lifeCycle: androidx.lifecycle.Lifecycle,
     private val seedAdapter: SeedAdapter
@@ -16,17 +14,17 @@ class ViewPagerAdapter(
 ) {
 
     override fun getItemCount(): Int {
-        return 3
+        return 5
     }
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> { HomeFragment(seedAdapter) }
             1 -> { FavoritesFragment() }
-            2 -> { SearchFragment() }
-            else -> {
-                HomeFragment(seedAdapter)
-            }
+            2 -> { CreateFragment() }
+            3 -> { SearchFragment() }
+            4 -> { RecentFragment() }
+            else -> throw IllegalStateException("Invalid position")
         }
     }
 }
