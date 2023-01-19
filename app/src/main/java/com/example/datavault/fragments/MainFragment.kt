@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
@@ -48,7 +47,7 @@ class MainFragment(private val seedAdapter: SeedAdapter) : Fragment() {
         val bottomNav: BottomNavigationView = view.findViewById(R.id.bottomNavigation)
 
         setFirebase()
-        setNavigationDrawer(navView, toolBar, drawer, bottomNav)
+        setNavigationDrawer(navView, toolBar, drawer)
         setViewPager(bottomNav, viewPager)
     }
 
@@ -63,7 +62,7 @@ class MainFragment(private val seedAdapter: SeedAdapter) : Fragment() {
     }
 
     private fun setViewPager(bottomNav: BottomNavigationView, viewPager: ViewPager2) {
-        viewPager.adapter = VPMainAdapter(parentFragmentManager, lifecycle, seedAdapter)
+        viewPager.adapter = VPMainAdapter(childFragmentManager, lifecycle, seedAdapter)
 
         viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -94,9 +93,7 @@ class MainFragment(private val seedAdapter: SeedAdapter) : Fragment() {
         currentUser = firebase.currentUser!!
     }
 
-    private fun setNavigationDrawer(
-        navView: NavigationView, toolbar: MaterialToolbar,
-        drawer: DrawerLayout, bottomNav: BottomNavigationView) {
+    private fun setNavigationDrawer(navView: NavigationView, toolbar: MaterialToolbar, drawer: DrawerLayout) {
         val gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -110,42 +107,6 @@ class MainFragment(private val seedAdapter: SeedAdapter) : Fragment() {
         toolbar.setNavigationOnClickListener {
             drawer.open()
         }
-        val viewPager = view?.findViewById<ViewPager2>(R.id.viewPager)
-
-        val dpValue = 55
-        val scale = context?.resources?.displayMetrics?.density
-        val pixels = (dpValue * scale!! + 0.5f).toInt()
-
-        drawer.addDrawerListener(object: DrawerLayout.DrawerListener {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                bottomNav.visibility = View.GONE
-                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    viewPager?.setPadding(0, 0, 0, 0)
-                }
-            }
-            override fun onDrawerOpened(drawerView: View) {
-                bottomNav.visibility = View.GONE
-                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    viewPager?.setPadding(0, 0, 0, 0)
-                }
-            }
-
-            override fun onDrawerClosed(drawerView: View) {
-                viewPager?.setPadding(0, 0, 0, pixels)
-                bottomNav.visibility = View.VISIBLE
-            }
-            override fun onDrawerStateChanged(newState: Int) {
-                if (drawer.isDrawerVisible(GravityCompat.START)) {
-                    bottomNav.visibility = View.GONE
-                    if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        viewPager?.setPadding(0, 0, 0, 0)
-                    }
-                } else {
-                    viewPager?.setPadding(0, 0, 0, pixels)
-                    bottomNav.visibility = View.VISIBLE
-                }
-            }
-        })
 
         navView.setNavigationItemSelectedListener { menuItem ->
             // Handle menu item selected

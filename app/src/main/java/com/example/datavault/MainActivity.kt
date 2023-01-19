@@ -29,23 +29,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var seedAdapter: SeedAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         seedAdapter = SeedAdapter(viewModel.listDataModel, viewModel.mapDataModel, supportFragmentManager,
             R.id.frameLayoutActivityMain)
         setContentView(R.layout.activity_main)
 
+        supportFragmentManager.fragmentFactory = HomeFragmentFactory(seedAdapter)
+
+        super.onCreate(savedInstanceState)
+
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         setFirebaseAuth()
         setFirebaseAuthListeners()
-    }
-
-    override fun onStart() {
         subscribeToRealtimeUpdates(viewModel)
         setFirstFragment()
-        super.onStart()
     }
 
     private val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
