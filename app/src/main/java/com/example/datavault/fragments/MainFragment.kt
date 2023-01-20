@@ -48,7 +48,7 @@ class MainFragment(private val seedAdapter: SeedAdapter) : Fragment() {
 
         setFirebase()
         setNavigationDrawer(navView, toolBar, drawer)
-        setViewPager(bottomNav, viewPager)
+        setViewPager(bottomNav, viewPager, toolBar)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -61,17 +61,24 @@ class MainFragment(private val seedAdapter: SeedAdapter) : Fragment() {
         super.onPause()
     }
 
-    private fun setViewPager(bottomNav: BottomNavigationView, viewPager: ViewPager2) {
+    private fun setViewPager(bottomNav: BottomNavigationView, viewPager: ViewPager2, toolBar: MaterialToolbar) {
         viewPager.adapter = VPMainAdapter(childFragmentManager, lifecycle, seedAdapter)
 
         viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 when (position) {
-                    0 -> bottomNav.selectedItemId = R.id.bottomNavMenuHome
-                    1 -> bottomNav.selectedItemId = R.id.bottomNavFavorites
-                    2 -> bottomNav.selectedItemId = R.id.bottomNavCreateData
-                    3 -> bottomNav.selectedItemId = R.id.bottomNavSearch
-                    4 -> bottomNav.selectedItemId = R.id.bottomNavRecent
+                    0 -> {
+                        toolBar.title = "Home"
+                        bottomNav.selectedItemId = R.id.bottomNavMenuHome
+                    }
+                    1 -> {
+                        toolBar.title = "Create new data"
+                        bottomNav.selectedItemId = R.id.bottomNavCreateData
+                    }
+                    2 -> {
+                        toolBar.title = "Favorites"
+                        bottomNav.selectedItemId = R.id.bottomNavFavorites
+                    }
                 }
             }
         })
@@ -79,10 +86,8 @@ class MainFragment(private val seedAdapter: SeedAdapter) : Fragment() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.bottomNavMenuHome -> { viewPager.setCurrentItem(0, true);true }
-                R.id.bottomNavFavorites -> { viewPager.setCurrentItem(1, true); true }
-                R.id.bottomNavCreateData -> { viewPager.setCurrentItem(2, true); true }
-                R.id.bottomNavSearch -> { viewPager.setCurrentItem(3, true); true }
-                R.id.bottomNavRecent -> { viewPager.setCurrentItem(4, true); true }
+                R.id.bottomNavCreateData -> { viewPager.setCurrentItem(1, true); true }
+                R.id.bottomNavFavorites -> { viewPager.setCurrentItem(2, true); true }
                 else -> false
             }
         }
@@ -116,7 +121,7 @@ class MainFragment(private val seedAdapter: SeedAdapter) : Fragment() {
                     drawer.close()
                     true
                 }
-                R.id.menuSeed -> {
+                R.id.menuHome -> {
                     // Add click listener
                     true
                 }

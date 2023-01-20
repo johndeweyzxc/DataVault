@@ -19,22 +19,23 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
-            style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:fitsSystemWindows="true"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/mainToolBar"
-                style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:navigationIcon="@drawable/ic_main_navigation_menu"
-                app:title="DataVault" />
+                app:title="DataVault"
+                app:menu="@menu/top_app_bar_menu"
+                style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -71,7 +72,7 @@
             app:headerLayout="@layout/navigation_header"
             app:itemIconTint="@color/grey_800"
             app:itemTextColor="@color/grey_800"
-            app:menu="@menu/top_navigation_menu" />
+            app:menu="@menu/drawer_menu" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

@@ -7,19 +7,26 @@
         <item android:title="@string/nav_menu_application" >
                 <menu>
                         <item
-                            android:id="@+id/menuAbout"
-                            android:title="@string/nav_menu_about"
-                            android:icon="@drawable/ic_menu_about"/>
-
+                            android:id="@+id/menuAccount"
+                            android:title="Account"
+                            android:icon="@drawable/ic_menu_account" />
                         <item
-                            android:id="@+id/menuSeed"
-                            android:title="@string/nav_menu_seed_manager"
-                            android:icon="@drawable/ic_menu_data"/>
+                            android:id="@+id/menuHome"
+                            android:title="Home"
+                            android:icon="@drawable/ic_menu_home" />
+                        <item
+                            android:id="@+id/menuTrash"
+                            android:title="Trash"
+                            android:icon="@drawable/ic_menu_trash" />
                 </menu>
         </item>
 
         <item android:title="@string/nav_menu_privacy_terms">
                 <menu>
+                        <item
+                            android:id="@+id/menuAbout"
+                            android:title="@string/nav_menu_about"
+                            android:icon="@drawable/ic_menu_about" />
                         <item
                             android:id="@+id/menuPrivacyPolicy"
                             android:title="@string/nav_menu_privacy"
