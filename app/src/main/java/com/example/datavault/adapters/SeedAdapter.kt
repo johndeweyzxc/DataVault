@@ -1,5 +1,7 @@
 package com.example.datavault.adapters
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.datavault.R
 import com.example.datavault.fragments.EditSeedFragment
 import com.example.datavault.schema.SeedSchema
-import com.google.android.material.card.MaterialCardView
+import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -21,20 +23,20 @@ class SeedAdapter(
     private var listOfDataModel: MutableList<SeedSchema>,
     private var uidMapOfDataModel: HashMap<String, Int>,
     private val fragmentManger: FragmentManager,
-    private val frameLayoutId: Int
+    private val frameLayoutId: Int,
+    private val clipBoard: ClipboardManager,
 ) : RecyclerView.Adapter<SeedAdapter.SeedViewHolder>() {
 
-    private val maxCardElevation: Float = 8.0F
-
     class SeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val cardViewSeed: MaterialCardView = itemView.findViewById(R.id.cardViewSeed)
         val tvSeedAppName: TextView = itemView.findViewById(R.id.tvSeedAppName)
-        val tvSeedUserName: TextView = itemView.findViewById(R.id.tvSeedUserName)
-        val tvSeedEmail: TextView = itemView.findViewById(R.id.tvSeedEmail)
         val tvDocId: TextView = itemView.findViewById(R.id.tvDocId)
         val ivSeedEditIcon: ImageView = itemView.findViewById(R.id.ivSeedEditIcon)
         val ivSeedDeleteIcon: ImageView = itemView.findViewById(R.id.ivSeedDeleteIcon)
         val ivSeedFavoriteIcon: ImageView = itemView.findViewById(R.id.ivSeedFavoriteIcon)
+        val seedChipUsernameInfo: Chip = itemView.findViewById(R.id.seedChipUsernameInfo)
+        val seedChipEmailInfo: Chip = itemView.findViewById(R.id.seedChipEmailInfo)
+        val seedChipPhoneNumberInfo: Chip = itemView.findViewById(R.id.seedChipPhoneNumberInfo)
+        val seedChipPasswordInfo: Chip = itemView.findViewById(R.id.seedChipPasswordInfo)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeedViewHolder {
@@ -55,15 +57,28 @@ class SeedAdapter(
     private fun updateContentOfView(holder: SeedViewHolder, currentData: SeedSchema) {
 
         holder.apply {
-            cardViewSeed.cardElevation = maxCardElevation
+            val itemV = holder.itemView
+
+            seedChipUsernameInfo.text = currentData.userName
+            copyFromChip(itemV, "Copied username", seedChipUsernameInfo.text.toString(),
+                seedChipUsernameInfo)
+
+            seedChipEmailInfo.text = currentData.email
+            copyFromChip(itemV, "Copied email", seedChipEmailInfo.text.toString(), seedChipEmailInfo)
+
+            seedChipPhoneNumberInfo.text = currentData.phoneNumber
+            copyFromChip(itemV, "Copied phone number", seedChipPhoneNumberInfo.text.toString(),
+                seedChipPhoneNumberInfo)
+
+            seedChipPasswordInfo.text = currentData.password
+            copyFromChip(itemV, "Copied phone number", seedChipPasswordInfo.text.toString(),
+                seedChipPasswordInfo)
+
             tvSeedAppName.text = currentData.appName
-            tvSeedUserName.text = currentData.userName
-            tvSeedEmail.text = currentData.email
             tvDocId.text = currentData.docId
+
             ivSeedFavoriteIcon.setOnClickListener {
-                Toast.makeText(
-                    holder.itemView.context, "Added to favorites",
-                    Toast.LENGTH_SHORT
+                Toast.makeText(holder.itemView.context, "Added to favorites", Toast.LENGTH_SHORT
                 ).show()
             }
             ivSeedEditIcon.setOnClickListener {
@@ -96,6 +111,14 @@ class SeedAdapter(
         }
     }
 
+    private fun copyFromChip(itemView: View, label: String, text: String, chip: Chip) {
+        chip.setOnClickListener {
+            val clip = ClipData.newPlainText(label, text)
+            clipBoard.setPrimaryClip(clip)
+            Toast.makeText(itemView.context, label, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun fireStoreDeleteData(itemView: View, userId: String, firestoreDocId: String) {
         Firebase.firestore.collection("generatedUserData")
             .document(userId)
@@ -103,15 +126,11 @@ class SeedAdapter(
             .document(firestoreDocId)
             .delete()
             .addOnSuccessListener {
-                Toast.makeText(
-                    itemView.context, "Successfully deleted the data",
-                    Toast.LENGTH_SHORT
+                Toast.makeText(itemView.context, "Successfully deleted the data", Toast.LENGTH_SHORT
                 ).show()
             }
             .addOnFailureListener {
-                Toast.makeText(
-                    itemView.context, "Failed to delete data",
-                    Toast.LENGTH_SHORT
+                Toast.makeText(itemView.context, "Failed to delete data", Toast.LENGTH_SHORT
                 ).show()
             }
     }

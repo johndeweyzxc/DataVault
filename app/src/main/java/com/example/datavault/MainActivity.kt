@@ -1,11 +1,15 @@
 package com.example.datavault
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import com.example.datavault.adapters.SeedAdapter
 import com.example.datavault.fragments.MainFragment
@@ -30,8 +34,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        seedAdapter = SeedAdapter(viewModel.listDataModel, viewModel.mapDataModel, supportFragmentManager,
-            R.id.frameLayoutActivityMain)
+        val clipBoardManager: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        seedAdapter = SeedAdapter(
+            viewModel.listDataModel, viewModel.mapDataModel,
+            supportFragmentManager, R.id.frameLayoutActivityMain,
+            clipBoardManager
+        )
+
         setContentView(R.layout.activity_main)
 
         supportFragmentManager.fragmentFactory = HomeFragmentFactory(seedAdapter)

@@ -16,31 +16,42 @@
         android:clipToPadding="false"
         android:clickable="true"
         android:focusable="true"
+        app:cardElevation="4dp"
+        app:cardMaxElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:cardBackgroundColor="@color/white"
         app:cardPreventCornerOverlap="false"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium">
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Large">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <TextView
+            android:id="@+id/tvDocId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="15dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
 
                 <HorizontalScrollView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:scrollbars="none">
@@ -86,7 +97,7 @@
                         android:src="@drawable/ic_seed_delete" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
@@ -94,108 +105,130 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/roboto_medium"
-                android:text="@string/seed_field_header_username"
-                android:textColor="@color/grey_800"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tvSeedUserName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_medium"
-                android:text="@string/seed_container_text_view_username"
-                android:textColor="@color/grey_600"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/roboto_medium"
-                android:text="@string/seed_field_header_email"
-                android:textColor="@color/grey_800"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tvSeedEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="@font/roboto_medium"
-                android:text="@string/seed_container_text_view_email"
-                android:textColor="@color/grey_600"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tvDocId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
-
-            <com.google.android.material.divider.MaterialDivider
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp" />
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none">
-
-                <com.google.android.material.chip.ChipGroup
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:singleLine="true">
+                    android:layout_marginEnd="10dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/light_blue_600"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/seed_field_header_username" />
+
+                <HorizontalScrollView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:scrollbars="none">
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chipSeedUsername"
+                        android:id="@+id/seedChipUsernameInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/seed_copy_username"
+                        android:text="@string/seed_container_text_view_username"
+                        android:textSize="14sp"
                         android:fontFamily="@font/roboto_medium"
                         app:chipIcon="@drawable/ic_seed_content_copy"
                         app:chipIconSize="15dp"
                         app:iconStartPadding="5dp" />
+                </HorizontalScrollView>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/red_400"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/seed_field_header_email"
+                    android:layout_gravity="center"/>
+
+                <HorizontalScrollView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:scrollbars="none">
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chipSeedPassword"
+                        android:id="@+id/seedChipEmailInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:text="@string/seed_copy_password"
-                        app:chipIcon="@drawable/ic_seed_content_copy"
+                        android:text="@string/seed_container_text_view_email"
+                        android:textSize="14sp"
                         android:fontFamily="@font/roboto_medium"
+                        app:chipIcon="@drawable/ic_seed_content_copy"
                         app:chipIconSize="15dp"
                         app:iconStartPadding="5dp" />
+                </HorizontalScrollView>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    android:textSize="18sp"
+                    android:textColor="@color/deep_purple_500"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/seed_container_chip_name_phone" />
+
+                <HorizontalScrollView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:scrollbars="none">
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chipSeedEmail"
+                        android:id="@+id/seedChipPhoneNumberInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/seed_copy_email"
-                        app:chipIcon="@drawable/ic_seed_content_copy"
+                        android:text="@string/seed_container_chip_info_phone"
+                        android:textSize="14sp"
                         android:fontFamily="@font/roboto_medium"
+                        app:chipIcon="@drawable/ic_seed_content_copy"
                         app:chipIconSize="15dp"
                         app:iconStartPadding="5dp" />
+                </HorizontalScrollView>
+            </LinearLayout>
 
-                </com.google.android.material.chip.ChipGroup>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/red_400"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/seed_container_chip_name_password" />
 
-            </HorizontalScrollView>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/seed_tap_chips_to_copy"
-                android:textSize="12sp"
-                android:textStyle="italic" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
+                <HorizontalScrollView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:scrollbars="none">
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/seedChipPasswordInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/seed_container_chip_info_password"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/roboto_medium"
+                        app:chipIcon="@drawable/ic_seed_content_copy"
+                        app:chipIconSize="15dp"
+                        app:iconStartPadding="5dp" />
+                </HorizontalScrollView>
+            </LinearLayout>
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,16 +14,14 @@ class VPMainAdapter(
 ) {
 
     override fun getItemCount(): Int {
-        return 5
+        return 3
     }
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> { HomeFragment(seedAdapter) }
-            1 -> { FavoritesFragment() }
-            2 -> { CreateFragment() }
-            3 -> { SearchFragment() }
-            4 -> { RecentFragment() }
+            1 -> { CreateFragment() }
+            2 -> { FavoritesFragment() }
             else -> throw IllegalStateException("Invalid position")
         }
     }
