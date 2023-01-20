@@ -1,4 +1,4 @@
-package com.example.datavault.fragments
+package com.example.datavault.views
 
 import android.content.Context
 import android.os.Bundle
@@ -38,10 +38,7 @@ class CreateFragment : Fragment() {
 
     private lateinit var saveDataButton: Button
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCreateBinding.inflate(layoutInflater)
         return binding.root
     }

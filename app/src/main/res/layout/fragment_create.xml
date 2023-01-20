@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.CreateFragment">
+    tools:context=".views.CreateFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,11 +20,10 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="32dp">
+            android:padding="16dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/createIlAppname"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -48,7 +47,6 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/createIlUsername"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -72,7 +70,6 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/createIlEmail"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -96,7 +93,6 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/createIlPhonenumber"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -120,7 +116,6 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/createIlPassword"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
@@ -143,22 +138,16 @@
 
             <Button
                 android:id="@+id/createSaveDataButton"
-                style="@style/Widget.MaterialComponents.Button.Icon"
-                android:layout_width="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:backgroundTint="@color/light_blue_600"
                 android:fontFamily="@font/roboto_mono_medium"
                 android:padding="12dp"
                 android:text="@string/create_data_button_text_save_data"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:icon="@drawable/ic_create_save_data"
-                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
-                app:strokeColor="@color/light_blue_600"
-                app:strokeWidth="2dp" />
+                android:textColor="@color/orange_500"
+                android:textSize="16sp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>

@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SignUpFragment">
+    tools:context=".views.SignUpFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.SignUpFragment"
+        tools:context=".views.SignUpFragment"
         android:background="@color/white">
 
         <com.google.android.material.appbar.AppBarLayout

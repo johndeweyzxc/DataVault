@@ -1,12 +1,42 @@
 package com.example.datavault.models
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.datavault.schema.SeedSchema
+import com.google.firebase.auth.FirebaseUser
 
-class HomeViewModel: ViewModel() {
+class MainViewModel: ViewModel() {
 
-    var listDataModel = mutableListOf<SeedSchema>()
-    var mapDataModel = HashMap<String, Int>()
+    private var listDataModel = mutableListOf<SeedSchema>()
+    private var mapDataModel = HashMap<String, Int>()
+
+    fun getListData(): MutableList<SeedSchema> {
+        return listDataModel
+    }
+
+    fun getMapData(): HashMap<String, Int> {
+        return mapDataModel
+    }
+
+    fun getUserEmail(currentUser: FirebaseUser): String {
+        return currentUser.email!!
+    }
+
+    fun getUserName(currentUser: FirebaseUser): String {
+        if (currentUser.displayName.isNullOrBlank()) {
+            val createName = currentUser.email.toString().split("@")
+            return createName.first()
+        }
+        return currentUser.displayName!!
+    }
+
+    fun getUserphotoUrl(currentUser: FirebaseUser): String {
+        val defaultUrl = "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Android_symbol_green_2.max-1500x1500.png"
+        if (currentUser.photoUrl == null) {
+            return defaultUrl
+        }
+        return currentUser.photoUrl.toString()
+    }
 
     fun addData(dataItem: SeedSchema, docId: String): Int {
         // Cannot add duplicate documents
@@ -55,7 +85,16 @@ class HomeViewModel: ViewModel() {
         return dataIndex as Int
     }
 
-    private fun itemCount(): Int {
+    fun getData(docId: String): SeedSchema? {
+        // Document does not exists
+        if (!mapDataModel.containsKey(docId)) {
+            Log.i("DEV.LOG.INFO", "Document does not exists")
+            return null
+        }
+        return listDataModel[mapDataModel[docId] as Int]
+    }
+
+    fun itemCount(): Int {
         return listDataModel.size
     }
 }

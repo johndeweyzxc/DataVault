@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".fragments.EditSeedFragment">
+    tools:context=".views.EditSeedDialog">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/editAppBar"
@@ -21,8 +21,9 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_register_back"
+            app:navigationIcon="@drawable/ic_edit_seed_dialog_close"
             app:navigationIconTint="@color/grey_200"
+            app:menu="@menu/top_app_bar_edit_menu"
             app:title="Edit data" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -41,7 +42,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="32dp">
+            android:padding="16dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editIlAppname"
@@ -54,9 +55,7 @@
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
                 android:layout_marginBottom="10dp"
-                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editEtAppname"
                     android:layout_width="match_parent"
@@ -78,8 +77,7 @@
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
                 android:layout_marginBottom="10dp"
-                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editEtUsername"
@@ -102,8 +100,7 @@
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
                 android:layout_marginBottom="10dp"
-                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editEtEmail"
@@ -126,8 +123,7 @@
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
                 android:layout_marginBottom="10dp"
-                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editEtPhonenumber"
@@ -149,8 +145,7 @@
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
                 android:layout_marginBottom="15dp"
-                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editEtPassword"
@@ -176,14 +171,9 @@
                     android:text="@string/create_data_button_back"
                     android:textAllCaps="false"
                     android:padding="12dp"
-                    android:textColor="@color/red_400"
-                    android:fontFamily="@font/roboto_mono_medium"
+                    android:fontFamily="@font/roboto_medium"
                     android:textSize="16sp"
-                    app:strokeWidth="2dp"
-                    app:strokeColor="@color/red_400"
-                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    />
+                    style="@style/Widget.MaterialComponents.Button.TextButton" />
 
                 <Button
                     android:id="@+id/editSaveChangesButton"
@@ -193,16 +183,9 @@
                     android:text="@string/edit_button_save_changes"
                     android:textAllCaps="false"
                     android:padding="12dp"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/roboto_mono_medium"
+                    android:fontFamily="@font/roboto_medium"
                     android:textSize="16sp"
-                    android:backgroundTint="@color/light_blue_600"
-                    app:strokeWidth="2dp"
-                    app:strokeColor="@color/light_blue_600"
-                    app:icon="@drawable/ic_create_save_data"
-                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
-                    style="@style/Widget.MaterialComponents.Button.Icon"
-                    />
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

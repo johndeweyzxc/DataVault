@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/editSeedSave"
+        android:icon="@drawable/ic_edit_seed_dialog_save"
+        android:title="Save"
+        android:contentDescription="Save the changes"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/editSeedDelete"
+        android:icon="@drawable/ic_edit_seed_dialog_delete"
+        android:title="Delete"
+        android:contentDescription="Delete this document"
+        app:showAsAction="ifRoom" />
+</menu>

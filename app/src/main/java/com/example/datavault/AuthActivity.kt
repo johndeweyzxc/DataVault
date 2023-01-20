@@ -1,27 +1,27 @@
 package com.example.datavault
 
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.datavault.auth.FirebaseAuthWithGoogle
-import com.example.datavault.fragments.LoginFragment
+import androidx.appcompat.app.AppCompatActivity
+import com.example.datavault.views.LoginFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 
 class AuthActivity : AppCompatActivity() {
-
-    private lateinit var firebaseAuth: FirebaseAuth
-    private var currentUser: FirebaseUser? = null
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
@@ -33,14 +33,25 @@ class AuthActivity : AppCompatActivity() {
         // This is the listener whenever the user presses back button
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
-        // Set the firebase and the current user if there is a logged in user.
-        setFirebaseAuth()
         // Set the authentication listener to check if a user just logged in.
-        setAuthListener()
+        FirebaseAuth.getInstance().addAuthStateListener { auth ->
+            val user = auth.currentUser
+            if (user != null) {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+        }
+
         // Configure google sign in so user can sign in with their google accounts.
         configureGoogleSignIn()
+
         // Set the first fragment to be shown.
-        loginPageFragment()
+        supportFragmentManager.beginTransaction().apply {
+            // Replace the frame layout with login page fragment in the auth activity.
+            replace(R.id.frameLayoutActivityAuth, LoginFragment(googleSignInClient, activityResultLauncher))
+            commit()
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -59,29 +70,6 @@ class AuthActivity : AppCompatActivity() {
                 moveTaskToBack(true)
             } else {
                 supportFragmentManager.popBackStack()
-            }
-        }
-    }
-
-    private fun loginPageFragment() {
-        supportFragmentManager.beginTransaction().apply {
-            // Replace the frame layout with login page fragment in the auth activity.
-            replace(R.id.frameLayoutActivityAuth, LoginFragment(googleSignInClient, activityResultLauncher))
-            commit()
-        }
-    }
-
-    private fun setFirebaseAuth() {
-        firebaseAuth = FirebaseAuth.getInstance()
-        currentUser = firebaseAuth.currentUser
-    }
-
-    private fun setAuthListener() {
-        firebaseAuth.addAuthStateListener { auth ->
-            if (auth.currentUser != null) {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
             }
         }
     }
@@ -105,7 +93,7 @@ class AuthActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(ActivityResult.data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
-                FirebaseAuthWithGoogle(account.idToken!!, this).signIn()
+                authWithGoogle(account.idToken!!, this)
             } catch (e: ApiException) {
                 Toast.makeText(
                     this,
@@ -114,5 +102,86 @@ class AuthActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    private fun authWithGoogle(idToken: String, mainContext: Context) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(
+                    mainContext, "Successfully signed in with google", Toast.LENGTH_LONG
+                ).show()
+            } else {
+                Toast.makeText(mainContext, "Failed signing in with google", Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    fun signInWithEmail(email: TextInputEditText, emailParent: TextInputLayout?,
+                        password: TextInputEditText, passwordParent: TextInputLayout?) {
+        val emailText = email.text.toString()
+        val passwordText = password.text.toString()
+
+        if (passwordParent != null || emailParent != null) {
+            emailParent?.helperText = null
+            passwordParent?.helperText = null
+
+            when {
+                emailText.isEmpty() -> {
+                    emailParent?.helperText = "*Email cannot be empty"; return
+                }
+                passwordText.isEmpty() -> {
+                    passwordParent?.helperText = "*Password cannot be empty"; return
+                }
+            }
+
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(emailText, passwordText)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        email.text?.clear(); password.text?.clear()
+                    } else {
+                        Log.d(ContentValues.TAG, "[LOG] signIn(): ${task.exception}")
+                    }
+                }
+        }
+    }
+
+    fun signUpWithEmail(
+        email: TextInputEditText, emailParent: TextInputLayout,
+        password: TextInputEditText, passwordParent: TextInputLayout,
+        confirmPassword: TextInputEditText, confirmParent: TextInputLayout
+    ) {
+        emailParent.helperText = null
+        passwordParent.helperText = null
+        confirmParent.helperText = null
+
+        val emailText = email.text.toString()
+        val passwordText = password.text.toString()
+        val confirmText = confirmPassword.text.toString()
+
+        when {
+            emailText.isEmpty() -> {
+                emailParent.helperText = "*Email cannot be empty"; return
+            }
+            passwordText.isEmpty() -> {
+                passwordParent.helperText = "*Password cannot be empty"; return
+            }
+            confirmText.isEmpty() -> {
+                confirmParent.helperText = "*Email cannot be empty"; return
+            }
+            passwordText != confirmText -> {
+                confirmParent.helperText = "*Password did not match"; return
+            }
+        }
+
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(emailText, passwordText)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    email.text?.clear(); password.text?.clear(); confirmPassword.text?.clear()
+                } else {
+                    Log.d(ContentValues.TAG, "[LOG] signUp(): ${task.exception}")
+                }
+            }
     }
 }

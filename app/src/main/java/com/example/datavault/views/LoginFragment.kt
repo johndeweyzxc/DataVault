@@ -1,4 +1,4 @@
-package com.example.datavault.fragments
+package com.example.datavault.views
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,46 +9,35 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
+import com.example.datavault.AuthActivity
 import com.example.datavault.R
-import com.example.datavault.auth.SignInWIthEmail
 import com.example.datavault.databinding.FragmentLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 
-class LoginFragment(
-    private val googleSignInClient: GoogleSignInClient,
-    private val activityResultLauncher: ActivityResultLauncher<Intent>
+class LoginFragment(private val googleSignInClient: GoogleSignInClient,
+                    private val activityResultLauncher: ActivityResultLauncher<Intent>
 ) : Fragment() {
 
-    private var binding: FragmentLoginBinding? = null
+    private lateinit var binding: FragmentLoginBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
-        return binding?.root
+        return binding.root
     }
 
-    override fun onStart() {
-        // Click listeners for buttons
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setClickListeners()
-        super.onStart()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        binding = null
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun setClickListeners() {
-        val loginButton: Button = binding!!.btnLogin
-        val loginWithGoogleButton: Button = binding!!.btnLoginWithGoogle
-        val loginSignUpTextView: TextView = binding!!.tvLoginSignUp
+        val loginButton: Button = binding.btnLogin
+        val loginWithGoogleButton: Button = binding.btnLoginWithGoogle
+        val loginSignUpTextView: TextView = binding.tvLoginSignUp
         loginButton.setOnClickListener {
-            SignInWIthEmail().signIn(
-                binding!!.etLoginEmail, binding!!.ilLoginEmail,
-                binding!!.etLoginPassword, binding!!.ilLoginPassword,
+            (activity as AuthActivity).signInWithEmail(
+                binding.etLoginEmail, binding.ilLoginEmail,
+                binding.etLoginPassword, binding.ilLoginPassword,
             )
         }
         loginWithGoogleButton.setOnClickListener {

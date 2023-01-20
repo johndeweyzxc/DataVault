@@ -9,10 +9,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.example.datavault.R
-import com.example.datavault.fragments.EditSeedFragment
 import com.example.datavault.schema.SeedSchema
+import com.example.datavault.views.EditSeedDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +24,6 @@ class SeedAdapter(
     private var listOfDataModel: MutableList<SeedSchema>,
     private var uidMapOfDataModel: HashMap<String, Int>,
     private val fragmentManger: FragmentManager,
-    private val frameLayoutId: Int,
     private val clipBoard: ClipboardManager,
 ) : RecyclerView.Adapter<SeedAdapter.SeedViewHolder>() {
 
@@ -83,8 +83,9 @@ class SeedAdapter(
             }
             ivSeedEditIcon.setOnClickListener {
                 fragmentManger.beginTransaction().apply {
-                    add(frameLayoutId, EditSeedFragment(currentData.fireStoreDocId))
-                    addToBackStack("EditSeedFragment")
+                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    add(R.id.frameLayoutActivityMain, EditSeedDialog(currentData.fireStoreDocId))
+                    addToBackStack("EditSeedDialog")
                     commit()
                 }
             }

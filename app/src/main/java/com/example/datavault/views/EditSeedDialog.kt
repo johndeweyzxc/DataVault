@@ -1,4 +1,4 @@
-package com.example.datavault.fragments
+package com.example.datavault.views
 
 import android.content.Context
 import android.os.Bundle
@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import com.example.datavault.databinding.FragmentEditSeedBinding
+import androidx.fragment.app.DialogFragment
+import com.example.datavault.databinding.EditSeedDialogBinding
 import com.example.datavault.schema.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -19,9 +19,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 
-class EditSeedFragment(private val fireStoreDocId: String) : Fragment() {
+class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
 
-    private lateinit var binding: FragmentEditSeedBinding
+    private lateinit var binding: EditSeedDialogBinding
     private lateinit var documentRef: DocumentReference
     private lateinit var userId: String
 
@@ -41,11 +41,9 @@ class EditSeedFragment(private val fireStoreDocId: String) : Fragment() {
     private lateinit var updatedAt: Timestamp
     private lateinit var docId: String
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentEditSeedBinding.inflate(layoutInflater)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = EditSeedDialogBinding.inflate(layoutInflater)
+        userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
         return binding.root
     }
 
@@ -54,7 +52,7 @@ class EditSeedFragment(private val fireStoreDocId: String) : Fragment() {
         documentRef = Firebase.firestore.collection("generatedUserData")
             .document(userId)
             .collection("data")
-            .document(fireStoreDocId)
+            .document(firestoreDocId)
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -106,16 +104,29 @@ class EditSeedFragment(private val fireStoreDocId: String) : Fragment() {
 
     private fun setButtonListeners() {
         binding.editToolBar.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            dismiss()
         }
         binding.editBackButton.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            dismiss()
         }
 
         binding.editSaveChangesButton.setOnClickListener {
             if (checkForBlankOrNull() == 0) {
                 updateData()
                 closeActiveKeyboard()
+            }
+        }
+
+        binding.editToolBar.setOnMenuItemClickListener { listener ->
+            when (listener.title) {
+                "Save" -> {
+                    if (checkForBlankOrNull() == 0) {
+                        closeActiveKeyboard()
+                        updateData()
+                    }
+                    true
+                }
+                else -> false
             }
         }
     }
@@ -151,18 +162,15 @@ class EditSeedFragment(private val fireStoreDocId: String) : Fragment() {
         Firebase.firestore.collection("generatedUserData")
             .document(userId)
             .collection("data")
-            .document(fireStoreDocId)
+            .document(firestoreDocId)
             .set(dataModel)
             .addOnSuccessListener {
-                Toast.makeText(
-                    requireActivity(), "Successfully saved changes",
-                    Toast.LENGTH_SHORT
+                dismiss()
+                Toast.makeText(requireActivity(), "Successfully saved changes", Toast.LENGTH_SHORT
                 ).show()
             }
             .addOnFailureListener {
-                Toast.makeText(
-                    requireActivity(), "Failed to save changes",
-                    Toast.LENGTH_SHORT
+                Toast.makeText(requireActivity(), "Failed to save changes", Toast.LENGTH_SHORT
                 ).show()
             }
     }
@@ -176,5 +184,4 @@ class EditSeedFragment(private val fireStoreDocId: String) : Fragment() {
             requireActivity().currentFocus?.windowToken, 0
         )
     }
-
 }
