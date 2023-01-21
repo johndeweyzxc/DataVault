@@ -24,7 +24,6 @@ class SignUpFragment : Fragment() {
 
     private fun setClickListeners() {
         binding.registerToolBar.setNavigationOnClickListener {
-            // Tell fragment manager to pop this fragment from the back stack.
             parentFragmentManager.popBackStack()
         }
 
@@ -57,7 +56,6 @@ class SignUpFragment : Fragment() {
         }
 
         binding.tvRegisterLoginInstead.setOnClickListener {
-            // Tell fragment manager to pop this fragment from the back stack.
             parentFragmentManager.popBackStack()
         }
     }

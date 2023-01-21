@@ -6,15 +6,15 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/datavault_icon_orange_500"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/datavault_icon_orange_500_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DataVault"
         tools:targetApi="31">
 
         <activity
-            android:name=".AuthActivity"
+            android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true">
             <intent-filter>
@@ -29,7 +29,7 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".AuthActivity"
             android:configChanges="orientation|screenSize"/>
 
         <meta-data

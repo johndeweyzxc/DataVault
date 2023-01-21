@@ -2,6 +2,7 @@ package com.example.datavault.adapters
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.example.datavault.R
-import com.example.datavault.schema.SeedSchema
+import com.example.datavault.models.SeedSchema
 import com.example.datavault.views.EditSeedDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -20,12 +21,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class SeedAdapter(
+// Adapter for recycler view in HomeFragment to render list of document.
+class RvHome(
     private var listOfDataModel: MutableList<SeedSchema>,
     private var uidMapOfDataModel: HashMap<String, Int>,
     private val fragmentManger: FragmentManager,
     private val clipBoard: ClipboardManager,
-) : RecyclerView.Adapter<SeedAdapter.SeedViewHolder>() {
+) : RecyclerView.Adapter<RvHome.SeedViewHolder>() {
 
     class SeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvSeedAppName: TextView = itemView.findViewById(R.id.tvSeedAppName)
@@ -40,8 +42,7 @@ class SeedAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeedViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.seed_container, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.seed_container, parent, false)
         return SeedViewHolder(itemView)
     }
 
@@ -59,6 +60,7 @@ class SeedAdapter(
         holder.apply {
             val itemV = holder.itemView
 
+            // When user touch on chips, it copies its content on the clipboard
             seedChipUsernameInfo.text = currentData.userName
             copyFromChip(itemV, "Copied username", seedChipUsernameInfo.text.toString(),
                 seedChipUsernameInfo)
@@ -77,38 +79,9 @@ class SeedAdapter(
             tvSeedAppName.text = currentData.appName
             tvDocId.text = currentData.docId
 
-            ivSeedFavoriteIcon.setOnClickListener {
-                Toast.makeText(holder.itemView.context, "Added to favorites", Toast.LENGTH_SHORT
-                ).show()
-            }
-            ivSeedEditIcon.setOnClickListener {
-                fragmentManger.beginTransaction().apply {
-                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    add(R.id.frameLayoutActivityMain, EditSeedDialog(currentData.fireStoreDocId))
-                    addToBackStack("EditSeedDialog")
-                    commit()
-                }
-            }
-            ivSeedDeleteIcon.setOnClickListener {
-                val indexPos: Int = uidMapOfDataModel[tvDocId.text.toString()]!!
-                val dataContent: SeedSchema = listOfDataModel[indexPos]
-                val currentUser = FirebaseAuth.getInstance().currentUser
-                val userId = currentUser?.uid
-
-                MaterialAlertDialogBuilder(itemView.context)
-                    .setTitle("Deleting ${dataContent.appName}")
-                    .setMessage("Do you really want to delete ${dataContent.appName}?")
-                    .setNeutralButton("CANCEL") { dialog, _ ->
-                        dialog.cancel()
-                        return@setNeutralButton
-                    }
-                    .setPositiveButton("DELETE") {_, _ ->
-                        if (userId != null) {
-                            fireStoreDeleteData(itemView, userId, dataContent.fireStoreDocId)
-                        }
-                        return@setPositiveButton
-                    }.show()
-            }
+            favoriteClickListener(ivSeedFavoriteIcon, itemView)
+            editClickListener(ivSeedEditIcon, currentData)
+            deleteClickListener(ivSeedDeleteIcon, itemView, tvDocId.text as String)
         }
     }
 
@@ -120,19 +93,63 @@ class SeedAdapter(
         }
     }
 
+    private fun favoriteClickListener(ivFavoriteIcon: ImageView, itemView: View) {
+        ivFavoriteIcon.setOnClickListener {
+            Toast.makeText(itemView.context, "Added to favorites", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun editClickListener(ivEditIcon: ImageView, currentData: SeedSchema) {
+        ivEditIcon.setOnClickListener {
+            fragmentManger.beginTransaction().apply {
+                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                add(R.id.frameLayoutActivityMain, EditSeedDialog(currentData.fireStoreDocId))
+                addToBackStack("EditSeedDialog")
+                commit()
+            }
+        }
+    }
+
+    private fun deleteClickListener(ivDeleteIcon: ImageView, itemView: View, tvDocId: String) {
+        ivDeleteIcon.setOnClickListener {
+            val indexPos: Int = uidMapOfDataModel[tvDocId]!!
+            val dataContent: SeedSchema = listOfDataModel[indexPos]
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            val userId = currentUser?.uid
+
+            MaterialAlertDialogBuilder(itemView.context)
+                .setTitle("Deleting ${dataContent.appName}")
+                .setMessage("Do you really want to delete ${dataContent.appName}?")
+                .setNeutralButton("CANCEL") { dialog, _ ->
+                    dialog.cancel()
+                    return@setNeutralButton
+                }
+                .setPositiveButton("DELETE") {_, _ ->
+                    if (userId != null) {
+                        fireStoreDeleteData(itemView, userId, dataContent.fireStoreDocId)
+                    }
+                    return@setPositiveButton
+                }.show()
+        }
+    }
+
     private fun fireStoreDeleteData(itemView: View, userId: String, firestoreDocId: String) {
-        Firebase.firestore.collection("generatedUserData")
-            .document(userId)
-            .collection("data")
-            .document(firestoreDocId)
-            .delete()
-            .addOnSuccessListener {
-                Toast.makeText(itemView.context, "Successfully deleted the data", Toast.LENGTH_SHORT
-                ).show()
+        val generatedUserData = Firebase.firestore.collection("generatedUserData")
+        val userIdRef = generatedUserData.document(userId)
+        val data = userIdRef.collection("data")
+        val targetDocument = data.document(firestoreDocId)
+
+        val delete = targetDocument.delete()
+
+        delete.addOnSuccessListener {
+            Toast.makeText(itemView.context, "Successfully deleted the data", Toast.LENGTH_SHORT).show()
+        }.addOnCanceledListener {
+            Toast.makeText(itemView.context, "Canceled deleting data", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.i("devlog", exception.message!!)
             }
-            .addOnFailureListener {
-                Toast.makeText(itemView.context, "Failed to delete data", Toast.LENGTH_SHORT
-                ).show()
-            }
+            Toast.makeText(itemView.context, "Failed to delete data", Toast.LENGTH_SHORT).show()
+        }
     }
 }

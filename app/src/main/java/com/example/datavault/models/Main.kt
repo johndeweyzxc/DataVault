@@ -1,11 +1,10 @@
 package com.example.datavault.models
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.datavault.schema.SeedSchema
 import com.google.firebase.auth.FirebaseUser
 
-class MainViewModel: ViewModel() {
+// View model for MainActivity
+class Main: ViewModel() {
 
     private var listDataModel = mutableListOf<SeedSchema>()
     private var mapDataModel = HashMap<String, Int>()
@@ -30,8 +29,7 @@ class MainViewModel: ViewModel() {
         return currentUser.displayName!!
     }
 
-    fun getUserphotoUrl(currentUser: FirebaseUser): String {
-        val defaultUrl = "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Android_symbol_green_2.max-1500x1500.png"
+    fun getUserphotoUrl(currentUser: FirebaseUser, defaultUrl: String): String {
         if (currentUser.photoUrl == null) {
             return defaultUrl
         }
@@ -45,8 +43,8 @@ class MainViewModel: ViewModel() {
         }
         listDataModel.add(dataItem)
         // Use docId as the key
-        mapDataModel[docId] = itemCount() - 1
-        return itemCount() - 1
+        mapDataModel[docId] = listDataModel.size - 1
+        return listDataModel.size - 1
     }
 
     fun deleteData(docId: String): Int {
@@ -62,7 +60,7 @@ class MainViewModel: ViewModel() {
                 mapDataModel.remove(docId)
             }
             // Check if the index is not null to prevent IndexOutOfBoundsException
-            if (itemCount() > dataIndex) {
+            if (listDataModel.size > dataIndex) {
                 listDataModel.removeAt(dataIndex)
             }
         }
@@ -78,23 +76,11 @@ class MainViewModel: ViewModel() {
         val dataIndex: Int? = mapDataModel[docId]
         if (dataIndex != null) {
             // Check if the index is not null to prevent IndexOutOfBoundsException
-            if (itemCount() > dataIndex) {
+            if (listDataModel.size > dataIndex) {
                 listDataModel[dataIndex] = updatedItem
             }
         }
         return dataIndex as Int
     }
 
-    fun getData(docId: String): SeedSchema? {
-        // Document does not exists
-        if (!mapDataModel.containsKey(docId)) {
-            Log.i("DEV.LOG.INFO", "Document does not exists")
-            return null
-        }
-        return listDataModel[mapDataModel[docId] as Int]
-    }
-
-    fun itemCount(): Int {
-        return listDataModel.size
-    }
 }

@@ -6,12 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.datavault.MainActivity
 import com.example.datavault.R
-import com.example.datavault.adapters.VPMainAdapter
+import com.example.datavault.adapters.VpMain
 import com.example.datavault.databinding.FragmentMainBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -34,10 +35,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setViewPager() {
-        // val adapter = (activity as MainActivity).MainFragmentInterface().getAdapter()
-        binding.viewPager.adapter = VPMainAdapter(childFragmentManager, lifecycle)
-
-        // Set a listener to detect which page is selected on the view pager
+        binding.viewPager.adapter = VpMain(childFragmentManager, lifecycle)
         binding.viewPager.registerOnPageChangeCallback(viewPagerPageChange)
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
@@ -79,31 +77,30 @@ class MainFragment : Fragment() {
     }
 
     private fun setNavigationDrawer() {
-        val gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-
         val headerView: View = binding.navView.getHeaderView(0)
         val avatar: CircleImageView = headerView.findViewById(R.id.ivNavHeaderAvatar)
         val username: TextView = headerView.findViewById(R.id.tvNavHeaderUsername)
         val email: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
+        val activity = (activity as MainActivity)
 
-        val mainInterface = (activity as MainActivity).MainFragmentInterface()
-
-        Glide.with(this).load(mainInterface.getUserPhoto()).into(avatar)
-        username.text = mainInterface.getUserName()
-        email.text = mainInterface.getUserEmail()
+        Glide.with(this).load(activity.currentUserUrlPhoto()).into(avatar)
+        username.text = activity.currentUserName()
+        email.text = activity.currentUserEmail()
 
         binding.mainToolBar.setNavigationOnClickListener {
             binding.drawerLayout.open()
         }
 
         binding.navView.setNavigationItemSelectedListener { menuItem ->
-            // Handle menu item selected
+
+            val gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+
             when (menuItem.itemId) {
                 R.id.menuAbout -> {
-                    Log.i("DEV.LOG.INFO", "About is pressed")
+                    Log.i("devlog", "About is pressed")
                     binding.drawerLayout.close()
                     true
                 }
@@ -128,8 +125,15 @@ class MainFragment : Fragment() {
                     true
                 }
                 R.id.menuSignOut -> {
-                    FirebaseAuth.getInstance().signOut()
-                    GoogleSignIn.getClient(requireActivity(), gso).signOut()
+                    try {
+                        FirebaseAuth.getInstance().signOut()
+                        GoogleSignIn.getClient(requireActivity(), gso).signOut()
+                    } catch (e: Exception) {
+                        if (e.message != null) {
+                            Log.i("devlog", e.message!!)
+                        }
+                        Toast.makeText(requireActivity(), "There is a problem signing out", Toast.LENGTH_LONG).show()
+                    }
                     true
                 }
                 else -> false

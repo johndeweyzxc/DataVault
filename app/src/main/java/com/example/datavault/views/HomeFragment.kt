@@ -20,7 +20,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val scrollableView: RecyclerView = view.findViewById(R.id.rvMainScrollableView)
-        scrollableView.adapter = (activity as MainActivity).MainFragmentInterface().getAdapter()
+        scrollableView.adapter = (activity as MainActivity).homeAdapter()
         scrollableView.layoutManager = LinearLayoutManager(context)
     }
 }

@@ -2,19 +2,20 @@ package com.example.datavault.views
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.example.datavault.MainActivity
 import com.example.datavault.databinding.EditSeedDialogBinding
-import com.example.datavault.schema.SeedSchemaUpload
+import com.example.datavault.models.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
@@ -22,7 +23,6 @@ import java.util.*
 class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
 
     private lateinit var binding: EditSeedDialogBinding
-    private lateinit var documentRef: DocumentReference
     private lateinit var userId: String
 
     private lateinit var ilAppName: TextInputLayout
@@ -43,27 +43,16 @@ class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = EditSeedDialogBinding.inflate(layoutInflater)
-        userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        (activity as MainActivity).userMightBeNull(currentUser)
+        userId = currentUser!!.uid
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
-        documentRef = Firebase.firestore.collection("generatedUserData")
-            .document(userId)
-            .collection("data")
-            .document(firestoreDocId)
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     override fun onStart() {
-        // Set the reference of edit text and input layouts from the view.
         referenceEditTextsAndInputLayouts()
-        // Set the end icon click listeners.
-        inputEndIconListener()
-        // This set the default value of the document to input edit text.
         setDefaultValues()
-        // Sets the click listener for the button
         setButtonListeners()
         super.onStart()
     }
@@ -82,15 +71,13 @@ class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
         etPassword = binding.editEtPassword
     }
 
-    private fun inputEndIconListener() {
-        ilAppName.setEndIconOnClickListener { etAppName.text?.clear() }
-        ilUserName.setEndIconOnClickListener { etUserName.text?.clear() }
-        ilEmail.setEndIconOnClickListener { etEmail.text?.clear() }
-        ilPhoneNumber.setEndIconOnClickListener { etPhoneNumber.text?.clear() }
-    }
-
     private fun setDefaultValues() {
-        documentRef.get().addOnSuccessListener {
+        val generatedUserData = Firebase.firestore.collection("generatedUserData")
+        val userId = generatedUserData.document(userId)
+        val data = userId.collection("data")
+        val targetDocument = data.document(firestoreDocId)
+
+        targetDocument.get().addOnSuccessListener {
             etAppName.setText(it.data?.get("appName").toString())
             etUserName.setText(it.data?.get("userName").toString())
             etEmail.setText(it.data?.get("email").toString())
@@ -103,12 +90,13 @@ class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
     }
 
     private fun setButtonListeners() {
-        binding.editToolBar.setOnClickListener {
-            dismiss()
-        }
-        binding.editBackButton.setOnClickListener {
-            dismiss()
-        }
+        ilAppName.setEndIconOnClickListener { etAppName.text?.clear() }
+        ilUserName.setEndIconOnClickListener { etUserName.text?.clear() }
+        ilEmail.setEndIconOnClickListener { etEmail.text?.clear() }
+        ilPhoneNumber.setEndIconOnClickListener { etPhoneNumber.text?.clear() }
+
+        binding.editToolBar.setOnClickListener { dismiss() }
+        binding.editBackButton.setOnClickListener { dismiss() }
 
         binding.editSaveChangesButton.setOnClickListener {
             if (checkForBlankOrNull() == 0) {
@@ -159,29 +147,26 @@ class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
             updatedAt
         )
 
-        Firebase.firestore.collection("generatedUserData")
-            .document(userId)
-            .collection("data")
-            .document(firestoreDocId)
-            .set(dataModel)
-            .addOnSuccessListener {
-                dismiss()
-                Toast.makeText(requireActivity(), "Successfully saved changes", Toast.LENGTH_SHORT
-                ).show()
+        val generatedUserData = Firebase.firestore.collection("generatedUserData")
+        val userId = generatedUserData.document(userId)
+        val data = userId.collection("data")
+        val targetDocument = data.document(firestoreDocId)
+
+        targetDocument.set(dataModel).addOnSuccessListener {
+            Toast.makeText(requireActivity(), "Successfully saved changes", Toast.LENGTH_SHORT).show()
+            dismiss()
+        }.addOnCanceledListener {
+            Toast.makeText(requireActivity(), "Failed to save changes", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.i("devlog", exception.message!!)
             }
-            .addOnFailureListener {
-                Toast.makeText(requireActivity(), "Failed to save changes", Toast.LENGTH_SHORT
-                ).show()
-            }
+            Toast.makeText(requireActivity(), "Failed to save changes", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun closeActiveKeyboard() {
-        val imm = requireActivity().getSystemService(
-            Context.INPUT_METHOD_SERVICE
-        ) as InputMethodManager
-
-        imm.hideSoftInputFromWindow(
-            requireActivity().currentFocus?.windowToken, 0
-        )
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
     }
 }

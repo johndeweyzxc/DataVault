@@ -2,7 +2,7 @@ package com.example.datavault.views
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +10,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.example.datavault.MainActivity
 import com.example.datavault.databinding.FragmentCreateBinding
-import com.example.datavault.schema.SeedSchemaUpload
+import com.example.datavault.models.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
@@ -73,29 +74,20 @@ class CreateFragment : Fragment() {
 
         saveDataButton.setOnClickListener {
             clearHelperText()
-            if (checkForBlackOrNull() == -1) { return@setOnClickListener; }
+            if (checkForBlankOrNull() == -1) { return@setOnClickListener; }
             closeActiveKeyboard()
             uploadData()
             clearEditText()
         }
     }
 
-    private fun checkForBlackOrNull(): Int {
-        when {
-            etAppName.text.isNullOrBlank() -> {ilAppName.helperText = "*App name is required"; return -1 }
-            etUserName.text.isNullOrBlank() -> {ilUserName.helperText = "*User name is required"; return -1}
-            etEmail.text.isNullOrBlank() -> {ilEmail.helperText = "*Email is required"; return -1}
-            etPhoneNumber.text.isNullOrBlank() -> {ilPhoneNumber.helperText = "*Phone number is required"; return -1 }
-            etPassword.text.isNullOrBlank() -> {ilPassword.helperText = "Password is required"; return -1}
-        }
-        return 0
-    }
-
     private fun uploadData() {
-        val collectionRef: CollectionReference = Firebase.firestore.collection(
-            "generatedUserData")
-            .document(FirebaseAuth.getInstance().currentUser!!.uid)
-            .collection("data")
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        (activity as MainActivity).userMightBeNull(currentUser)
+
+        val generatedUserData = Firebase.firestore.collection("generatedUserData")
+        val userId = generatedUserData.document(currentUser!!.uid)
+        val data = userId.collection("data")
 
         val dataItem = SeedSchemaUpload(
             etAppName.text.toString(),
@@ -108,34 +100,34 @@ class CreateFragment : Fragment() {
             Timestamp(Date()),
         )
 
-        collectionRef.add(dataItem).addOnSuccessListener {
-            Toast.makeText(
-                requireActivity(), "Successfully saved the data.",
-                Toast.LENGTH_LONG
-            ).show()
+        val upload = data.add(dataItem)
+
+        upload.addOnSuccessListener {
+            Toast.makeText(requireActivity(), "Successfully saved the data.", Toast.LENGTH_LONG).show()
+        }.addOnCanceledListener {
+            Toast.makeText(requireActivity(), "Canceled saving data", Toast.LENGTH_LONG).show()
+        }.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.i("devlog", exception.message!!)
+            }
+            Toast.makeText(requireActivity(), "Failed to save data", Toast.LENGTH_LONG).show()
         }
-            .addOnCanceledListener {
-                Toast.makeText(
-                    requireActivity(), "Canceled saving data",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(
-                    requireActivity(), "Failed to save data",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
     }
 
     private fun closeActiveKeyboard() {
-        val imm = requireActivity().getSystemService(
-            Context.INPUT_METHOD_SERVICE
-        ) as InputMethodManager
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
+    }
 
-        imm.hideSoftInputFromWindow(
-            requireActivity().currentFocus?.windowToken, 0
-        )
+    private fun checkForBlankOrNull(): Int {
+        when {
+            etAppName.text.isNullOrBlank() -> {ilAppName.helperText = "*App name is required"; return -1 }
+            etUserName.text.isNullOrBlank() -> {ilUserName.helperText = "*User name is required"; return -1}
+            etEmail.text.isNullOrBlank() -> {ilEmail.helperText = "*Email is required"; return -1}
+            etPhoneNumber.text.isNullOrBlank() -> {ilPhoneNumber.helperText = "*Phone number is required"; return -1 }
+            etPassword.text.isNullOrBlank() -> {ilPassword.helperText = "Password is required"; return -1}
+        }
+        return 0
     }
 
     private fun clearEditText() {

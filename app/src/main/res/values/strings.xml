@@ -45,4 +45,5 @@
     <string name="nav_menu_dark_mode">Dark Mode</string>
     <string name="nav_menu_sign_out">Sign Out</string>
     <string name="edit_button_save_changes">Save changes</string>
+    <string name="default_user_photo">https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Android_symbol_green_2.max-1500x1500.png</string>
 </resources>
