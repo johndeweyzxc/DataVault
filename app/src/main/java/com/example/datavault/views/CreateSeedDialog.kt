@@ -10,9 +10,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import com.example.datavault.MainActivity
-import com.example.datavault.databinding.FragmentCreateBinding
+import com.example.datavault.databinding.FragmentDialogCreateBinding
 import com.example.datavault.models.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
@@ -21,9 +21,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 
-class CreateFragment : Fragment() {
+class CreateSeedDialog : DialogFragment() {
 
-    private lateinit var binding: FragmentCreateBinding
+    private lateinit var binding: FragmentDialogCreateBinding
 
     private lateinit var etAppName: EditText
     private lateinit var etUserName: EditText
@@ -40,7 +40,7 @@ class CreateFragment : Fragment() {
     private lateinit var saveDataButton: Button
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentCreateBinding.inflate(layoutInflater)
+        binding = FragmentDialogCreateBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -71,6 +71,9 @@ class CreateFragment : Fragment() {
         ilUserName.setEndIconOnClickListener { binding.createEtUsername.text?.clear() }
         ilEmail.setEndIconOnClickListener { binding.createEtEmail.text?.clear() }
         ilPhoneNumber.setEndIconOnClickListener { binding.createEtPassword.text?.clear() }
+
+        binding.createEditToolBar.setOnClickListener { dismiss() }
+        binding.createBackButton.setOnClickListener { dismiss() }
 
         saveDataButton.setOnClickListener {
             clearHelperText()

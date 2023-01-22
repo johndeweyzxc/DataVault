@@ -24,7 +24,7 @@
             app:navigationIcon="@drawable/ic_edit_seed_dialog_close"
             app:navigationIconTint="@color/grey_200"
             app:menu="@menu/top_app_bar_edit_menu"
-            app:title="Edit data" />
+            app:title="Cancel" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -44,6 +44,22 @@
             android:gravity="center"
             android:padding="16dp">
 
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginBottom="32dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/edit_headline_text"
+                    android:layout_gravity="center"
+                    android:textColor="@color/orange_700"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto_medium"/>
+            </HorizontalScrollView>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editIlAppname"
                 android:layout_width="match_parent"
@@ -54,6 +70,7 @@
                 app:endIconMode="custom"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
+                app:boxBackgroundColor="@color/white"
                 android:layout_marginBottom="10dp"
                 app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small">
                 <com.google.android.material.textfield.TextInputEditText
@@ -74,6 +91,7 @@
                 app:startIconDrawable="@drawable/ic_create_username"
                 app:endIconDrawable="@drawable/ic_create_clear_button"
                 app:endIconMode="custom"
+                app:boxBackgroundColor="@color/white"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
                 android:layout_marginBottom="10dp"
@@ -97,6 +115,7 @@
                 app:startIconDrawable="@drawable/ic_create_email"
                 app:endIconDrawable="@drawable/ic_create_clear_button"
                 app:endIconMode="custom"
+                app:boxBackgroundColor="@color/white"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
                 android:layout_marginBottom="10dp"
@@ -120,6 +139,7 @@
                 app:startIconDrawable="@drawable/ic_create_phone_number"
                 app:endIconDrawable="@drawable/ic_create_clear_button"
                 app:endIconMode="custom"
+                app:boxBackgroundColor="@color/white"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
                 android:layout_marginBottom="10dp"
@@ -142,6 +162,7 @@
                 android:hint="@string/create_edit_text_hint_password"
                 app:startIconDrawable="@drawable/ic_create_password"
                 app:endIconMode="password_toggle"
+                app:boxBackgroundColor="@color/white"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
                 android:layout_marginBottom="15dp"
@@ -157,37 +178,34 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <Button
+                android:id="@+id/editSaveChangesButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:fontFamily="@font/roboto_medium"
+                android:padding="12dp"
+                android:text="@string/edit_button_save_changes"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                style="@style/Widget.MaterialComponents.Button"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small" />
 
-                <Button
-                    android:id="@+id/editBackButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/create_data_button_back"
-                    android:textAllCaps="false"
-                    android:padding="12dp"
-                    android:fontFamily="@font/roboto_medium"
-                    android:textSize="16sp"
-                    style="@style/Widget.MaterialComponents.Button.TextButton" />
-
-                <Button
-                    android:id="@+id/editSaveChangesButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="@string/edit_button_save_changes"
-                    android:textAllCaps="false"
-                    android:padding="12dp"
-                    android:fontFamily="@font/roboto_medium"
-                    android:textSize="16sp"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            <Button
+                android:id="@+id/editBackButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/roboto_medium"
+                android:padding="12dp"
+                android:text="@string/edit_back"
+                android:textStyle="bold"
+                android:textColor="@color/grey_800"
+                android:textSize="16sp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>

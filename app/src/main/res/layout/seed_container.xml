@@ -114,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:textSize="18sp"
-                    android:textColor="@color/light_blue_600"
+                    android:textColor="@color/grey_600"
                     android:fontFamily="@font/roboto_medium"
                     android:text="@string/seed_field_header_username" />
 
@@ -131,7 +131,7 @@
                         android:text="@string/seed_container_text_view_username"
                         android:textSize="14sp"
                         android:fontFamily="@font/roboto_medium"
-                        app:chipIcon="@drawable/ic_seed_content_copy"
+                        app:chipIcon="@drawable/ic_seed_user"
                         app:chipIconSize="15dp"
                         app:iconStartPadding="5dp" />
                 </HorizontalScrollView>
@@ -145,7 +145,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:textSize="18sp"
-                    android:textColor="@color/red_400"
+                    android:textColor="@color/grey_600"
                     android:fontFamily="@font/roboto_medium"
                     android:text="@string/seed_field_header_email"
                     android:layout_gravity="center"/>
@@ -162,7 +162,7 @@
                         android:text="@string/seed_container_text_view_email"
                         android:textSize="14sp"
                         android:fontFamily="@font/roboto_medium"
-                        app:chipIcon="@drawable/ic_seed_content_copy"
+                        app:chipIcon="@drawable/ic_seed_email"
                         app:chipIconSize="15dp"
                         app:iconStartPadding="5dp" />
                 </HorizontalScrollView>
@@ -177,7 +177,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_gravity="center"
                     android:textSize="18sp"
-                    android:textColor="@color/deep_purple_500"
+                    android:textColor="@color/grey_600"
                     android:fontFamily="@font/roboto_medium"
                     android:text="@string/seed_container_chip_name_phone" />
 
@@ -193,7 +193,7 @@
                         android:text="@string/seed_container_chip_info_phone"
                         android:textSize="14sp"
                         android:fontFamily="@font/roboto_medium"
-                        app:chipIcon="@drawable/ic_seed_content_copy"
+                        app:chipIcon="@drawable/ic_seed_phone"
                         app:chipIconSize="15dp"
                         app:iconStartPadding="5dp" />
                 </HorizontalScrollView>
@@ -208,7 +208,7 @@
                     android:layout_gravity="center"
                     android:layout_marginEnd="10dp"
                     android:textSize="18sp"
-                    android:textColor="@color/red_400"
+                    android:textColor="@color/grey_600"
                     android:fontFamily="@font/roboto_medium"
                     android:text="@string/seed_container_chip_name_password" />
 
@@ -224,11 +224,24 @@
                         android:text="@string/seed_container_chip_info_password"
                         android:textSize="14sp"
                         android:fontFamily="@font/roboto_medium"
-                        app:chipIcon="@drawable/ic_seed_content_copy"
+                        app:chipIcon="@drawable/ic_seed_password"
                         app:chipIconSize="15dp"
                         app:iconStartPadding="5dp" />
                 </HorizontalScrollView>
             </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@string/seed_tap_chips"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

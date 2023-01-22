@@ -66,6 +66,10 @@ class MainActivity : AppCompatActivity() {
         return seedAdapter
     }
 
+    fun getItemCount(): Int {
+        return viewModel.countItem()
+    }
+
     private val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
         // If the user presses back button, pop the fragment stack or pause the activity if there is only one fragment
         override fun handleOnBackPressed() {

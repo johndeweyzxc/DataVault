@@ -7,20 +7,32 @@
     <string name="create_edit_text_hint_phone_number">Phone Number</string>
     <string name="create_data_button_text_save_data">Save Data</string>
     <string name="create_data_button_back">Back</string>
+    <string name="create_headline">Create document</string>
+    <string name="create_back_text">back</string>
+
+    <string name="login_brand_name_datavault">DATAVAULT</string>
     <string name="login_edit_text_email">Email</string>
     <string name="login_edit_text_password">Password</string>
     <string name="login_text_view_forgot_password">Forgot your password?</string>
     <string name="login_button_text">Login</string>
     <string name="login_text_view_not_have_account">I don\'t have an account</string>
+    <string name="login_agree_policy">By logging in you agree to DataVault\'s</string>
+    <string name="login_privacy_terms">Privacy Policy and Terms of Use</string>
     <string name="login_text_view_sign_up">Sign Up</string>
     <string name="login_text_view_login_with">or</string>
-    <string name="login_button_text_google">Sign in with Google</string>
-    <string name="register_edit_text_email">Email</string>
-    <string name="register_edit_text_password">Password</string>
-    <string name="register_edit_text_confirm_password">Confirm Password</string>
-    <string name="register_button">Create an Account</string>
-    <string name="register_text_view_have_account">I have an account</string>
-    <string name="register_text_view_login_instead">Login Instead</string>
+    <string name="login_button_text_google">Login with Google</string>
+
+    <string name="sign_up_headline">Create an account</string>
+    <string name="sign_up_forgot_password">Forgot your password?</string>
+    <string name="sign_up_login_instead">Login instead</string>
+    <string name="sign_up_agree">By signing up you agree to DataVault\'s</string>
+    <string name="sign_up_privacy_terms">Privacy Policy and Terms of Use</string>
+    <string name="sign_up_email">Email</string>
+    <string name="sign_up_password">Password</string>
+    <string name="sign_up_confirm_password">Confirm Password</string>
+    <string name="sign_up_create_button">Sign Up</string>
+    <string name="sign_up_have_account">I have an account,</string>
+
     <string name="seed_container_text_view_facebook">Facebook</string>
     <string name="seed_container_text_view_username">johndewey.123</string>
     <string name="seed_container_text_view_email">johndewey02003@gmail.com</string>
@@ -33,17 +45,30 @@
     <string name="seed_delete_description">Delete the data</string>
     <string name="seed_field_header_username">Username</string>
     <string name="seed_field_header_email">Email</string>
-    <string name="nav_header_text_view_name">John Dewey</string>
-    <string name="nav_header_text_view_email">johndewey@email.com</string>
-    <string name="nav_menu_application">Application</string>
-    <string name="nav_menu_about">About</string>
-    <string name="nav_menu_privacy_terms">Privacy and Terms of Use</string>
-    <string name="nav_menu_privacy">Privacy Policy</string>
-    <string name="nav_menu_terms">Terms of Use</string>
-    <string name="nav_menu_application_settings">Application Settings</string>
-    <string name="nav_menu_strings">Settings</string>
-    <string name="nav_menu_dark_mode">Dark Mode</string>
-    <string name="nav_menu_sign_out">Sign Out</string>
+    <string name="seed_tap_chips">Tap chips to copy</string>
+
+    <string name="main_header_text_view_name">John Dewey</string>
+    <string name="main_header_text_view_email">johndewey@email.com</string>
+    <string name="main_menu_application">Application</string>
+    <string name="main_menu_about">About</string>
+    <string name="main_menu_privacy_terms">Privacy and Terms of Use</string>
+    <string name="main_menu_privacy">Privacy Policy</string>
+    <string name="main_menu_terms">Terms of Use</string>
+    <string name="main_menu_application_settings">Application Settings</string>
+    <string name="main_menu_strings">Settings</string>
+    <string name="main_menu_dark_mode">Dark Mode</string>
+    <string name="main_menu_sign_out">Sign Out</string>
+    <string name="main_bottom_nav_home">Home</string>
+    <string name="main_bottom_nav_favorites">Favorites</string>
+    <string name="main_drawer_account">Account</string>
+    <string name="main_drawer_home">Home</string>
+    <string name="main_drawer_trash">Trash</string>
+    <string name="main_create_fab">Create</string>
+
     <string name="edit_button_save_changes">Save changes</string>
+    <string name="edit_headline_text">Edit document</string>
+    <string name="edit_back">back</string>
+
     <string name="default_user_photo">https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Android_symbol_green_2.max-1500x1500.png</string>
+
 </resources>

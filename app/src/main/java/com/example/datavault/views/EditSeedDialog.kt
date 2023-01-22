@@ -10,7 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.datavault.MainActivity
-import com.example.datavault.databinding.EditSeedDialogBinding
+import com.example.datavault.databinding.FragmentDialogEditBinding
 import com.example.datavault.models.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -22,7 +22,7 @@ import java.util.*
 
 class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
 
-    private lateinit var binding: EditSeedDialogBinding
+    private lateinit var binding: FragmentDialogEditBinding
     private lateinit var userId: String
 
     private lateinit var ilAppName: TextInputLayout
@@ -42,7 +42,7 @@ class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
     private lateinit var docId: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = EditSeedDialogBinding.inflate(layoutInflater)
+        binding = FragmentDialogEditBinding.inflate(layoutInflater)
         val currentUser = FirebaseAuth.getInstance().currentUser
 
         (activity as MainActivity).userMightBeNull(currentUser)

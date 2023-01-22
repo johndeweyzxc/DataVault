@@ -9,6 +9,10 @@ class Main: ViewModel() {
     private var listDataModel = mutableListOf<SeedSchema>()
     private var mapDataModel = HashMap<String, Int>()
 
+    fun countItem(): Int {
+        return listDataModel.size
+    }
+
     fun getListData(): MutableList<SeedSchema> {
         return listDataModel
     }

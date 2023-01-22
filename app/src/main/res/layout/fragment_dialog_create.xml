@@ -4,7 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.CreateFragment">
+    tools:context=".views.CreateSeedDialog"
+    android:background="@color/white">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/createDataAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/createEditToolBar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_create_back"
+            app:navigationIconTint="@color/grey_200"
+            app:title="Back" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,7 +33,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/createDataAppBar">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -22,12 +42,29 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginBottom="32dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_headline"
+                    android:layout_gravity="center"
+                    android:textColor="@color/orange_700"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto_medium"/>
+            </HorizontalScrollView>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/createIlAppname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:hint="@string/create_edit_text_hint_application_name"
+                app:boxBackgroundColor="@color/white"
                 app:endIconDrawable="@drawable/ic_create_clear_button"
                 app:endIconMode="custom"
                 app:helperTextEnabled="true"
@@ -51,6 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:hint="@string/create_edit_text_hint_username"
+                app:boxBackgroundColor="@color/white"
                 app:endIconDrawable="@drawable/ic_create_clear_button"
                 app:endIconMode="custom"
                 app:helperTextEnabled="true"
@@ -74,6 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:hint="@string/create_edit_text_hint_email"
+                app:boxBackgroundColor="@color/white"
                 app:endIconDrawable="@drawable/ic_create_clear_button"
                 app:endIconMode="custom"
                 app:helperTextEnabled="true"
@@ -97,6 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:hint="@string/create_edit_text_hint_phone_number"
+                app:boxBackgroundColor="@color/white"
                 app:endIconDrawable="@drawable/ic_create_clear_button"
                 app:endIconMode="custom"
                 app:helperTextEnabled="true"
@@ -120,6 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:hint="@string/create_edit_text_hint_password"
+                app:boxBackgroundColor="@color/white"
                 app:endIconMode="password_toggle"
                 app:helperTextEnabled="true"
                 app:helperTextTextColor="@color/red_400"
@@ -138,16 +179,32 @@
 
             <Button
                 android:id="@+id/createSaveDataButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:fontFamily="@font/roboto_medium"
+                android:padding="12dp"
+                android:text="@string/create_data_button_text_save_data"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                style="@style/Widget.MaterialComponents.Button"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"/>
+
+            <Button
+                android:id="@+id/createBackButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="@font/roboto_mono_medium"
+                android:fontFamily="@font/roboto_medium"
                 android:padding="12dp"
-                android:text="@string/create_data_button_text_save_data"
-                android:textAllCaps="false"
-                android:textColor="@color/orange_500"
-                android:textSize="16sp" />
+                android:text="@string/create_back_text"
+                android:textStyle="bold"
+                android:textColor="@color/grey_800"
+                android:textSize="16sp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>

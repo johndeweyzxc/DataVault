@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.datavault.MainActivity
@@ -32,20 +33,25 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setNavigationDrawer()
         setViewPager()
+
+        binding.floatinActionButton.setOnClickListener {
+            parentFragmentManager.beginTransaction().apply {
+                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                add(R.id.frameLayoutActivityMain, CreateSeedDialog())
+                addToBackStack("CreateFragment")
+                commit()
+            }
+        }
     }
 
     private fun setViewPager() {
-        binding.viewPager.adapter = VpMain(childFragmentManager, lifecycle)
+        binding.viewPager.adapter = VpMain(childFragmentManager, lifecycle, binding.floatinActionButton)
         binding.viewPager.registerOnPageChangeCallback(viewPagerPageChange)
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.bottomNavMenuHome -> {
                     binding.viewPager.setCurrentItem(0, true)
-                    true
-                }
-                R.id.bottomNavCreateData -> {
-                    binding.viewPager.setCurrentItem(1, true)
                     true
                 }
                 R.id.bottomNavFavorites -> {
@@ -65,10 +71,6 @@ class MainFragment : Fragment() {
                     binding.bottomNavigation.selectedItemId = R.id.bottomNavMenuHome
                 }
                 1 -> {
-                    binding.mainToolBar.title = "Create new data"
-                    binding.bottomNavigation.selectedItemId = R.id.bottomNavCreateData
-                }
-                2 -> {
                     binding.mainToolBar.title = "Favorites"
                     binding.bottomNavigation.selectedItemId = R.id.bottomNavFavorites
                 }

@@ -27,7 +27,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:navigationIcon="@drawable/ic_register_back"
                 app:navigationIconTint="@color/grey_200"
-                app:title="Register" />
+                app:title="Back" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -47,19 +47,30 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="42dp"
+                    android:text="@string/sign_up_headline"
+                    android:textColor="@color/orange_700"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto_medium"
+                    />
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/ilRegisterEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:hint="@string/register_edit_text_email"
+                    android:hint="@string/sign_up_email"
                     app:startIconDrawable="@drawable/ic_login_email"
                     app:endIconDrawable="@drawable/ic_create_clear_button"
                     app:endIconMode="custom"
                     app:helperTextEnabled="true"
                     app:helperTextTextColor="@color/red_400"
-                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    app:boxBackgroundColor="@color/white"
+                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etRegisterEmail"
                         android:layout_width="match_parent"
@@ -73,13 +84,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:hint="@string/register_edit_text_password"
+                    android:hint="@string/sign_up_password"
                     app:startIconDrawable="@drawable/ic_login_password"
                     app:endIconMode="password_toggle"
                     app:helperTextEnabled="true"
                     app:helperTextTextColor="@color/red_400"
-                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    app:boxBackgroundColor="@color/white"
+                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etRegisterPassword"
                         android:layout_width="match_parent"
@@ -93,13 +104,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:hint="@string/register_edit_text_confirm_password"
+                    android:hint="@string/sign_up_confirm_password"
                     app:startIconDrawable="@drawable/ic_login_password"
                     app:endIconMode="password_toggle"
                     app:helperTextEnabled="true"
                     app:helperTextTextColor="@color/red_400"
-                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    app:boxBackgroundColor="@color/white"
+                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etRegisterConfirmPassword"
                         android:layout_width="match_parent"
@@ -114,40 +125,64 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:letterSpacing="0.2"
-                    android:text="@string/register_button"
+                    android:text="@string/sign_up_create_button"
                     android:textColor="@color/grey_200"
                     android:textStyle="bold"
                     android:padding="12dp"
                     android:textSize="16sp"
-                    android:elevation="10dp"
+                    android:fontFamily="@font/roboto_medium"
                     app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
                     style="@style/Widget.MaterialComponents.Button"/>
 
-                <androidx.appcompat.widget.LinearLayoutCompat
+                <TextView
+                    android:id="@+id/tvLoginForgotPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@string/sign_up_forgot_password"
+                    android:textColor="@color/light_blue_600"
+                    android:textStyle="bold"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:textSize="14sp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:layout_marginBottom="12dp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:text="@string/register_text_view_have_account" />
+                <Button
+                    android:id="@+id/tvRegisterLoginInstead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:text="@string/sign_up_login_instead"
+                    android:fontFamily="@font/roboto_medium"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/grey_800"
+                    android:textStyle="bold"
+                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-                    <TextView
-                        android:id="@+id/tvRegisterLoginInstead"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:textSize="14sp"
-                        android:text="@string/register_text_view_login_instead"
-                        android:textColor="@color/light_blue_600"
-                        android:textStyle="bold" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="@string/sign_up_agree"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_up_privacy_terms"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/light_blue_600" />
+
             </androidx.appcompat.widget.LinearLayoutCompat>
         </ScrollView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </FrameLayout>
