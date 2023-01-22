@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navHeader"
     android:layout_width="match_parent"
@@ -30,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/nav_header_text_view_name"
+            android:text="@string/main_header_text_view_name"
             android:textColor="@color/grey_800"
             android:fontFamily="@font/roboto_medium"
             android:textSize="22sp" />
@@ -40,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="@string/nav_header_text_view_email"
+            android:text="@string/main_header_text_view_email"
             android:fontFamily="@font/roboto_medium"
             android:textSize="16sp" />
 
