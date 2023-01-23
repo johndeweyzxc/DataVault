@@ -54,13 +54,13 @@
     <string name="main_menu_privacy_terms">Privacy and Terms of Use</string>
     <string name="main_menu_privacy">Privacy Policy</string>
     <string name="main_menu_terms">Terms of Use</string>
-    <string name="main_menu_application_settings">Application Settings</string>
+    <string name="main_menu_account_settings">Account</string>
     <string name="main_menu_strings">Settings</string>
-    <string name="main_menu_dark_mode">Dark Mode</string>
+    <string name="main_menu_favorites">Favorites</string>
     <string name="main_menu_sign_out">Sign Out</string>
     <string name="main_bottom_nav_home">Home</string>
     <string name="main_bottom_nav_favorites">Favorites</string>
-    <string name="main_drawer_account">Account</string>
+    <string name="main_drawer_account">Account Settings</string>
     <string name="main_drawer_home">Home</string>
     <string name="main_drawer_trash">Trash</string>
     <string name="main_create_fab">Create</string>

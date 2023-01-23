@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.datavault.R
 import com.example.datavault.models.SeedSchema
 import com.example.datavault.views.EditSeedDialog
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
@@ -30,6 +32,7 @@ class RvHome(
 ) : RecyclerView.Adapter<RvHome.SeedViewHolder>() {
 
     class SeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cardViewSeed: MaterialCardView = itemView.findViewById(R.id.cardViewSeed)
         val tvSeedAppName: TextView = itemView.findViewById(R.id.tvSeedAppName)
         val tvDocId: TextView = itemView.findViewById(R.id.tvDocId)
         val ivSeedEditIcon: ImageView = itemView.findViewById(R.id.ivSeedEditIcon)
@@ -59,6 +62,9 @@ class RvHome(
 
         holder.apply {
             val itemV = holder.itemView
+
+            // Set the animation for the card view when it appears on the screen
+            cardViewSeed.startAnimation(AnimationUtils.loadAnimation(itemV.context, R.anim.rvhome_item))
 
             // When user touch on chips, it copies its content on the clipboard
             seedChipUsernameInfo.text = currentData.userName

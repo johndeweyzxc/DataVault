@@ -1,16 +1,27 @@
 package com.example.datavault.views
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.datavault.AuthActivity
+import com.example.datavault.R
 import com.example.datavault.databinding.FragmentSignUpBinding
 
 class SignUpFragment : Fragment() {
 
     private lateinit var binding: FragmentSignUpBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        // When this fragment enter, slide to the left
+        enterTransition = inflater.inflateTransition(R.transition.fragment_slide_right)
+        // When this fragment exit, slide to the right
+        exitTransition = inflater.inflateTransition(R.transition.fragment_slide_right)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentSignUpBinding.inflate(inflater, container, false)

@@ -2,6 +2,7 @@ package com.example.datavault.views
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.datavault.MainActivity
+import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogEditBinding
 import com.example.datavault.models.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputEditText
@@ -40,6 +42,15 @@ class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
     private lateinit var createdAt: Timestamp
     private lateinit var updatedAt: Timestamp
     private lateinit var docId: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        // When this fragment enter, slide to the left
+        enterTransition = inflater.inflateTransition(R.transition.fragment_slide_right)
+        // When this fragment exit, slide to the right
+        exitTransition = inflater.inflateTransition(R.transition.fragment_slide_right)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentDialogEditBinding.inflate(layoutInflater)

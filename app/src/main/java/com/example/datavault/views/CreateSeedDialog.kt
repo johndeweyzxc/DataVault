@@ -2,6 +2,7 @@ package com.example.datavault.views
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.datavault.MainActivity
+import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogCreateBinding
 import com.example.datavault.models.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputLayout
@@ -38,6 +40,15 @@ class CreateSeedDialog : DialogFragment() {
     private lateinit var ilPhoneNumber: TextInputLayout
 
     private lateinit var saveDataButton: Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        // When this fragment enter, slide to the left
+        enterTransition = inflater.inflateTransition(R.transition.fragment_slide_right)
+        // When this fragment exit, slide to the right
+        exitTransition = inflater.inflateTransition(R.transition.fragment_slide_right)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentDialogCreateBinding.inflate(layoutInflater)

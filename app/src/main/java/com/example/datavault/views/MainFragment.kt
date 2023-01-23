@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.datavault.MainActivity
@@ -36,7 +35,6 @@ class MainFragment : Fragment() {
 
         binding.floatinActionButton.setOnClickListener {
             parentFragmentManager.beginTransaction().apply {
-                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 add(R.id.frameLayoutActivityMain, CreateSeedDialog())
                 addToBackStack("CreateFragment")
                 commit()
@@ -119,10 +117,6 @@ class MainFragment : Fragment() {
                     true
                 }
                 R.id.menuSettings -> {
-                    // Add click listener
-                    true
-                }
-                R.id.menuDarkMode -> {
                     // Add click listener
                     true
                 }
