@@ -11,19 +11,16 @@ import androidx.fragment.app.DialogFragment
 import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogEditBinding
-import com.example.datavault.models.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
 
     private lateinit var binding: FragmentDialogEditBinding
-    private lateinit var userId: String
 
     private lateinit var ilAppName: TextInputLayout
     private lateinit var ilUserName: TextInputLayout
@@ -52,10 +49,6 @@ class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentDialogEditBinding.inflate(layoutInflater)
-        val currentUser = FirebaseAuth.getInstance().currentUser
-
-        (activity as MainActivity).userMightBeNull(currentUser)
-        userId = currentUser!!.uid
         return binding.root
     }
 
@@ -81,20 +74,16 @@ class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
     }
 
     private fun setDefaultValues() {
-        val generatedUserData = Firebase.firestore.collection("generatedUserData")
-        val userId = generatedUserData.document(userId)
-        val data = userId.collection("data")
-        val targetDocument = data.document(firestoreDocId)
+        val scope = CoroutineScope(Dispatchers.Main)
+        scope.launch {
+            val result: List<Any> = (activity as MainActivity).fetchData(
+                firestoreDocId, etAppName, etUserName,
+                etEmail, etPassword, etPhoneNumber
+            )
 
-        targetDocument.get().addOnSuccessListener {
-            etAppName.setText(it.data?.get("appName").toString())
-            etUserName.setText(it.data?.get("userName").toString())
-            etEmail.setText(it.data?.get("email").toString())
-            etPassword.setText(it.data?.get("password").toString())
-            etPhoneNumber.setText(it.data?.get("phoneNumber").toString())
-            docId = it.data?.get("docId").toString()
-            createdAt = it.data?.get("createdAt") as Timestamp
-            updatedAt = Timestamp(Date())
+            docId = result[0].toString()
+            createdAt = result[1] as Timestamp
+            updatedAt = result[2] as Timestamp
         }
     }
 
@@ -145,18 +134,10 @@ class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
             return
         }
 
-        val dataModel = SeedSchemaUpload(
-            etAppName.text.toString(),
-            etUserName.text.toString(),
-            etEmail.text.toString(),
-            etPassword.text.toString(),
-            etPhoneNumber.text.toString(),
-            docId,
-            createdAt,
-            updatedAt
+        (activity as MainActivity).updateData(
+            firestoreDocId, etAppName.text.toString(), etUserName.text.toString(), etEmail.text.toString(),
+            etPassword.text.toString(), etPhoneNumber.text.toString(), docId, createdAt, updatedAt
         )
-
-        (activity as MainActivity).updateData(userId, firestoreDocId, dataModel)
     }
 
     private fun closeActiveKeyboard() {

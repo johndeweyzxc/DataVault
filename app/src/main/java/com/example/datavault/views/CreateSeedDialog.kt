@@ -13,10 +13,8 @@ import androidx.fragment.app.DialogFragment
 import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogCreateBinding
-import com.example.datavault.models.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 
 class CreateSeedDialog : DialogFragment() {
@@ -92,20 +90,11 @@ class CreateSeedDialog : DialogFragment() {
     }
 
     private fun uploadData() {
-        val dataModel = SeedSchemaUpload(
-            etAppName.text.toString(),
-            etUserName.text.toString(),
-            etEmail.text.toString(),
-            etPassword.text.toString(),
-            etPhoneNumber.text.toString(),
-            UUID.randomUUID().toString(),
-            Timestamp(Date()),
-            Timestamp(Date()),
+        (activity as MainActivity).uploadData(
+            etAppName.text.toString(), etUserName.text.toString(),
+            etEmail.text.toString(), etPassword.text.toString(), etPhoneNumber.text.toString(),
+            UUID.randomUUID().toString(), Timestamp(Date()), Timestamp(Date())
         )
-
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        (activity as MainActivity).userMightBeNull(currentUser)
-        (activity as MainActivity).uploadData(currentUser?.uid!!, dataModel)
     }
 
     private fun closeActiveKeyboard() {
