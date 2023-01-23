@@ -1,6 +1,7 @@
 package com.example.datavault.models
 
 import androidx.lifecycle.ViewModel
+import com.example.datavault.schema.SeedSchema
 import com.google.firebase.auth.FirebaseUser
 
 // View model for MainActivity

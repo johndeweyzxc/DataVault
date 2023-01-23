@@ -2,7 +2,6 @@ package com.example.datavault.adapters
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +12,12 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.example.datavault.MainActivity
 import com.example.datavault.R
-import com.example.datavault.models.SeedSchema
+import com.example.datavault.schema.SeedSchema
 import com.example.datavault.views.EditSeedDialog
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 // Adapter for recycler view in HomeFragment to render list of document.
 class RvHome(
@@ -87,7 +83,7 @@ class RvHome(
 
             favoriteClickListener(ivSeedFavoriteIcon, itemView)
             editClickListener(ivSeedEditIcon, currentData)
-            deleteClickListener(ivSeedDeleteIcon, itemView, tvDocId.text as String)
+            deleteClickListener(ivSeedDeleteIcon, itemView, tvDocId.text.toString())
         }
     }
 
@@ -116,46 +112,11 @@ class RvHome(
         }
     }
 
-    private fun deleteClickListener(ivDeleteIcon: ImageView, itemView: View, tvDocId: String) {
+    private fun deleteClickListener(ivDeleteIcon: ImageView, itemV: View, tvDocId: String) {
         ivDeleteIcon.setOnClickListener {
             val indexPos: Int = uidMapOfDataModel[tvDocId]!!
             val dataContent: SeedSchema = listOfDataModel[indexPos]
-            val currentUser = FirebaseAuth.getInstance().currentUser
-            val userId = currentUser?.uid
-
-            MaterialAlertDialogBuilder(itemView.context)
-                .setTitle("Deleting ${dataContent.appName}")
-                .setMessage("Do you really want to delete ${dataContent.appName}?")
-                .setNeutralButton("CANCEL") { dialog, _ ->
-                    dialog.cancel()
-                    return@setNeutralButton
-                }
-                .setPositiveButton("DELETE") {_, _ ->
-                    if (userId != null) {
-                        fireStoreDeleteData(itemView, userId, dataContent.fireStoreDocId)
-                    }
-                    return@setPositiveButton
-                }.show()
-        }
-    }
-
-    private fun fireStoreDeleteData(itemView: View, userId: String, firestoreDocId: String) {
-        val generatedUserData = Firebase.firestore.collection("generatedUserData")
-        val userIdRef = generatedUserData.document(userId)
-        val data = userIdRef.collection("data")
-        val targetDocument = data.document(firestoreDocId)
-
-        val delete = targetDocument.delete()
-
-        delete.addOnSuccessListener {
-            Toast.makeText(itemView.context, "Successfully deleted the data", Toast.LENGTH_SHORT).show()
-        }.addOnCanceledListener {
-            Toast.makeText(itemView.context, "Canceled deleting data", Toast.LENGTH_SHORT).show()
-        }.addOnFailureListener { exception ->
-            if (exception.message != null) {
-                Log.i("devlog", exception.message!!)
-            }
-            Toast.makeText(itemView.context, "Failed to delete data", Toast.LENGTH_SHORT).show()
+            MainActivity().deleteData(itemV.context,dataContent)
         }
     }
 }

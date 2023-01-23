@@ -1,4 +1,4 @@
-package com.example.datavault.models
+package com.example.datavault.schema
 
 import com.google.firebase.Timestamp
 
