@@ -3,14 +3,12 @@ package com.example.datavault.views
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.datavault.MainActivity
 import com.example.datavault.R
@@ -19,8 +17,6 @@ import com.example.datavault.models.SeedSchemaUpload
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import java.util.*
 
 class CreateSeedDialog : DialogFragment() {
@@ -96,14 +92,7 @@ class CreateSeedDialog : DialogFragment() {
     }
 
     private fun uploadData() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        (activity as MainActivity).userMightBeNull(currentUser)
-
-        val generatedUserData = Firebase.firestore.collection("generatedUserData")
-        val userId = generatedUserData.document(currentUser!!.uid)
-        val data = userId.collection("data")
-
-        val dataItem = SeedSchemaUpload(
+        val dataModel = SeedSchemaUpload(
             etAppName.text.toString(),
             etUserName.text.toString(),
             etEmail.text.toString(),
@@ -114,18 +103,9 @@ class CreateSeedDialog : DialogFragment() {
             Timestamp(Date()),
         )
 
-        val upload = data.add(dataItem)
-
-        upload.addOnSuccessListener {
-            Toast.makeText(requireActivity(), "Successfully saved the data.", Toast.LENGTH_LONG).show()
-        }.addOnCanceledListener {
-            Toast.makeText(requireActivity(), "Canceled saving data", Toast.LENGTH_LONG).show()
-        }.addOnFailureListener { exception ->
-            if (exception.message != null) {
-                Log.i("devlog", exception.message!!)
-            }
-            Toast.makeText(requireActivity(), "Failed to save data", Toast.LENGTH_LONG).show()
-        }
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        (activity as MainActivity).userMightBeNull(currentUser)
+        (activity as MainActivity).uploadData(currentUser?.uid!!, dataModel)
     }
 
     private fun closeActiveKeyboard() {

@@ -6,12 +6,14 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.datavault.adapters.RvHome
 import com.example.datavault.models.Main
 import com.example.datavault.models.SeedSchema
+import com.example.datavault.models.SeedSchemaUpload
 import com.example.datavault.views.MainFragment
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -20,11 +22,13 @@ import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainInterface {
 
     private lateinit var viewModel: Main
     private lateinit var seedAdapter: RvHome
     private var currentUser: FirebaseUser? = null
+
+    private val generatedUserData = Firebase.firestore.collection("generatedUserData")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         currentUser = FirebaseAuth.getInstance().currentUser
@@ -47,29 +51,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun currentUserName(): String {
-        userMightBeNull(currentUser)
-        return viewModel.getUserName(currentUser!!)
-    }
-
-    fun currentUserEmail(): String {
-        userMightBeNull(currentUser)
-        return viewModel.getUserEmail(currentUser!!)
-    }
-
-    fun currentUserUrlPhoto(): String {
-        userMightBeNull(currentUser)
-        return viewModel.getUserphotoUrl(currentUser!!, getString(R.string.default_user_photo))
-    }
-
-    fun homeAdapter(): RvHome {
-        return seedAdapter
-    }
-
-    fun getItemCount(): Int {
-        return viewModel.countItem()
-    }
-
     private val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
         // If the user presses back button, pop the fragment stack or pause the activity if there is only one fragment
         override fun handleOnBackPressed() {
@@ -89,15 +70,6 @@ class MainActivity : AppCompatActivity() {
             Log.i("devlog", "Screen orientation changed to portrait in MainActivity")
         }
         super.onConfigurationChanged(newConfig)
-    }
-
-    fun userMightBeNull(user: FirebaseUser?) {
-        if (user == null) {
-            Log.i("devlog", "User is null, navigating to AuthActivity")
-            val intent = Intent(this, AuthActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-        }
     }
 
     private fun authListener() {
@@ -175,5 +147,71 @@ class MainActivity : AppCompatActivity() {
             changes.document.get("createdAt") as Timestamp?,
             changes.document.get("updatedAt") as Timestamp?,
         )
+    }
+
+    // MainInterface
+    override fun updateData(userId: String, firestoreDocId: String, dataModel: SeedSchemaUpload) {
+        val userIdDocRef = generatedUserData.document(userId)
+        val dataColRef = userIdDocRef.collection("data")
+        val targetDocument = dataColRef.document(firestoreDocId)
+
+        targetDocument.set(dataModel).addOnSuccessListener {
+            Toast.makeText(applicationContext, "Successfully saved changes", Toast.LENGTH_SHORT).show()
+        }.addOnCanceledListener {
+            Toast.makeText(applicationContext, "Canceled to save changes", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.i("devlog", exception.message!!)
+            }
+            Toast.makeText(applicationContext, "Failed to save changes", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun uploadData(userId: String, dataModel: SeedSchemaUpload) {
+        val userIdDocRef = generatedUserData.document(currentUser!!.uid)
+        val dataColRef = userIdDocRef.collection("data")
+
+        dataColRef.add(dataModel).addOnSuccessListener {
+            Toast.makeText(applicationContext, "Successfully saved the data.", Toast.LENGTH_LONG).show()
+        }.addOnCanceledListener {
+            Toast.makeText(applicationContext, "Canceled saving data", Toast.LENGTH_LONG).show()
+        }.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.i("devlog", exception.message!!)
+            }
+            Toast.makeText(applicationContext, "Failed to save data", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun userMightBeNull(user: FirebaseUser?) {
+        if (user == null) {
+            Log.i("devlog", "User is null, navigating to AuthActivity")
+            val intent = Intent(this, AuthActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
+    }
+
+    override fun currentUserEmail(): String {
+        userMightBeNull(currentUser)
+        return viewModel.getUserEmail(currentUser!!)
+    }
+
+    override fun currentUserName(): String {
+        userMightBeNull(currentUser)
+        return viewModel.getUserName(currentUser!!)
+    }
+
+    override fun currentUserUrlPhoto(): String {
+        userMightBeNull(currentUser)
+        return viewModel.getUserphotoUrl(currentUser!!, getString(R.string.default_user_photo))
+    }
+
+    override fun homeAdapter(): RvHome {
+        return seedAdapter
+    }
+
+    override fun adapterItemCount(): Int {
+        return viewModel.countItem()
     }
 }

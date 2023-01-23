@@ -29,7 +29,7 @@ class HomeFragment(private val fab: ExtendedFloatingActionButton) : Fragment() {
         scrollableView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
-                if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == (activity as MainActivity).getItemCount() - 1) {
+                if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == (activity as MainActivity).adapterItemCount() - 1) {
                     fab.extend()
                     isExtended = true
                 } else {

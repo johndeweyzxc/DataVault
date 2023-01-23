@@ -3,12 +3,10 @@ package com.example.datavault.views
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.datavault.MainActivity
 import com.example.datavault.R
@@ -158,22 +156,7 @@ class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
             updatedAt
         )
 
-        val generatedUserData = Firebase.firestore.collection("generatedUserData")
-        val userId = generatedUserData.document(userId)
-        val data = userId.collection("data")
-        val targetDocument = data.document(firestoreDocId)
-
-        targetDocument.set(dataModel).addOnSuccessListener {
-            Toast.makeText(requireActivity(), "Successfully saved changes", Toast.LENGTH_SHORT).show()
-            dismiss()
-        }.addOnCanceledListener {
-            Toast.makeText(requireActivity(), "Failed to save changes", Toast.LENGTH_SHORT).show()
-        }.addOnFailureListener { exception ->
-            if (exception.message != null) {
-                Log.i("devlog", exception.message!!)
-            }
-            Toast.makeText(requireActivity(), "Failed to save changes", Toast.LENGTH_SHORT).show()
-        }
+        (activity as MainActivity).updateData(userId, firestoreDocId, dataModel)
     }
 
     private fun closeActiveKeyboard() {
