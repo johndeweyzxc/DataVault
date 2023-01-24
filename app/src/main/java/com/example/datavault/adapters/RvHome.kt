@@ -82,18 +82,18 @@ class RvHome(
                 true
             }
 
-            setTextContent(seedChipUsernameInfo, currentData.userName)
             // When user touch on chips, it copies its content on the clipboard
             copyFromChip(itemV, "Copied username", seedChipUsernameInfo.text.toString(), seedChipUsernameInfo)
+            setTextContent(seedChipUsernameInfo, currentData.userName)
 
-            setTextContent(seedChipEmailInfo, currentData.email)
             copyFromChip(itemV, "Copied email", seedChipEmailInfo.text.toString(), seedChipEmailInfo)
+            setTextContent(seedChipEmailInfo, currentData.email)
 
-            setTextContent(seedChipPhoneNumberInfo, currentData.phoneNumber)
             copyFromChip(itemV, "Copied phone number", seedChipPhoneNumberInfo.text.toString(), seedChipPhoneNumberInfo)
+            setTextContent(seedChipPhoneNumberInfo, currentData.phoneNumber)
 
-            setTextContent(seedChipPasswordInfo, currentData.password)
             copyFromChip(itemV, "Copied password", seedChipPasswordInfo.text.toString(), seedChipPasswordInfo)
+            setTextContent(seedChipPasswordInfo, currentData.password)
 
             tvSeedAppName.text = currentData.appName
             tvDocId.text = currentData.docId
