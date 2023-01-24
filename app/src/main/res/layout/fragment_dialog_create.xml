@@ -23,7 +23,7 @@
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_create_back"
             app:navigationIconTint="@color/grey_200"
-            app:title="Back" />
+            app:title="@string/create_back_text" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

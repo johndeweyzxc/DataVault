@@ -6,7 +6,6 @@
     <string name="create_edit_text_hint_password">Password</string>
     <string name="create_edit_text_hint_phone_number">Phone Number</string>
     <string name="create_data_button_text_save_data">Save Data</string>
-    <string name="create_data_button_back">Back</string>
     <string name="create_headline">Create document</string>
     <string name="create_back_text">back</string>
 
@@ -31,7 +30,6 @@
     <string name="sign_up_password">Password</string>
     <string name="sign_up_confirm_password">Confirm Password</string>
     <string name="sign_up_create_button">Sign Up</string>
-    <string name="sign_up_have_account">I have an account,</string>
 
     <string name="seed_container_text_view_facebook">Facebook</string>
     <string name="seed_container_text_view_username">johndewey.123</string>
@@ -40,12 +38,8 @@
     <string name="seed_container_chip_info_phone">09385747532</string>
     <string name="seed_container_chip_name_password">Password</string>
     <string name="seed_container_chip_info_password">Password123</string>
-    <string name="seed_edit_description">Edit the data</string>
-    <string name="seed_favorite_description">Add this data to Favorites</string>
-    <string name="seed_delete_description">Delete the data</string>
     <string name="seed_field_header_username">Username</string>
     <string name="seed_field_header_email">Email</string>
-    <string name="seed_tap_chips">Tap chips to copy</string>
 
     <string name="main_header_text_view_name">John Dewey</string>
     <string name="main_header_text_view_email">johndewey@email.com</string>
@@ -67,9 +61,12 @@
 
     <string name="edit_button_save_changes">Save changes</string>
     <string name="edit_headline_text">Edit document</string>
+    <string name="edit_top_app_bar_favorite_title">Favorite</string>
+    <string name="edit_top_app_bar_delete_title">Delete</string>
+    <string name="edit_top_app_bar_favorite_desc">Add this document to favorite</string>
+    <string name="edit_top_app_bar_delete_desc">Delete this document</string>
     <string name="edit_back">back</string>
 
     <string name="default_user_photo">https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Android_symbol_green_2.max-1500x1500.png</string>
     <string name="favorites_favorite_text">Favorites</string>
-
 </resources>

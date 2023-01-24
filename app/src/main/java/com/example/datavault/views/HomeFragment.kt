@@ -23,13 +23,13 @@ class HomeFragment(private val fab: ExtendedFloatingActionButton) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val scrollableView: RecyclerView = view.findViewById(R.id.rvMainScrollableView)
-        fab.shrink()
-
-        scrollableView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        val scrollListener = object: RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
-                if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == (activity as MainActivity).adapterItemCount() - 1) {
+                val lastVisibleItem = linearLayoutManager?.findLastCompletelyVisibleItemPosition()
+                val lastAdapterItem = (activity as MainActivity).adapterItemCount() - 1
+
+                if (linearLayoutManager != null && lastVisibleItem == lastAdapterItem) {
                     fab.extend()
                     isExtended = true
                 } else {
@@ -39,7 +39,12 @@ class HomeFragment(private val fab: ExtendedFloatingActionButton) : Fragment() {
                     }
                 }
             }
-        })
+        }
+
+        fab.shrink()
+
+        val scrollableView: RecyclerView = view.findViewById(R.id.rvMainScrollableView)
+        scrollableView.addOnScrollListener(scrollListener)
 
         scrollableView.adapter = (activity as MainActivity).homeAdapter()
         scrollableView.layoutManager = LinearLayoutManager(context)

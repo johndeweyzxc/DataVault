@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogEditBinding
+import com.example.datavault.schema.SeedSchema
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
@@ -18,7 +20,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
+class EditSeedDialog(
+    private val itemView: View, private val firestoreDocId: String,
+    private val list: MutableList<SeedSchema>, private val map: HashMap<String, Int>) : DialogFragment() {
 
     private lateinit var binding: FragmentDialogEditBinding
 
@@ -105,11 +109,14 @@ class EditSeedDialog(private val firestoreDocId: String) : DialogFragment() {
 
         binding.editToolBar.setOnMenuItemClickListener { listener ->
             when (listener.title) {
-                "Save" -> {
-                    if (checkForBlankOrNull() == 0) {
-                        closeActiveKeyboard()
-                        updateData()
-                    }
+                "Favorite" -> {
+                    Toast.makeText(requireActivity(), "Clicked favorite", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                "Delete" -> {
+                    val indexPos: Int = map[docId]!!
+                    val dataContent: SeedSchema = list[indexPos]
+                    (activity as MainActivity).deleteData(itemView.context, dataContent)
                     true
                 }
                 else -> false

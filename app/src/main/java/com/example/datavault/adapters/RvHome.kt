@@ -6,13 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
-import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.schema.SeedSchema
 import com.example.datavault.views.EditSeedDialog
@@ -21,9 +19,9 @@ import com.google.android.material.chip.Chip
 
 // Adapter for recycler view in HomeFragment to render list of document.
 class RvHome(
-    private var listOfDataModel: MutableList<SeedSchema>,
-    private var uidMapOfDataModel: HashMap<String, Int>,
-    private val fragmentManger: FragmentManager,
+    private val listOfDataModel: MutableList<SeedSchema>,
+    private val uidHashMap: HashMap<String, Int>,
+    private val fragmentManager: FragmentManager,
     private val clipBoard: ClipboardManager,
 ) : RecyclerView.Adapter<RvHome.SeedViewHolder>() {
 
@@ -31,9 +29,6 @@ class RvHome(
         val cardViewSeed: MaterialCardView = itemView.findViewById(R.id.cardViewSeed)
         val tvSeedAppName: TextView = itemView.findViewById(R.id.tvSeedAppName)
         val tvDocId: TextView = itemView.findViewById(R.id.tvDocId)
-        val ivSeedEditIcon: ImageView = itemView.findViewById(R.id.ivSeedEditIcon)
-        val ivSeedDeleteIcon: ImageView = itemView.findViewById(R.id.ivSeedDeleteIcon)
-        val ivSeedFavoriteIcon: ImageView = itemView.findViewById(R.id.ivSeedFavoriteIcon)
         val seedChipUsernameInfo: Chip = itemView.findViewById(R.id.seedChipUsernameInfo)
         val seedChipEmailInfo: Chip = itemView.findViewById(R.id.seedChipEmailInfo)
         val seedChipPhoneNumberInfo: Chip = itemView.findViewById(R.id.seedChipPhoneNumberInfo)
@@ -62,28 +57,55 @@ class RvHome(
             // Set the animation for the card view when it appears on the screen
             cardViewSeed.startAnimation(AnimationUtils.loadAnimation(itemV.context, R.anim.rvhome_item))
 
-            // When user touch on chips, it copies its content on the clipboard
-            seedChipUsernameInfo.text = currentData.userName
-            copyFromChip(itemV, "Copied username", seedChipUsernameInfo.text.toString(),
-                seedChipUsernameInfo)
+            cardViewSeed.setOnClickListener {
+                val totalFragments = fragmentManager.backStackEntryCount
+                if (totalFragments > 0) {
+                    // Prevent adding duplicate fragment to the stack when the user clicks twice on the card
+                    val latestFragment = fragmentManager.getBackStackEntryAt(totalFragments - 1)
+                    if (latestFragment.name == "EditSeedDialog") {
+                        fragmentManager.popBackStack()
+                    }
+                }
 
-            seedChipEmailInfo.text = currentData.email
+                fragmentManager.beginTransaction().apply {
+                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    add(R.id.frameLayoutActivityMain, EditSeedDialog(
+                        itemView, currentData.fireStoreDocId, listOfDataModel, uidHashMap
+                    ))
+                    addToBackStack("EditSeedDialog")
+                    commit()
+                }
+            }
+
+            cardViewSeed.setOnLongClickListener {
+                cardViewSeed.isChecked = !cardViewSeed.isChecked
+                true
+            }
+
+            setTextContent(seedChipUsernameInfo, currentData.userName)
+            // When user touch on chips, it copies its content on the clipboard
+            copyFromChip(itemV, "Copied username", seedChipUsernameInfo.text.toString(), seedChipUsernameInfo)
+
+            setTextContent(seedChipEmailInfo, currentData.email)
             copyFromChip(itemV, "Copied email", seedChipEmailInfo.text.toString(), seedChipEmailInfo)
 
-            seedChipPhoneNumberInfo.text = currentData.phoneNumber
-            copyFromChip(itemV, "Copied phone number", seedChipPhoneNumberInfo.text.toString(),
-                seedChipPhoneNumberInfo)
+            setTextContent(seedChipPhoneNumberInfo, currentData.phoneNumber)
+            copyFromChip(itemV, "Copied phone number", seedChipPhoneNumberInfo.text.toString(), seedChipPhoneNumberInfo)
 
-            seedChipPasswordInfo.text = currentData.password
-            copyFromChip(itemV, "Copied phone number", seedChipPasswordInfo.text.toString(),
-                seedChipPasswordInfo)
+            setTextContent(seedChipPasswordInfo, currentData.password)
+            copyFromChip(itemV, "Copied password", seedChipPasswordInfo.text.toString(), seedChipPasswordInfo)
 
             tvSeedAppName.text = currentData.appName
             tvDocId.text = currentData.docId
+        }
+    }
 
-            favoriteClickListener(ivSeedFavoriteIcon, itemView)
-            editClickListener(ivSeedEditIcon, currentData)
-            deleteClickListener(ivSeedDeleteIcon, itemView, tvDocId.text.toString())
+    private fun setTextContent(textView: TextView, text: String) {
+        if (text.length > 8) {
+            val data = "${text.take(4)}...${text.takeLast(4)}"
+            textView.text = data
+        } else {
+            textView.text = text
         }
     }
 
@@ -92,31 +114,6 @@ class RvHome(
             val clip = ClipData.newPlainText(label, text)
             clipBoard.setPrimaryClip(clip)
             Toast.makeText(itemView.context, label, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun favoriteClickListener(ivFavoriteIcon: ImageView, itemView: View) {
-        ivFavoriteIcon.setOnClickListener {
-            Toast.makeText(itemView.context, "Added to favorites", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun editClickListener(ivEditIcon: ImageView, currentData: SeedSchema) {
-        ivEditIcon.setOnClickListener {
-            fragmentManger.beginTransaction().apply {
-                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                add(R.id.frameLayoutActivityMain, EditSeedDialog(currentData.fireStoreDocId))
-                addToBackStack("EditSeedDialog")
-                commit()
-            }
-        }
-    }
-
-    private fun deleteClickListener(ivDeleteIcon: ImageView, itemV: View, tvDocId: String) {
-        ivDeleteIcon.setOnClickListener {
-            val indexPos: Int = uidMapOfDataModel[tvDocId]!!
-            val dataContent: SeedSchema = listOfDataModel[indexPos]
-            MainActivity().deleteData(itemV.context,dataContent)
         }
     }
 }

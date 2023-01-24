@@ -24,7 +24,7 @@
             app:navigationIcon="@drawable/ic_edit_seed_dialog_close"
             app:navigationIconTint="@color/grey_200"
             app:menu="@menu/top_app_bar_edit_menu"
-            app:title="Cancel" />
+            app:title="@string/edit_back" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

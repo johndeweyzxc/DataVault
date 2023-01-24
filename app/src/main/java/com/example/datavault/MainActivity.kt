@@ -15,6 +15,7 @@ import com.example.datavault.models.Main
 import com.example.datavault.schema.SeedSchema
 import com.example.datavault.schema.SeedSchemaUpload
 import com.example.datavault.views.MainFragment
+import com.google.android.gms.tasks.Task
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
@@ -28,7 +29,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class MainActivity : AppCompatActivity(), MainInterface {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: Main
     private lateinit var seedAdapter: RvHome
@@ -157,8 +158,7 @@ class MainActivity : AppCompatActivity(), MainInterface {
         )
     }
 
-    // MainInterface
-    override suspend fun fetchData(
+    suspend fun fetchData(
         firestoreDocId: String, appName: TextInputEditText, userName: TextInputEditText,
         email: TextInputEditText, password: TextInputEditText, pNumber: TextInputEditText,
     ): MutableList<Any> {
@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity(), MainInterface {
         return list
     }
 
-    override fun updateData(
+    fun updateData(
         firestoreDocId: String, appName: String, userName: String, email: String,
         password: String, phoneNumber: String, docId: String,
         createdAt: Timestamp, updatedAt: Timestamp
@@ -218,7 +218,7 @@ class MainActivity : AppCompatActivity(), MainInterface {
         displayStatusToUser(applicationContext, task)
     }
 
-    override fun uploadData(
+    fun uploadData(
         appName: String, userName: String, email: String, password: String,
         phoneNumber: String, docId: String, createdAt: Timestamp,
         updatedAt: Timestamp
@@ -245,7 +245,7 @@ class MainActivity : AppCompatActivity(), MainInterface {
         }
     }
 
-    override fun deleteData(context: Context, dataContent: SeedSchema) {
+    fun deleteData(context: Context, dataContent: SeedSchema) {
         val currentUser = FirebaseAuth.getInstance().currentUser
         userMightBeNull(currentUser)
         val userId = currentUser?.uid
@@ -265,11 +265,12 @@ class MainActivity : AppCompatActivity(), MainInterface {
                 val task = targetDocument.delete()
                 // Display status of the task, like is it successful or failed
                 displayStatusToUser(context, task)
+                supportFragmentManager.popBackStack()
                 return@setPositiveButton
             }.show()
     }
 
-    override fun userMightBeNull(user: FirebaseUser?) {
+    private fun userMightBeNull(user: FirebaseUser?) {
         if (user == null) {
             Log.i("devlog", "User is null, navigating to AuthActivity")
             val intent = Intent(this, AuthActivity::class.java)
@@ -278,26 +279,39 @@ class MainActivity : AppCompatActivity(), MainInterface {
         }
     }
 
-    override fun currentUserEmail(): String {
+    private fun displayStatusToUser(context: Context, taskVoid: Task<Void>) {
+        taskVoid.addOnSuccessListener {
+            Toast.makeText(context, "Successfully deleted the data", Toast.LENGTH_SHORT).show()
+        }.addOnCanceledListener {
+            Toast.makeText(context, "Canceled deleting data", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.i("devlog", exception.message!!)
+            }
+            Toast.makeText(context, "Failed to delete data", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun currentUserEmail(): String {
         userMightBeNull(currentUser)
         return viewModel.getUserEmail(currentUser!!)
     }
 
-    override fun currentUserName(): String {
+    fun currentUserName(): String {
         userMightBeNull(currentUser)
         return viewModel.getUserName(currentUser!!)
     }
 
-    override fun currentUserUrlPhoto(): String {
+    fun currentUserUrlPhoto(): String {
         userMightBeNull(currentUser)
         return viewModel.getUserphotoUrl(currentUser!!, getString(R.string.default_user_photo))
     }
 
-    override fun homeAdapter(): RvHome {
+    fun homeAdapter(): RvHome {
         return seedAdapter
     }
 
-    override fun adapterItemCount(): Int {
+    fun adapterItemCount(): Int {
         return viewModel.countItem()
     }
 }
