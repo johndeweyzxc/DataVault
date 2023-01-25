@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.datavault.adapters.RvFavorite
 import com.example.datavault.adapters.RvHome
+import com.example.datavault.databinding.FragmentDialogCreateBinding
 import com.example.datavault.databinding.FragmentDialogEditBinding
 import com.example.datavault.models.MainViewModel
 import com.example.datavault.schema.SeedSchema
@@ -269,16 +270,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Use by CreateSeedDialog
-    fun uploadData(
-        appName: String, userName: String, email: String, password: String,
-        phoneNumber: String, createdAt: Timestamp, updatedAt: Timestamp
-    ) {
+    fun uploadData(binding: FragmentDialogCreateBinding) {
         val currentUser = FirebaseAuth.getInstance().currentUser
         userMightBeNull(currentUser)
         val userIdDocRef = generatedUserData.document(currentUser!!.uid)
         val dataColRef = userIdDocRef.collection("data")
         val dataModel = SeedSchemaUpload(
-            appName, userName, email, password, phoneNumber, false, createdAt, updatedAt
+            binding.createEtAppname.text.toString(),
+            binding.createEtUsername.text.toString(),
+            binding.createEtEmail.text.toString(),
+            binding.createEtPassword.text.toString(),
+            binding.createEtPhonenumber.text.toString(),
+            false,
+            Timestamp(Date()),
+            Timestamp(Date())
         )
 
         // Display status of the task, like is it successful or failed

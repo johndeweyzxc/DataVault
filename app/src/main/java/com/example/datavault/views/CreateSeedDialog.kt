@@ -14,8 +14,6 @@ import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogCreateBinding
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.Timestamp
-import java.util.*
 
 class CreateSeedDialog : DialogFragment() {
 
@@ -84,16 +82,9 @@ class CreateSeedDialog : DialogFragment() {
             clearHelperText()
             if (checkForBlankOrNull() == -1) { return@setOnClickListener; }
             closeActiveKeyboard()
-            uploadData()
+            (activity as MainActivity).uploadData(binding)
             clearEditText()
         }
-    }
-
-    private fun uploadData() {
-        (activity as MainActivity).uploadData(
-            etAppName.text.toString(), etUserName.text.toString(), etEmail.text.toString(), etPassword.text.toString(),
-            etPhoneNumber.text.toString(), Timestamp(Date()), Timestamp(Date())
-        )
     }
 
     private fun closeActiveKeyboard() {
