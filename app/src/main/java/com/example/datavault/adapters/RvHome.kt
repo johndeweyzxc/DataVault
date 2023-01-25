@@ -2,15 +2,16 @@ package com.example.datavault.adapters
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.schema.SeedSchema
 import com.example.datavault.views.EditSeedDialog
@@ -18,12 +19,8 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 
 // Adapter for recycler view in HomeFragment to render list of document.
-class RvHome(
-    private val listOfDataModel: MutableList<SeedSchema>,
-    private val uidHashMap: HashMap<String, Int>,
-    private val fragmentManager: FragmentManager,
-    private val clipBoard: ClipboardManager,
-) : RecyclerView.Adapter<RvHome.SeedViewHolder>() {
+class RvHome(private val listOfDataModel: MutableList<SeedSchema>, private val activity: MainActivity
+    ) : RecyclerView.Adapter<RvHome.SeedViewHolder>() {
 
     class SeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardViewSeed: MaterialCardView = itemView.findViewById(R.id.cardViewSeed)
@@ -53,25 +50,32 @@ class RvHome(
 
         holder.apply {
             val itemV = holder.itemView
-
             // Set the animation for the card view when it appears on the screen
             cardViewSeed.startAnimation(AnimationUtils.loadAnimation(itemV.context, R.anim.rvhome_item))
 
             cardViewSeed.setOnClickListener {
-                val totalFragments = fragmentManager.backStackEntryCount
+                val totalFragments = activity.supportFragmentManager.backStackEntryCount
                 if (totalFragments > 0) {
                     // Prevent adding duplicate fragment to the stack when the user clicks twice on the card
-                    val latestFragment = fragmentManager.getBackStackEntryAt(totalFragments - 1)
+                    val latestFragment = activity.supportFragmentManager.getBackStackEntryAt(totalFragments - 1)
                     if (latestFragment.name == "EditSeedDialog") {
-                        fragmentManager.popBackStack()
+                        activity.supportFragmentManager.popBackStack()
                     }
                 }
 
-                fragmentManager.beginTransaction().apply {
+                activity.supportFragmentManager.beginTransaction().apply {
+                    var dataContent: SeedSchema? = null
+
+                    for((index, seed) in listOfDataModel.withIndex()) {
+                        if (seed.docId == currentData.docId) {
+                            dataContent = listOfDataModel[index]
+                        }
+                    }
+                    val fireStoreDocId = dataContent?.fireStoreDocId
+                    val appName = dataContent?.appName
+
                     setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    add(R.id.frameLayoutActivityMain, EditSeedDialog(
-                        itemView, currentData.fireStoreDocId, listOfDataModel, uidHashMap
-                    ))
+                    add(R.id.frameLayoutActivityMain, EditSeedDialog(itemView, fireStoreDocId!!, appName!!))
                     addToBackStack("EditSeedDialog")
                     commit()
                 }
@@ -112,7 +116,8 @@ class RvHome(
     private fun copyFromChip(itemView: View, label: String, text: String, chip: Chip) {
         chip.setOnClickListener {
             val clip = ClipData.newPlainText(label, text)
-            clipBoard.setPrimaryClip(clip)
+            val clipBoardManager: ClipboardManager = activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipBoardManager.setPrimaryClip(clip)
             Toast.makeText(itemView.context, label, Toast.LENGTH_SHORT).show()
         }
     }

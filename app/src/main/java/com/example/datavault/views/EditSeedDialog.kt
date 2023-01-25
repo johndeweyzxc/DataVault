@@ -3,16 +3,15 @@ package com.example.datavault.views
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogEditBinding
-import com.example.datavault.schema.SeedSchema
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
@@ -21,8 +20,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class EditSeedDialog(
-    private val itemView: View, private val firestoreDocId: String,
-    private val list: MutableList<SeedSchema>, private val map: HashMap<String, Int>) : DialogFragment() {
+    private val itemView: View, private val fireStoreDocId: String, private val appName: String
+    ) : DialogFragment() {
 
     private lateinit var binding: FragmentDialogEditBinding
 
@@ -38,6 +37,7 @@ class EditSeedDialog(
     private lateinit var etPassword: TextInputEditText
     private lateinit var etPhoneNumber: TextInputEditText
 
+    private lateinit var favorite: String
     private lateinit var createdAt: Timestamp
     private lateinit var updatedAt: Timestamp
     private lateinit var docId: String
@@ -81,13 +81,18 @@ class EditSeedDialog(
         val scope = CoroutineScope(Dispatchers.Main)
         scope.launch {
             val result: List<Any> = (activity as MainActivity).fetchData(
-                firestoreDocId, etAppName, etUserName,
+                fireStoreDocId, etAppName, etUserName,
                 etEmail, etPassword, etPhoneNumber
             )
 
-            docId = result[0].toString()
-            createdAt = result[1] as Timestamp
-            updatedAt = result[2] as Timestamp
+            favorite = if (result[0] as Boolean) {
+                "Added"
+            } else {
+                "notAdded"
+            }
+            docId = result[1].toString()
+            createdAt = result[2] as Timestamp
+            updatedAt = result[3] as Timestamp
         }
     }
 
@@ -110,13 +115,11 @@ class EditSeedDialog(
         binding.editToolBar.setOnMenuItemClickListener { listener ->
             when (listener.title) {
                 "Favorite" -> {
-                    Toast.makeText(requireActivity(), "Clicked favorite", Toast.LENGTH_SHORT).show()
+                    (activity as MainActivity).addToFavorites(fireStoreDocId)
                     true
                 }
                 "Delete" -> {
-                    val indexPos: Int = map[docId]!!
-                    val dataContent: SeedSchema = list[indexPos]
-                    (activity as MainActivity).deleteData(itemView.context, dataContent)
+                    (activity as MainActivity).deleteData(itemView.context, fireStoreDocId, appName)
                     true
                 }
                 else -> false
@@ -141,9 +144,16 @@ class EditSeedDialog(
             return
         }
 
+        val isAdded: Boolean = favorite == "Added"
+        if (isAdded) {
+            Log.i("devlog", "This seed is marked as favorite in edit seed dialog")
+        } else {
+            Log.i("devlog", "This seed is not marked as favorite in edit seed dialog")
+        }
+
         (activity as MainActivity).updateData(
-            firestoreDocId, etAppName.text.toString(), etUserName.text.toString(), etEmail.text.toString(),
-            etPassword.text.toString(), etPhoneNumber.text.toString(), docId, createdAt, updatedAt
+            fireStoreDocId, etAppName.text.toString(), etUserName.text.toString(), etEmail.text.toString(),
+            etPassword.text.toString(), etPhoneNumber.text.toString(), isAdded, docId, createdAt, updatedAt
         )
     }
 

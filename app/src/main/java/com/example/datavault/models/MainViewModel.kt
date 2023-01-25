@@ -1,0 +1,90 @@
+package com.example.datavault.models
+
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import com.example.datavault.schema.SeedSchema
+
+// View model for MainActivity
+class MainViewModel: ViewModel() {
+
+    private var listDataModel = mutableListOf<SeedSchema>()
+    private var listFavorites = mutableListOf<SeedSchema>()
+
+    fun countSeed(): Int { return listDataModel.size }
+
+    fun countFavorites(): Int { return listFavorites.size }
+
+    fun getListSeed(): MutableList<SeedSchema> { return listDataModel }
+
+    fun getListFavorites(): MutableList<SeedSchema> { return listFavorites }
+
+    fun addData(dataItem: SeedSchema): List<Int> {
+        listDataModel.add(dataItem)
+        if (dataItem.favorite) {
+            listFavorites.add(dataItem)
+            Log.i("devlog", "Returning with indexOfFavorites")
+            return listOf(countSeed() - 1, countFavorites() - 1)
+        }
+        return listOf(countSeed() - 1, -1)
+    }
+
+    fun deleteData(deletedItem: SeedSchema): List<Int> {
+        val indexOfSeed = indexLocationList(deletedItem.docId)
+        if (deletedItem.favorite) {
+            listDataModel.removeAt(indexOfSeed)
+            val indexOfFavorites = indexLocationFavorite(deletedItem.docId)
+            return if (indexOfFavorites != -1) {
+                Log.i("devlog", "Present in favorites, deleting existing data")
+                listFavorites.removeAt(indexOfFavorites)
+                listOf(indexOfSeed, indexOfFavorites)
+            } else {
+                Log.i("devlog", "Not present in favorites, returning -1")
+                listOf(indexOfSeed,  -1)
+            }
+        }
+
+        listDataModel.removeAt(indexOfSeed)
+        return listOf(indexOfSeed, -1)
+    }
+
+    fun modifyData(updatedItem: SeedSchema): List<Int> {
+        val indexOfSeed = indexLocationList(updatedItem.docId)
+        if (updatedItem.favorite) {
+            val indexOfFavorites = indexLocationFavorite(updatedItem.docId)
+            return if (indexOfFavorites != -1) {
+                Log.i("devlog", "Present in favorites, modifying existing data")
+                listFavorites[indexOfFavorites] = updatedItem
+                listOf(indexOfSeed, indexOfFavorites)
+            } else {
+                Log.i("devlog", "Not present in favorites, adding data")
+                listFavorites.add(updatedItem)
+                listOf(indexOfSeed, countFavorites() - 1)
+            }
+        }
+
+        listDataModel[indexOfSeed] = updatedItem
+        return listOf(indexOfSeed, -1)
+    }
+
+    private fun indexLocationList(docId: String): Int {
+        var i = -1
+        for((index, seed) in listDataModel.withIndex()){
+            if (seed.docId == docId) {
+                i = index
+                break
+            }
+        }
+        return i
+    }
+
+    private fun indexLocationFavorite(docId: String): Int {
+        var i = -1
+        for((index, seed) in listFavorites.withIndex()){
+            if (seed.docId == docId) {
+                i = index
+                break
+            }
+        }
+        return i
+    }
+}

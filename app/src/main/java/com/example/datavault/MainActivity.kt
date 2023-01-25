@@ -1,6 +1,5 @@
 package com.example.datavault
 
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -10,12 +9,12 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.example.datavault.adapters.RvFavorite
 import com.example.datavault.adapters.RvHome
-import com.example.datavault.models.Main
+import com.example.datavault.models.MainViewModel
 import com.example.datavault.schema.SeedSchema
 import com.example.datavault.schema.SeedSchemaUpload
 import com.example.datavault.views.MainFragment
-import com.google.android.gms.tasks.Task
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
@@ -31,8 +30,9 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: Main
+    private lateinit var viewModel: MainViewModel
     private lateinit var seedAdapter: RvHome
+    private lateinit var favoriteAdapter: RvFavorite
     private var currentUser: FirebaseUser? = null
 
     private val generatedUserData = Firebase.firestore.collection("generatedUserData")
@@ -44,11 +44,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[Main::class.java]
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         // Clipboard manager to be use by the chips inside the data container layout
-        val clipBoardManager: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        seedAdapter = RvHome(viewModel.getListData(), viewModel.getMapData(), supportFragmentManager, clipBoardManager)
-
+        seedAdapter = RvHome(viewModel.getListSeed(), this)
+        favoriteAdapter = RvFavorite(viewModel.getListFavorites())
         subscribeToRealtimeUpdates()
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         // Set the MainFragment as the first fragment to appear on the activity
@@ -112,11 +111,16 @@ class MainActivity : AppCompatActivity() {
         // Convert DocumentChange to DataModel
         val dataModel: SeedSchema = convertToModel(changes)
         // Append the data in the view model
-        val addedPos: Int = viewModel.addData(dataModel, dataModel.docId)
-        if (addedPos != -1) {
+        val addedPos: List<Int> = viewModel.addData(dataModel)
+        if (addedPos.first() != -1) {
             // Notify the adapter about the new added data from the view model
-            seedAdapter.notifyItemInserted(addedPos)
+            seedAdapter.notifyItemInserted(addedPos.first())
             Log.i("devlog", "Added new document [${dataModel.appName}] from firestore snapshot")
+        }
+        if (addedPos.last() != -1) {
+            // Notify the adapter about the new added data from the view model
+            favoriteAdapter.notifyItemInserted(addedPos.last())
+            Log.i("devlog", "Added [${dataModel.appName}] to favorites")
         }
     }
 
@@ -124,11 +128,20 @@ class MainActivity : AppCompatActivity() {
         // Convert DocumentChange to DataModel
         val dataModel: SeedSchema = convertToModel(changes)
         // Modify the data in the view model
-        val modifiedPos: Int = viewModel.modifyData(dataModel, dataModel.docId)
-        if (modifiedPos != -1) {
+        val modifiedPos: List<Int> = viewModel.modifyData(dataModel)
+
+        Log.i("devlog" ,
+            "seedAdapter modified pos: ${modifiedPos.first()}, favoriteAdapter modified pos: ${modifiedPos.last()}")
+
+        if (modifiedPos.first() != -1) {
             // Notify the adapter about the modified data from the view model
-            seedAdapter.notifyItemChanged(modifiedPos)
+            seedAdapter.notifyItemChanged(modifiedPos.first())
             Log.i("devlog", "Document [${dataModel.appName}] has been modified")
+        }
+        if (modifiedPos.last() != -1) {
+            // Notify the adapter about the modified data from the view model
+            favoriteAdapter.notifyItemChanged(modifiedPos.last())
+            Log.i("devlog", "Document [${dataModel.appName}] has also been modified in favorites")
         }
     }
 
@@ -136,11 +149,21 @@ class MainActivity : AppCompatActivity() {
         // Convert DocumentChange to DataModel
         val dataModel: SeedSchema = convertToModel(changes)
         // Remove the data in the view model
-        val deletedPos: Int = viewModel.deleteData(dataModel.docId)
-        if (deletedPos != -1) {
+        val deletedPos: List<Int> = viewModel.deleteData(dataModel)
+
+        Log.i("devlog" ,
+            "seedAdapter modified pos: ${deletedPos.first()}, favoriteAdapter modified pos: ${deletedPos.last()}")
+
+        if (deletedPos.first() != -1) {
             // Notify the adapter about the removed data from the view model
-            seedAdapter.notifyItemRemoved(deletedPos)
+            seedAdapter.notifyItemRemoved(deletedPos.first())
+            Log.i("devlog", "Total seed count: ${seedCount()}")
             Log.i("devlog", "Document [${dataModel.appName}] has been deleted")
+        }
+        if (deletedPos.last() != -1) {
+            // Notify the adapter about the removed data from the view model
+            favoriteAdapter.notifyItemRemoved(deletedPos.first())
+            Log.i("devlog", "Document [${dataModel.appName}] has also been deleted in favorites")
         }
     }
 
@@ -151,6 +174,7 @@ class MainActivity : AppCompatActivity() {
             changes.document.get("email") as String,
             changes.document.get("password") as String,
             changes.document.get("phoneNumber") as String,
+            changes.document.get("favorite") as Boolean,
             changes.document.get("docId") as String,
             changes.document.id,
             changes.document.get("createdAt") as Timestamp?,
@@ -158,6 +182,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    // Use by EditSeedDialog
     suspend fun fetchData(
         firestoreDocId: String, appName: TextInputEditText, userName: TextInputEditText,
         email: TextInputEditText, password: TextInputEditText, pNumber: TextInputEditText,
@@ -179,9 +204,11 @@ class MainActivity : AppCompatActivity() {
                 if (error.message != null) {
                     Log.i("devlog", error.message!!)
                 }
-                Toast.makeText(applicationContext, "There is a problem fetching data from the database",
-                    Toast.LENGTH_LONG
-                ).show()
+                runOnUiThread {
+                    Toast.makeText(applicationContext, "There is a problem fetching data from the database",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
 
@@ -191,6 +218,7 @@ class MainActivity : AppCompatActivity() {
         password.setText(result?.get("password").toString())
         pNumber.setText(result?.get("phoneNumber").toString())
 
+        list.add(result?.get("favorite") as Boolean)
         list.add(result?.get("docId").toString())
         list.add(result?.get("createdAt")!!)
         list.add(Timestamp(Date()))
@@ -198,9 +226,10 @@ class MainActivity : AppCompatActivity() {
         return list
     }
 
+    // Use by EditSeedDialog
     fun updateData(
         firestoreDocId: String, appName: String, userName: String, email: String,
-        password: String, phoneNumber: String, docId: String,
+        password: String, phoneNumber: String, favorite: Boolean, docId: String,
         createdAt: Timestamp, updatedAt: Timestamp
     ) {
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -209,27 +238,92 @@ class MainActivity : AppCompatActivity() {
         val dataColRef = userIdDocRef.collection("data")
         val targetDocument = dataColRef.document(firestoreDocId)
         val dataModel = SeedSchemaUpload(
-            appName, userName, email, password, phoneNumber, docId,
-            createdAt, updatedAt
+            appName, userName, email, password, phoneNumber, favorite, docId, createdAt, updatedAt
         )
 
         val task = targetDocument.set(dataModel)
         // Display status of the task, like is it successful or failed
-        displayStatusToUser(applicationContext, task)
+        task.addOnSuccessListener {
+            Toast.makeText(applicationContext, "Successfully deleted the data", Toast.LENGTH_SHORT).show()
+        }.addOnCanceledListener {
+            Toast.makeText(applicationContext, "Canceled deleting data", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.i("devlog", exception.message!!)
+            }
+            Toast.makeText(applicationContext, "Failed to delete data", Toast.LENGTH_SHORT).show()
+        }
     }
 
+    // Use by EditSeedDialog
+    fun deleteData(context: Context, fireStoreDocId: String, appName: String) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        userMightBeNull(currentUser)
+        val userId = currentUser?.uid
+
+        val userIdDocRef = generatedUserData.document(userId!!)
+        val dataColRef = userIdDocRef.collection("data")
+        val targetDocument = dataColRef.document(fireStoreDocId)
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Deleting $appName")
+            .setMessage("Do you really want to delete $appName?")
+            .setNeutralButton("CANCEL") { dialog, _ ->
+                dialog.cancel()
+                return@setNeutralButton
+            }
+            .setPositiveButton("DELETE") {_, _ ->
+                val task = targetDocument.delete()
+                // Display status of the task, like is it successful or failed
+                task.addOnSuccessListener {
+                    Toast.makeText(context, "Successfully deleted the data", Toast.LENGTH_SHORT).show()
+                }.addOnCanceledListener {
+                    Toast.makeText(context, "Canceled deleting data", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener { exception ->
+                    if (exception.message != null) {
+                        Log.i("devlog", exception.message!!)
+                    }
+                    Toast.makeText(context, "Failed to delete data", Toast.LENGTH_SHORT).show()
+                }
+                supportFragmentManager.popBackStack()
+                return@setPositiveButton
+            }.show()
+    }
+
+    // Use by EditSeedDialog
+    fun addToFavorites(fireStoreDocId: String) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        userMightBeNull(currentUser)
+        val userId = currentUser?.uid
+
+        val userIdDocRef = generatedUserData.document(userId!!)
+        val dataColRef = userIdDocRef.collection("data")
+        val targetDocument = dataColRef.document(fireStoreDocId)
+
+        targetDocument.update("favorite", true).addOnSuccessListener {
+            Toast.makeText(applicationContext, "Added to favorites", Toast.LENGTH_LONG).show()
+        }.addOnCanceledListener {
+            Toast.makeText(applicationContext, "Canceled saving to favorite", Toast.LENGTH_LONG).show()
+        }.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.i("devlog", exception.message!!)
+            }
+            Toast.makeText(applicationContext, "Failed to add to favorites", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    // Use by CreateSeedDialog
     fun uploadData(
         appName: String, userName: String, email: String, password: String,
-        phoneNumber: String, docId: String, createdAt: Timestamp,
-        updatedAt: Timestamp
+        phoneNumber: String, docId: String, createdAt:
+        Timestamp, updatedAt: Timestamp
     ) {
         val currentUser = FirebaseAuth.getInstance().currentUser
         userMightBeNull(currentUser)
         val userIdDocRef = generatedUserData.document(currentUser!!.uid)
         val dataColRef = userIdDocRef.collection("data")
         val dataModel = SeedSchemaUpload(
-            appName, userName, email, password, phoneNumber, docId,
-            createdAt, updatedAt
+            appName, userName, email, password, phoneNumber, false, docId, createdAt, updatedAt
         )
 
         // Display status of the task, like is it successful or failed
@@ -245,31 +339,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun deleteData(context: Context, dataContent: SeedSchema) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        userMightBeNull(currentUser)
-        val userId = currentUser?.uid
-
-        val userIdDocRef = generatedUserData.document(userId!!)
-        val dataColRef = userIdDocRef.collection("data")
-        val targetDocument = dataColRef.document(dataContent.fireStoreDocId)
-
-        MaterialAlertDialogBuilder(context)
-            .setTitle("Deleting ${dataContent.appName}")
-            .setMessage("Do you really want to delete ${dataContent.appName}?")
-            .setNeutralButton("CANCEL") { dialog, _ ->
-                dialog.cancel()
-                return@setNeutralButton
-            }
-            .setPositiveButton("DELETE") {_, _ ->
-                val task = targetDocument.delete()
-                // Display status of the task, like is it successful or failed
-                displayStatusToUser(context, task)
-                supportFragmentManager.popBackStack()
-                return@setPositiveButton
-            }.show()
-    }
-
     private fun userMightBeNull(user: FirebaseUser?) {
         if (user == null) {
             Log.i("devlog", "User is null, navigating to AuthActivity")
@@ -279,39 +348,40 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayStatusToUser(context: Context, taskVoid: Task<Void>) {
-        taskVoid.addOnSuccessListener {
-            Toast.makeText(context, "Successfully deleted the data", Toast.LENGTH_SHORT).show()
-        }.addOnCanceledListener {
-            Toast.makeText(context, "Canceled deleting data", Toast.LENGTH_SHORT).show()
-        }.addOnFailureListener { exception ->
-            if (exception.message != null) {
-                Log.i("devlog", exception.message!!)
-            }
-            Toast.makeText(context, "Failed to delete data", Toast.LENGTH_SHORT).show()
-        }
-    }
-
+    // Functions below this comment is use by MainFragment
     fun currentUserEmail(): String {
         userMightBeNull(currentUser)
-        return viewModel.getUserEmail(currentUser!!)
+        return currentUser?.email!!
     }
 
     fun currentUserName(): String {
         userMightBeNull(currentUser)
-        return viewModel.getUserName(currentUser!!)
+        if (currentUser?.displayName.isNullOrBlank()) {
+            val createName = currentUser?.email.toString().split("@")
+            return createName.first()
+        }
+        return currentUser?.displayName!!
     }
 
     fun currentUserUrlPhoto(): String {
         userMightBeNull(currentUser)
-        return viewModel.getUserphotoUrl(currentUser!!, getString(R.string.default_user_photo))
+        if (currentUser?.photoUrl == null) {
+            return getString(R.string.default_user_photo)
+        }
+        return currentUser?.photoUrl.toString()
     }
 
+    // Functions below this comment is use by HomeFragment
     fun homeAdapter(): RvHome {
         return seedAdapter
     }
 
-    fun adapterItemCount(): Int {
-        return viewModel.countItem()
+    fun seedCount(): Int {
+        return viewModel.countSeed()
+    }
+
+    // Functions below this comment is use by FavoritesFragment
+    fun favoriteAdapter(): RvFavorite {
+        return favoriteAdapter
     }
 }

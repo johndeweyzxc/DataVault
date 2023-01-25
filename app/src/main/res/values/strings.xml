@@ -69,4 +69,6 @@
 
     <string name="default_user_photo">https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Android_symbol_green_2.max-1500x1500.png</string>
     <string name="favorites_favorite_text">Favorites</string>
+    <string name="favorite_app_name">Twitter</string>
+    <string name="favorite_icon_indicator">Icon for indicating that this item is added to favorites</string>
 </resources>
