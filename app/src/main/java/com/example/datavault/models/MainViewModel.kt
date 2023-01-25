@@ -29,10 +29,10 @@ class MainViewModel: ViewModel() {
     }
 
     fun deleteData(deletedItem: SeedSchema): List<Int> {
-        val indexOfSeed = indexLocationList(deletedItem.docId)
+        val indexOfSeed = indexLocationList(deletedItem.fireStoreDocId)
         if (deletedItem.favorite) {
             listDataModel.removeAt(indexOfSeed)
-            val indexOfFavorites = indexLocationFavorite(deletedItem.docId)
+            val indexOfFavorites = indexLocationFavorite(deletedItem.fireStoreDocId)
             return if (indexOfFavorites != -1) {
                 Log.i("devlog", "Present in favorites, deleting existing data")
                 listFavorites.removeAt(indexOfFavorites)
@@ -48,9 +48,9 @@ class MainViewModel: ViewModel() {
     }
 
     fun modifyData(updatedItem: SeedSchema): List<Int> {
-        val indexOfSeed = indexLocationList(updatedItem.docId)
+        val indexOfSeed = indexLocationList(updatedItem.fireStoreDocId)
         if (updatedItem.favorite) {
-            val indexOfFavorites = indexLocationFavorite(updatedItem.docId)
+            val indexOfFavorites = indexLocationFavorite(updatedItem.fireStoreDocId)
             return if (indexOfFavorites != -1) {
                 Log.i("devlog", "Present in favorites, modifying existing data")
                 listFavorites[indexOfFavorites] = updatedItem
@@ -69,7 +69,7 @@ class MainViewModel: ViewModel() {
     private fun indexLocationList(docId: String): Int {
         var i = -1
         for((index, seed) in listDataModel.withIndex()){
-            if (seed.docId == docId) {
+            if (seed.fireStoreDocId == docId) {
                 i = index
                 break
             }
@@ -80,7 +80,7 @@ class MainViewModel: ViewModel() {
     private fun indexLocationFavorite(docId: String): Int {
         var i = -1
         for((index, seed) in listFavorites.withIndex()){
-            if (seed.docId == docId) {
+            if (seed.fireStoreDocId == docId) {
                 i = index
                 break
             }

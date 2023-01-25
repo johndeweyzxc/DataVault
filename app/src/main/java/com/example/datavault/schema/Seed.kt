@@ -10,7 +10,6 @@ data class SeedSchemaUpload(
     var password: String,
     var phoneNumber: String,
     var favorite: Boolean,
-    var docId: String,
     var createdAt: Timestamp?,
     var updatedAt: Timestamp?,
 )
@@ -23,7 +22,6 @@ data class SeedSchema(
     var password: String,
     var phoneNumber: String,
     var favorite: Boolean,
-    var docId: String,
     var fireStoreDocId: String,
     var createdAt: Timestamp?,
     var updatedAt: Timestamp?,

@@ -25,7 +25,6 @@ class RvHome(private val listOfDataModel: MutableList<SeedSchema>, private val a
     class SeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardViewSeed: MaterialCardView = itemView.findViewById(R.id.cardViewSeed)
         val tvSeedAppName: TextView = itemView.findViewById(R.id.tvSeedAppName)
-        val tvDocId: TextView = itemView.findViewById(R.id.tvDocId)
         val seedChipUsernameInfo: Chip = itemView.findViewById(R.id.seedChipUsernameInfo)
         val seedChipEmailInfo: Chip = itemView.findViewById(R.id.seedChipEmailInfo)
         val seedChipPhoneNumberInfo: Chip = itemView.findViewById(R.id.seedChipPhoneNumberInfo)
@@ -64,18 +63,10 @@ class RvHome(private val listOfDataModel: MutableList<SeedSchema>, private val a
                 }
 
                 activity.supportFragmentManager.beginTransaction().apply {
-                    var dataContent: SeedSchema? = null
-
-                    for((index, seed) in listOfDataModel.withIndex()) {
-                        if (seed.docId == currentData.docId) {
-                            dataContent = listOfDataModel[index]
-                        }
-                    }
-                    val fireStoreDocId = dataContent?.fireStoreDocId
-                    val appName = dataContent?.appName
-
                     setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    add(R.id.frameLayoutActivityMain, EditSeedDialog(itemView, fireStoreDocId!!, appName!!))
+                    add(R.id.frameLayoutActivityMain, EditSeedDialog(
+                        itemView, currentData.fireStoreDocId, currentData.appName
+                        ))
                     addToBackStack("EditSeedDialog")
                     commit()
                 }
@@ -100,7 +91,6 @@ class RvHome(private val listOfDataModel: MutableList<SeedSchema>, private val a
             setTextContent(seedChipPasswordInfo, currentData.password)
 
             tvSeedAppName.text = currentData.appName
-            tvDocId.text = currentData.docId
         }
     }
 

@@ -91,9 +91,8 @@ class CreateSeedDialog : DialogFragment() {
 
     private fun uploadData() {
         (activity as MainActivity).uploadData(
-            etAppName.text.toString(), etUserName.text.toString(),
-            etEmail.text.toString(), etPassword.text.toString(), etPhoneNumber.text.toString(),
-            UUID.randomUUID().toString(), Timestamp(Date()), Timestamp(Date())
+            etAppName.text.toString(), etUserName.text.toString(), etEmail.text.toString(), etPassword.text.toString(),
+            etPhoneNumber.text.toString(), Timestamp(Date()), Timestamp(Date())
         )
     }
 

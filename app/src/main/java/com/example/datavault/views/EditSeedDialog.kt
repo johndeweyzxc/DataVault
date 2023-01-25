@@ -40,7 +40,6 @@ class EditSeedDialog(
     private lateinit var favorite: String
     private lateinit var createdAt: Timestamp
     private lateinit var updatedAt: Timestamp
-    private lateinit var docId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,9 +89,8 @@ class EditSeedDialog(
             } else {
                 "notAdded"
             }
-            docId = result[1].toString()
-            createdAt = result[2] as Timestamp
-            updatedAt = result[3] as Timestamp
+            createdAt = result[1] as Timestamp
+            updatedAt = result[2] as Timestamp
         }
     }
 
@@ -153,7 +151,7 @@ class EditSeedDialog(
 
         (activity as MainActivity).updateData(
             fireStoreDocId, etAppName.text.toString(), etUserName.text.toString(), etEmail.text.toString(),
-            etPassword.text.toString(), etPhoneNumber.text.toString(), isAdded, docId, createdAt, updatedAt
+            etPassword.text.toString(), etPhoneNumber.text.toString(), isAdded, createdAt, updatedAt
         )
     }
 

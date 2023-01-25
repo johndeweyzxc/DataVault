@@ -175,7 +175,6 @@ class MainActivity : AppCompatActivity() {
             changes.document.get("password") as String,
             changes.document.get("phoneNumber") as String,
             changes.document.get("favorite") as Boolean,
-            changes.document.get("docId") as String,
             changes.document.id,
             changes.document.get("createdAt") as Timestamp?,
             changes.document.get("updatedAt") as Timestamp?,
@@ -219,7 +218,6 @@ class MainActivity : AppCompatActivity() {
         pNumber.setText(result?.get("phoneNumber").toString())
 
         list.add(result?.get("favorite") as Boolean)
-        list.add(result?.get("docId").toString())
         list.add(result?.get("createdAt")!!)
         list.add(Timestamp(Date()))
 
@@ -229,7 +227,7 @@ class MainActivity : AppCompatActivity() {
     // Use by EditSeedDialog
     fun updateData(
         firestoreDocId: String, appName: String, userName: String, email: String,
-        password: String, phoneNumber: String, favorite: Boolean, docId: String,
+        password: String, phoneNumber: String, favorite: Boolean,
         createdAt: Timestamp, updatedAt: Timestamp
     ) {
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -238,7 +236,7 @@ class MainActivity : AppCompatActivity() {
         val dataColRef = userIdDocRef.collection("data")
         val targetDocument = dataColRef.document(firestoreDocId)
         val dataModel = SeedSchemaUpload(
-            appName, userName, email, password, phoneNumber, favorite, docId, createdAt, updatedAt
+            appName, userName, email, password, phoneNumber, favorite, createdAt, updatedAt
         )
 
         val task = targetDocument.set(dataModel)
@@ -315,15 +313,14 @@ class MainActivity : AppCompatActivity() {
     // Use by CreateSeedDialog
     fun uploadData(
         appName: String, userName: String, email: String, password: String,
-        phoneNumber: String, docId: String, createdAt:
-        Timestamp, updatedAt: Timestamp
+        phoneNumber: String, createdAt: Timestamp, updatedAt: Timestamp
     ) {
         val currentUser = FirebaseAuth.getInstance().currentUser
         userMightBeNull(currentUser)
         val userIdDocRef = generatedUserData.document(currentUser!!.uid)
         val dataColRef = userIdDocRef.collection("data")
         val dataModel = SeedSchemaUpload(
-            appName, userName, email, password, phoneNumber, false, docId, createdAt, updatedAt
+            appName, userName, email, password, phoneNumber, false, createdAt, updatedAt
         )
 
         // Display status of the task, like is it successful or failed
