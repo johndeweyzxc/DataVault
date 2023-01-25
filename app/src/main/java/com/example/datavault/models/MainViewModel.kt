@@ -12,11 +12,15 @@ class MainViewModel: ViewModel() {
 
     fun countSeed(): Int { return listDataModel.size }
 
-    fun countFavorites(): Int { return listFavorites.size }
+    private fun countFavorites(): Int { return listFavorites.size }
 
     fun getListSeed(): MutableList<SeedSchema> { return listDataModel }
 
     fun getListFavorites(): MutableList<SeedSchema> { return listFavorites }
+
+    fun getSeed(fireStoreDocId: String): SeedSchema {
+        return listDataModel[indexLocationList(fireStoreDocId)]
+    }
 
     fun addData(dataItem: SeedSchema): List<Int> {
         listDataModel.add(dataItem)

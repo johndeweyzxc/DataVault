@@ -11,21 +11,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.datavault.adapters.RvFavorite
 import com.example.datavault.adapters.RvHome
+import com.example.datavault.databinding.FragmentDialogEditBinding
 import com.example.datavault.models.MainViewModel
 import com.example.datavault.schema.SeedSchema
 import com.example.datavault.schema.SeedSchemaUpload
 import com.example.datavault.views.MainFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -182,74 +179,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Use by EditSeedDialog
-    suspend fun fetchData(
-        firestoreDocId: String, appName: TextInputEditText, userName: TextInputEditText,
-        email: TextInputEditText, password: TextInputEditText, pNumber: TextInputEditText,
-    ): MutableList<Any> {
-
+    fun updateData(fireStoreDocId: String, binding: FragmentDialogEditBinding) {
+        val seedData = getSeedViaFirestoreDocId(fireStoreDocId)
         val currentUser = FirebaseAuth.getInstance().currentUser
         userMightBeNull(currentUser)
         val userIdDocRef = generatedUserData.document(currentUser!!.uid)
         val dataColRef = userIdDocRef.collection("data")
-        val targetDocument = dataColRef.document(firestoreDocId)
-
-        val list = mutableListOf<Any>()
-        var result: Map<String, Any>? = null
-
-        withContext(Dispatchers.IO) {
-            try {
-                result = targetDocument.get().await().data
-            } catch (error: Exception) {
-                if (error.message != null) {
-                    Log.i("devlog", error.message!!)
-                }
-                runOnUiThread {
-                    Toast.makeText(applicationContext, "There is a problem fetching data from the database",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
-
-        appName.setText(result?.get("appName").toString())
-        userName.setText(result?.get("userName").toString())
-        email.setText(result?.get("email").toString())
-        password.setText(result?.get("password").toString())
-        pNumber.setText(result?.get("phoneNumber").toString())
-
-        list.add(result?.get("favorite") as Boolean)
-        list.add(result?.get("createdAt")!!)
-        list.add(Timestamp(Date()))
-
-        return list
-    }
-
-    // Use by EditSeedDialog
-    fun updateData(
-        firestoreDocId: String, appName: String, userName: String, email: String,
-        password: String, phoneNumber: String, favorite: Boolean,
-        createdAt: Timestamp, updatedAt: Timestamp
-    ) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        userMightBeNull(currentUser)
-        val userIdDocRef = generatedUserData.document(currentUser!!.uid)
-        val dataColRef = userIdDocRef.collection("data")
-        val targetDocument = dataColRef.document(firestoreDocId)
+        val targetDocument = dataColRef.document(fireStoreDocId)
         val dataModel = SeedSchemaUpload(
-            appName, userName, email, password, phoneNumber, favorite, createdAt, updatedAt
+            binding.editEtAppname.text.toString(),
+            binding.editEtUsername.text.toString(),
+            binding.editEtEmail.text.toString(),
+            binding.editEtPassword.text.toString(),
+            binding.editEtPhonenumber.text.toString(),
+            seedData.favorite,
+            seedData.createdAt,
+            Timestamp(Date())
         )
 
         val task = targetDocument.set(dataModel)
         // Display status of the task, like is it successful or failed
         task.addOnSuccessListener {
-            Toast.makeText(applicationContext, "Successfully deleted the data", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, "Successfully updated the data", Toast.LENGTH_SHORT).show()
         }.addOnCanceledListener {
-            Toast.makeText(applicationContext, "Canceled deleting data", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, "Canceled updating the data", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener { exception ->
             if (exception.message != null) {
                 Log.i("devlog", exception.message!!)
             }
-            Toast.makeText(applicationContext, "Failed to delete data", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, "Failed to update the data", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -380,5 +338,10 @@ class MainActivity : AppCompatActivity() {
     // Functions below this comment is use by FavoritesFragment
     fun favoriteAdapter(): RvFavorite {
         return favoriteAdapter
+    }
+
+    // Functions below this comment is use by EditSeedDialog
+    fun getSeedViaFirestoreDocId(fireStoreDocId: String): SeedSchema {
+        return viewModel.getSeed(fireStoreDocId)
     }
 }

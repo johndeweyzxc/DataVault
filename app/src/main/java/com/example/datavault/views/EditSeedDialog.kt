@@ -3,7 +3,6 @@ package com.example.datavault.views
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +13,6 @@ import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogEditBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.Timestamp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class EditSeedDialog(
     private val itemView: View, private val fireStoreDocId: String, private val appName: String
@@ -36,10 +31,6 @@ class EditSeedDialog(
     private lateinit var etEmail: TextInputEditText
     private lateinit var etPassword: TextInputEditText
     private lateinit var etPhoneNumber: TextInputEditText
-
-    private lateinit var favorite: String
-    private lateinit var createdAt: Timestamp
-    private lateinit var updatedAt: Timestamp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,21 +68,13 @@ class EditSeedDialog(
     }
 
     private fun setDefaultValues() {
-        val scope = CoroutineScope(Dispatchers.Main)
-        scope.launch {
-            val result: List<Any> = (activity as MainActivity).fetchData(
-                fireStoreDocId, etAppName, etUserName,
-                etEmail, etPassword, etPhoneNumber
-            )
+        val seedData = (activity as MainActivity).getSeedViaFirestoreDocId(fireStoreDocId)
 
-            favorite = if (result[0] as Boolean) {
-                "Added"
-            } else {
-                "notAdded"
-            }
-            createdAt = result[1] as Timestamp
-            updatedAt = result[2] as Timestamp
-        }
+        etAppName.setText(seedData.appName)
+        etUserName.setText(seedData.userName)
+        etEmail.setText(seedData.email)
+        etPassword.setText(seedData.password)
+        etPhoneNumber.setText(seedData.phoneNumber)
     }
 
     private fun setButtonListeners() {
@@ -138,21 +121,8 @@ class EditSeedDialog(
     }
 
     private fun updateData() {
-        if (checkForBlankOrNull() == -1) {
-            return
-        }
-
-        val isAdded: Boolean = favorite == "Added"
-        if (isAdded) {
-            Log.i("devlog", "This seed is marked as favorite in edit seed dialog")
-        } else {
-            Log.i("devlog", "This seed is not marked as favorite in edit seed dialog")
-        }
-
-        (activity as MainActivity).updateData(
-            fireStoreDocId, etAppName.text.toString(), etUserName.text.toString(), etEmail.text.toString(),
-            etPassword.text.toString(), etPhoneNumber.text.toString(), isAdded, createdAt, updatedAt
-        )
+        if (checkForBlankOrNull() == -1) { return }
+        (activity as MainActivity).updateData(fireStoreDocId, binding)
     }
 
     private fun closeActiveKeyboard() {
