@@ -83,9 +83,9 @@ class MainFragment : Fragment() {
         val email: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
         val activity = (activity as MainActivity)
 
-        Glide.with(this).load(activity.currentUserUrlPhoto()).into(avatar)
-        username.text = activity.currentUserName()
-        email.text = activity.currentUserEmail()
+        Glide.with(this).load(activity.MainFrag().currentUserUrlPhoto()).into(avatar)
+        username.text = activity.MainFrag().currentUserName()
+        email.text = activity.MainFrag().currentUserEmail()
 
         binding.mainToolBar.setNavigationOnClickListener {
             binding.drawerLayout.open()

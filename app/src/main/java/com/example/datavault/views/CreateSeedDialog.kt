@@ -82,8 +82,9 @@ class CreateSeedDialog : DialogFragment() {
             clearHelperText()
             if (checkForBlankOrNull() == -1) { return@setOnClickListener; }
             closeActiveKeyboard()
-            (activity as MainActivity).uploadData(binding)
+            (activity as MainActivity).CreateSeed().uploadData(binding)
             clearEditText()
+            dismiss()
         }
     }
 

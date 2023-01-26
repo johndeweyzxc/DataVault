@@ -3,6 +3,8 @@ package com.example.datavault.models
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.datavault.schema.SeedSchema
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentChange
 
 // View model for MainActivity
 class MainViewModel: ViewModel() {
@@ -18,8 +20,16 @@ class MainViewModel: ViewModel() {
 
     fun getListFavorites(): MutableList<SeedSchema> { return listFavorites }
 
-    fun getSeed(fireStoreDocId: String): SeedSchema {
-        return listDataModel[indexLocationList(fireStoreDocId)]
+    fun getSeed(fireStoreDocId: String): SeedSchema { return listDataModel[indexLocationList(fireStoreDocId)] }
+
+    fun convertToModel(changes: DocumentChange): SeedSchema {
+        return SeedSchema(
+            changes.document.get("appName") as String, changes.document.get("userName") as String,
+            changes.document.get("email") as String, changes.document.get("password") as String,
+            changes.document.get("phoneNumber") as String, changes.document.get("favorite") as Boolean,
+            changes.document.id, changes.document.get("createdAt") as Timestamp?,
+            changes.document.get("updatedAt") as Timestamp?,
+        )
     }
 
     fun addData(dataItem: SeedSchema): List<Int> {
@@ -37,6 +47,7 @@ class MainViewModel: ViewModel() {
         if (deletedItem.favorite) {
             listDataModel.removeAt(indexOfSeed)
             val indexOfFavorites = indexLocationFavorite(deletedItem.fireStoreDocId)
+            Log.i("devlog", "Target index of favorites $indexOfFavorites")
             return if (indexOfFavorites != -1) {
                 Log.i("devlog", "Present in favorites, deleting existing data")
                 listFavorites.removeAt(indexOfFavorites)

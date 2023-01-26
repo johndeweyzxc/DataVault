@@ -20,7 +20,7 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val scrollableView: RecyclerView = view.findViewById(R.id.rvFavoriteScrollableView)
-        scrollableView.adapter = (activity as MainActivity).favoriteAdapter()
+        scrollableView.adapter = (activity as MainActivity).FavoriteFrag().favoriteAdapter()
         scrollableView.layoutManager = LinearLayoutManager(context)
     }
 }

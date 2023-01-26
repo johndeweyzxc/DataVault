@@ -15,7 +15,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 class EditSeedDialog(
-    private val itemView: View, private val fireStoreDocId: String, private val appName: String
+    private val itemView: View,
+    private val fireStoreDocId: String,
+    private val appName: String
     ) : DialogFragment() {
 
     private lateinit var binding: FragmentDialogEditBinding
@@ -68,7 +70,7 @@ class EditSeedDialog(
     }
 
     private fun setDefaultValues() {
-        val seedData = (activity as MainActivity).getSeedViaFirestoreDocId(fireStoreDocId)
+        val seedData = (activity as MainActivity).EditSeed().getSeedViaFirestoreDocId(fireStoreDocId)
 
         etAppName.setText(seedData.appName)
         etUserName.setText(seedData.userName)
@@ -88,19 +90,24 @@ class EditSeedDialog(
 
         binding.editSaveChangesButton.setOnClickListener {
             if (checkForBlankOrNull() == 0) {
-                updateData()
+                if (checkForBlankOrNull() == -1) {
+                    return@setOnClickListener
+                }
+                (activity as MainActivity).EditSeed().updateData(fireStoreDocId, binding)
                 closeActiveKeyboard()
+                dismiss()
             }
         }
 
         binding.editToolBar.setOnMenuItemClickListener { listener ->
             when (listener.title) {
                 "Favorite" -> {
-                    (activity as MainActivity).addToFavorites(fireStoreDocId)
+                    (activity as MainActivity).EditSeed().addToFavorites(fireStoreDocId)
+                    dismiss()
                     true
                 }
                 "Delete" -> {
-                    (activity as MainActivity).deleteData(itemView.context, fireStoreDocId, appName)
+                    (activity as MainActivity).EditSeed().deleteData(itemView.context, fireStoreDocId, appName)
                     true
                 }
                 else -> false
@@ -118,11 +125,6 @@ class EditSeedDialog(
         }
 
         return 0
-    }
-
-    private fun updateData() {
-        if (checkForBlankOrNull() == -1) { return }
-        (activity as MainActivity).updateData(fireStoreDocId, binding)
     }
 
     private fun closeActiveKeyboard() {
