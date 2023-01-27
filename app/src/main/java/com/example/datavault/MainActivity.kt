@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        favoriteAdapter = RvFavorite(viewModel.getListFavorites(), this)
         seedAdapter = RvHome(viewModel.getListSeed(), this)
-        favoriteAdapter = RvFavorite(viewModel.getListFavorites())
 
         subscribeToRealtimeUpdates()
 
@@ -306,7 +306,7 @@ class MainActivity : AppCompatActivity() {
                 }.show()
         }
 
-        fun addToFavorites(fireStoreDocId: String) {
+        fun addToFavorites(context: Context, fireStoreDocId: String, value: Boolean) {
             val currentUser = FirebaseAuth.getInstance().currentUser
             userMightBeNull(currentUser)
             val userId = currentUser?.uid
@@ -315,15 +315,15 @@ class MainActivity : AppCompatActivity() {
             val dataColRef = userIdDocRef.collection("data")
             val targetDocument = dataColRef.document(fireStoreDocId)
 
-            targetDocument.update("favorite", true).addOnSuccessListener {
-                Toast.makeText(applicationContext, "Added to favorites", Toast.LENGTH_LONG).show()
+            targetDocument.update("favorite", value).addOnSuccessListener {
+                Toast.makeText(context, "Added to favorites", Toast.LENGTH_LONG).show()
             }.addOnCanceledListener {
-                Toast.makeText(applicationContext, "Canceled saving to favorite", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Canceled saving to favorite", Toast.LENGTH_LONG).show()
             }.addOnFailureListener { exception ->
                 if (exception.message != null) {
                     Log.i("devlog", exception.message!!)
                 }
-                Toast.makeText(applicationContext, "Failed to add to favorites", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Failed to add to favorites", Toast.LENGTH_LONG).show()
             }
         }
     }

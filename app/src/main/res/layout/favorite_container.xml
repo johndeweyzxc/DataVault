@@ -23,7 +23,7 @@
         android:padding="15dp">
 
         <TextView
-            android:id="@+id/favoriteAppName"
+            android:id="@+id/tvFavoriteAppName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -34,7 +34,7 @@
             android:textStyle="bold"/>
 
         <ImageView
-            android:id="@+id/favoriteIcon"
+            android:id="@+id/ivFavoriteIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/favorite_icon_indicator"

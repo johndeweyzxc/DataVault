@@ -64,21 +64,25 @@ class MainViewModel: ViewModel() {
 
     fun modifyData(updatedItem: SeedSchema): List<Int> {
         val indexOfSeed = indexLocationList(updatedItem.fireStoreDocId)
-        if (updatedItem.favorite) {
-            val indexOfFavorites = indexLocationFavorite(updatedItem.fireStoreDocId)
-            return if (indexOfFavorites != -1) {
-                Log.i("devlog", "Present in favorites, modifying existing data")
-                listFavorites[indexOfFavorites] = updatedItem
-                listOf(indexOfSeed, indexOfFavorites)
-            } else {
-                Log.i("devlog", "Not present in favorites, adding data")
+        val indexOfFavorites = indexLocationFavorite(updatedItem.fireStoreDocId)
+        listDataModel[indexOfSeed] = updatedItem
+        return if (indexOfFavorites == -1) {
+            Log.i("devlog", "Not present in favorites, adding data")
+            if (updatedItem.favorite) {
                 listFavorites.add(updatedItem)
                 listOf(indexOfSeed, countFavorites() - 1)
+            } else {
+                listOf(indexOfSeed, -1)
             }
+        } else {
+            Log.i("devlog", "Present in favorites, modifying existing data")
+            if (updatedItem.favorite) {
+                listFavorites[indexOfFavorites] = updatedItem
+            } else {
+                listFavorites.removeAt(indexOfFavorites)
+            }
+            listOf(indexOfSeed, indexOfFavorites)
         }
-
-        listDataModel[indexOfSeed] = updatedItem
-        return listOf(indexOfSeed, -1)
     }
 
     private fun indexLocationList(docId: String): Int {

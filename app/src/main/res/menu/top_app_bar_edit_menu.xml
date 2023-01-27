@@ -5,7 +5,6 @@
 
     <item
         android:id="@+id/editSeedFavorite"
-        android:icon="@drawable/ic_edit_seed_dialog_favorite"
         android:title="@string/edit_top_app_bar_favorite_title"
         android:contentDescription="@string/edit_top_app_bar_favorite_desc"
         app:showAsAction="ifRoom" />

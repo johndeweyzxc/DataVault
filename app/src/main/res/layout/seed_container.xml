@@ -17,12 +17,6 @@
     app:cardPreventCornerOverlap="false"
     app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Large">
 
-    <TextView
-        android:id="@+id/tvDocId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,6 +41,12 @@
                 android:textColor="@color/grey_900"
                 android:textSize="22sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ivSeedFavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/seed_favorite_icon_description"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

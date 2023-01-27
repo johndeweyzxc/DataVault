@@ -15,9 +15,9 @@
                             android:title="@string/main_menu_favorites"
                             android:icon="@drawable/ic_menu_favorite" />
                         <item
-                            android:id="@+id/menuTrash"
-                            android:title="@string/main_drawer_trash"
-                            android:icon="@drawable/ic_menu_trash" />
+                            android:id="@+id/menuFind"
+                            android:title="@string/main_drawer_find"
+                            android:icon="@drawable/ic_menu_find" />
                         <item
                             android:id="@+id/menuSettings"
                             android:title="@string/main_menu_strings"
@@ -28,7 +28,7 @@
         <item android:title="@string/main_menu_account_settings">
                 <menu>
                         <item
-                            android:id="@+id/menuAccount"
+                            android:id="@+id/menuAccountSettings"
                             android:title="@string/main_drawer_account"
                             android:icon="@drawable/ic_menu_account" />
                         <item

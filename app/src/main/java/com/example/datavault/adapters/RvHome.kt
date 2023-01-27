@@ -6,7 +6,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentTransaction
@@ -19,12 +19,15 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 
 // Adapter for recycler view in HomeFragment to render list of document.
-class RvHome(private val listOfDataModel: MutableList<SeedSchema>, private val activity: MainActivity
+class RvHome(
+    private val listOfDataModel: MutableList<SeedSchema>,
+    private val activity: MainActivity,
     ) : RecyclerView.Adapter<RvHome.SeedViewHolder>() {
 
     class SeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardViewSeed: MaterialCardView = itemView.findViewById(R.id.cardViewSeed)
         val tvSeedAppName: TextView = itemView.findViewById(R.id.tvSeedAppName)
+        val ivSeedFavorite: ImageView = itemView.findViewById(R.id.ivSeedFavorite)
         val seedChipUsernameInfo: Chip = itemView.findViewById(R.id.seedChipUsernameInfo)
         val seedChipEmailInfo: Chip = itemView.findViewById(R.id.seedChipEmailInfo)
         val seedChipPhoneNumberInfo: Chip = itemView.findViewById(R.id.seedChipPhoneNumberInfo)
@@ -48,9 +51,19 @@ class RvHome(private val listOfDataModel: MutableList<SeedSchema>, private val a
     private fun updateContentOfView(holder: SeedViewHolder, currentData: SeedSchema) {
 
         holder.apply {
-            val itemV = holder.itemView
-            // Set the animation for the card view when it appears on the screen
-            cardViewSeed.startAnimation(AnimationUtils.loadAnimation(itemV.context, R.anim.rvhome_item))
+            if (currentData.favorite) {
+                ivSeedFavorite.setBackgroundResource(R.drawable.ic_seed_fav)
+            } else {
+                ivSeedFavorite.setBackgroundResource(R.drawable.ic_seed_not_fav)
+            }
+
+            ivSeedFavorite.setOnClickListener {
+                if (currentData.favorite) {
+                    activity.EditSeed().addToFavorites(itemView.context, currentData.fireStoreDocId, false)
+                } else {
+                    activity.EditSeed().addToFavorites(itemView.context, currentData.fireStoreDocId, true)
+                }
+            }
 
             cardViewSeed.setOnClickListener {
                 val totalFragments = activity.supportFragmentManager.backStackEntryCount
@@ -64,48 +77,41 @@ class RvHome(private val listOfDataModel: MutableList<SeedSchema>, private val a
 
                 activity.supportFragmentManager.beginTransaction().apply {
                     setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    add(R.id.frameLayoutActivityMain, EditSeedDialog(
-                        itemView, currentData.fireStoreDocId, currentData.appName
-                        ))
+                    add(R.id.frameLayoutActivityMain, EditSeedDialog(itemView, currentData))
                     addToBackStack("EditSeedDialog")
                     commit()
                 }
             }
 
-            cardViewSeed.setOnLongClickListener {
-                cardViewSeed.isChecked = !cardViewSeed.isChecked
-                true
-            }
-
             // When user touch on chips, it copies its content on the clipboard
-            copyFromChip(itemV, "Copied username", seedChipUsernameInfo.text.toString(), seedChipUsernameInfo)
+            copyFromChip(itemView, "Copied username", seedChipUsernameInfo)
             setTextContent(seedChipUsernameInfo, currentData.userName)
 
-            copyFromChip(itemV, "Copied email", seedChipEmailInfo.text.toString(), seedChipEmailInfo)
+            copyFromChip(itemView, "Copied email", seedChipEmailInfo)
             setTextContent(seedChipEmailInfo, currentData.email)
 
-            copyFromChip(itemV, "Copied phone number", seedChipPhoneNumberInfo.text.toString(), seedChipPhoneNumberInfo)
+            copyFromChip(itemView, "Copied phone number", seedChipPhoneNumberInfo)
             setTextContent(seedChipPhoneNumberInfo, currentData.phoneNumber)
 
-            copyFromChip(itemV, "Copied password", seedChipPasswordInfo.text.toString(), seedChipPasswordInfo)
+            copyFromChip(itemView, "Copied password", seedChipPasswordInfo)
             setTextContent(seedChipPasswordInfo, currentData.password)
 
             tvSeedAppName.text = currentData.appName
         }
     }
 
-    private fun setTextContent(textView: TextView, text: String) {
+    private fun setTextContent(chip: TextView, text: String) {
         if (text.length > 8) {
             val data = "${text.take(4)}...${text.takeLast(4)}"
-            textView.text = data
+            chip.text = data
         } else {
-            textView.text = text
+            chip.text = text
         }
     }
 
-    private fun copyFromChip(itemView: View, label: String, text: String, chip: Chip) {
+    private fun copyFromChip(itemView: View, label: String, chip: Chip) {
         chip.setOnClickListener {
-            val clip = ClipData.newPlainText(label, text)
+            val clip = ClipData.newPlainText(label, chip.text)
             val clipBoardManager: ClipboardManager = activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipBoardManager.setPrimaryClip(clip)
             Toast.makeText(itemView.context, label, Toast.LENGTH_SHORT).show()

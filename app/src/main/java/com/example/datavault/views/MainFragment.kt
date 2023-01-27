@@ -44,8 +44,26 @@ class MainFragment : Fragment() {
 
     private fun setViewPager() {
         binding.viewPager.adapter = VpMain(childFragmentManager, lifecycle, binding.floatinActionButton)
+
+        // Update bottom navigation indicator when user switches to different page in view pager.
+        val viewPagerPageChange = object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                when (position) {
+                    0 -> {
+                        binding.mainToolBar.title = "Home"
+                        binding.bottomNavigation.selectedItemId = R.id.bottomNavMenuHome
+                    }
+                    1 -> {
+                        binding.mainToolBar.title = "Favorites"
+                        binding.bottomNavigation.selectedItemId = R.id.bottomNavFavorites
+                    }
+                }
+            }
+        }
+
         binding.viewPager.registerOnPageChangeCallback(viewPagerPageChange)
 
+        // When bottom navigation menu item is clicked navigate to a specific page in view pager.
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.bottomNavMenuHome -> {
@@ -53,25 +71,10 @@ class MainFragment : Fragment() {
                     true
                 }
                 R.id.bottomNavFavorites -> {
-                    binding.viewPager.setCurrentItem(2, true)
+                    binding.viewPager.setCurrentItem(1, true)
                     true
                 }
                 else -> false
-            }
-        }
-    }
-
-    private val viewPagerPageChange = object: ViewPager2.OnPageChangeCallback() {
-        override fun onPageSelected(position: Int) {
-            when (position) {
-                0 -> {
-                    binding.mainToolBar.title = "Home"
-                    binding.bottomNavigation.selectedItemId = R.id.bottomNavMenuHome
-                }
-                1 -> {
-                    binding.mainToolBar.title = "Favorites"
-                    binding.bottomNavigation.selectedItemId = R.id.bottomNavFavorites
-                }
             }
         }
     }
@@ -99,25 +102,27 @@ class MainFragment : Fragment() {
                 .build()
 
             when (menuItem.itemId) {
-                R.id.menuAbout -> {
-                    Log.i("devlog", "About is pressed")
+                R.id.menuHome -> {
+                    binding.viewPager.setCurrentItem(0, true)
                     binding.drawerLayout.close()
                     true
                 }
-                R.id.menuHome -> {
-                    // Add click listener
+                R.id.menuFavorites -> {
+                    binding.viewPager.setCurrentItem(1, true)
+                    binding.drawerLayout.close()
                     true
                 }
-                R.id.menuPrivacyPolicy -> {
-                    // Add click listener
-                    true
-                }
-                R.id.menuTermsOfUse -> {
-                    // Add click listener
+                R.id.menuFind -> {
+                    binding.drawerLayout.close()
                     true
                 }
                 R.id.menuSettings -> {
-                    // Add click listener
+                    binding.drawerLayout.close()
+                    true
+                }
+
+                R.id.menuAccountSettings -> {
+                    binding.drawerLayout.close()
                     true
                 }
                 R.id.menuSignOut -> {
@@ -130,6 +135,20 @@ class MainFragment : Fragment() {
                         }
                         Toast.makeText(requireActivity(), "There is a problem signing out", Toast.LENGTH_LONG).show()
                     }
+                    true
+                }
+
+                R.id.menuAbout -> {
+                    Log.i("devlog", "About is pressed")
+                    binding.drawerLayout.close()
+                    true
+                }
+                R.id.menuPrivacyPolicy -> {
+                    binding.drawerLayout.close()
+                    true
+                }
+                R.id.menuTermsOfUse -> {
+                    binding.drawerLayout.close()
                     true
                 }
                 else -> false

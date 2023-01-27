@@ -3,21 +3,23 @@ package com.example.datavault.views
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.get
 import androidx.fragment.app.DialogFragment
 import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogEditBinding
+import com.example.datavault.schema.SeedSchema
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 class EditSeedDialog(
     private val itemView: View,
-    private val fireStoreDocId: String,
-    private val appName: String
+    private val currentData: SeedSchema
     ) : DialogFragment() {
 
     private lateinit var binding: FragmentDialogEditBinding
@@ -70,7 +72,7 @@ class EditSeedDialog(
     }
 
     private fun setDefaultValues() {
-        val seedData = (activity as MainActivity).EditSeed().getSeedViaFirestoreDocId(fireStoreDocId)
+        val seedData = (activity as MainActivity).EditSeed().getSeedViaFirestoreDocId(currentData.fireStoreDocId)
 
         etAppName.setText(seedData.appName)
         etUserName.setText(seedData.userName)
@@ -93,21 +95,39 @@ class EditSeedDialog(
                 if (checkForBlankOrNull() == -1) {
                     return@setOnClickListener
                 }
-                (activity as MainActivity).EditSeed().updateData(fireStoreDocId, binding)
+                (activity as MainActivity).EditSeed().updateData(currentData.fireStoreDocId, binding)
                 closeActiveKeyboard()
                 dismiss()
             }
         }
 
+        if (currentData.favorite) {
+            binding.editToolBar.menu[0].setIcon(R.drawable.ic_edit_seed_dialog_fav)
+        } else {
+            binding.editToolBar.menu[0].setIcon(R.drawable.ic_edit_seed_dialog_not_fav)
+        }
+
         binding.editToolBar.setOnMenuItemClickListener { listener ->
             when (listener.title) {
                 "Favorite" -> {
-                    (activity as MainActivity).EditSeed().addToFavorites(fireStoreDocId)
+                    if (currentData.favorite) {
+                        (activity as MainActivity).EditSeed().addToFavorites(
+                            requireActivity(), currentData.fireStoreDocId, false
+                        )
+                        Log.i("devlog", "Removed from favorite")
+                    } else {
+                        (activity as MainActivity).EditSeed().addToFavorites(
+                            requireActivity(), currentData.fireStoreDocId, true
+                        )
+                        Log.i("devlog", "Added to favorite")
+                    }
                     dismiss()
                     true
                 }
                 "Delete" -> {
-                    (activity as MainActivity).EditSeed().deleteData(itemView.context, fireStoreDocId, appName)
+                    (activity as MainActivity).EditSeed().deleteData(
+                        itemView.context, currentData.fireStoreDocId, currentData.appName
+                    )
                     true
                 }
                 else -> false

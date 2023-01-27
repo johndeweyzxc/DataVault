@@ -40,6 +40,7 @@
     <string name="seed_container_chip_info_password">Password123</string>
     <string name="seed_field_header_username">Username</string>
     <string name="seed_field_header_email">Email</string>
+    <string name="seed_favorite_icon_description">A placeholder to show if this document is added to favorite</string>
 
     <string name="main_header_text_view_name">John Dewey</string>
     <string name="main_header_text_view_email">johndewey@email.com</string>
@@ -56,7 +57,7 @@
     <string name="main_bottom_nav_favorites">Favorites</string>
     <string name="main_drawer_account">Account Settings</string>
     <string name="main_drawer_home">Home</string>
-    <string name="main_drawer_trash">Trash</string>
+    <string name="main_drawer_find">Find</string>
     <string name="main_create_fab">Create</string>
 
     <string name="edit_button_save_changes">Save changes</string>
