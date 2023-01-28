@@ -16,15 +16,20 @@ import com.example.datavault.adapters.VpMain
 import com.example.datavault.databinding.FragmentMainBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
 
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
+    private lateinit var mainActivity: MainActivity
+    lateinit var fab: ExtendedFloatingActionButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMainBinding.inflate(layoutInflater)
+        mainActivity = (activity as MainActivity)
+        fab = binding.floatinActionButton
         return binding.root
     }
 
@@ -43,7 +48,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setViewPager() {
-        binding.viewPager.adapter = VpMain(childFragmentManager, lifecycle, binding.floatinActionButton)
+        binding.viewPager.adapter = VpMain(childFragmentManager, lifecycle)
 
         // Update bottom navigation indicator when user switches to different page in view pager.
         val viewPagerPageChange = object: ViewPager2.OnPageChangeCallback() {
@@ -84,15 +89,20 @@ class MainFragment : Fragment() {
         val avatar: CircleImageView = headerView.findViewById(R.id.ivNavHeaderAvatar)
         val username: TextView = headerView.findViewById(R.id.tvNavHeaderUsername)
         val email: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
-        val activity = (activity as MainActivity)
 
-        Glide.with(this).load(activity.MainFrag().currentUserUrlPhoto()).into(avatar)
-        username.text = activity.MainFrag().currentUserName()
-        email.text = activity.MainFrag().currentUserEmail()
-
-        binding.mainToolBar.setNavigationOnClickListener {
-            binding.drawerLayout.open()
+        mainActivity.userMightBeNull(mainActivity.currentUser)
+        if (mainActivity.currentUser?.photoUrl == null) {
+            Glide.with(this).load(getString(R.string.default_user_photo)).into(avatar)
+        } else {
+            Glide.with(this).load(mainActivity.currentUser?.photoUrl).into(avatar)
         }
+        if (mainActivity.currentUser?.displayName.isNullOrBlank()) {
+            val createName = mainActivity.currentUser?.email.toString().split("@")
+            username.text = createName.first()
+        }
+        email.text = mainActivity.currentUser?.email
+
+        binding.mainToolBar.setNavigationOnClickListener { binding.drawerLayout.open() }
 
         binding.navView.setNavigationItemSelectedListener { menuItem ->
 

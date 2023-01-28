@@ -9,15 +9,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.datavault.MainActivity
 import com.example.datavault.R
+import com.example.datavault.databinding.FragmentHomeBinding
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
-class HomeFragment(private val fab: ExtendedFloatingActionButton) : Fragment() {
+class HomeFragment : Fragment() {
 
     private var isExtended = false
+    private lateinit var binding: FragmentHomeBinding
+    private lateinit var mainActivity: MainActivity
+    private lateinit var fab: ExtendedFloatingActionButton
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentHomeBinding.inflate(layoutInflater)
+        mainActivity = (activity as MainActivity)
+        val parentFragment = (parentFragment as MainFragment)
+        fab = parentFragment.fab
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -27,7 +34,7 @@ class HomeFragment(private val fab: ExtendedFloatingActionButton) : Fragment() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
                 val lastVisibleItem = linearLayoutManager?.findLastCompletelyVisibleItemPosition()
-                val lastAdapterItem = (activity as MainActivity).HomeFrag().seedCount() - 1
+                val lastAdapterItem = mainActivity.viewModel.countSeed() - 1
 
                 if (linearLayoutManager != null && lastVisibleItem == lastAdapterItem) {
                     fab.extend()
@@ -46,7 +53,7 @@ class HomeFragment(private val fab: ExtendedFloatingActionButton) : Fragment() {
         val scrollableView: RecyclerView = view.findViewById(R.id.rvMainScrollableView)
         scrollableView.addOnScrollListener(scrollListener)
 
-        scrollableView.adapter = (activity as MainActivity).HomeFrag().homeAdapter()
+        scrollableView.adapter = mainActivity.seedAdapter
         scrollableView.layoutManager = LinearLayoutManager(context)
     }
 }

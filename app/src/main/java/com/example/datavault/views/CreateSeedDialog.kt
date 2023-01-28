@@ -10,12 +10,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
+import com.example.datavault.Database
 import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogCreateBinding
 import com.google.android.material.textfield.TextInputLayout
 
-class CreateSeedDialog : DialogFragment() {
+class CreateSeedDialog : DialogFragment(), Database {
 
     private lateinit var binding: FragmentDialogCreateBinding
 
@@ -80,9 +81,14 @@ class CreateSeedDialog : DialogFragment() {
 
         saveDataButton.setOnClickListener {
             clearHelperText()
-            if (checkForBlankOrNull() == -1) { return@setOnClickListener; }
             closeActiveKeyboard()
-            (activity as MainActivity).CreateSeed().uploadData(binding)
+
+            if (checkForBlankOrNull() == -1) { return@setOnClickListener; }
+
+            val mainActivity = (activity as MainActivity)
+            mainActivity.userMightBeNull(mainActivity.currentUser)
+            uploadData(requireActivity(), binding)
+
             clearEditText()
             dismiss()
         }

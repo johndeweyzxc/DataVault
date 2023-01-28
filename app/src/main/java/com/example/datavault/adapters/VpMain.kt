@@ -3,13 +3,11 @@ package com.example.datavault.adapters
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.datavault.views.*
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.example.datavault.views.FavoritesFragment
+import com.example.datavault.views.HomeFragment
 
-// Adapter for view pager in MainFragment to show HomeFragment, CreateFragment and FavoritesFragment
 class VpMain(
-    fragmentManager: FragmentManager, lifeCycle: androidx.lifecycle.Lifecycle,
-    private val fab: ExtendedFloatingActionButton
+    fragmentManager: FragmentManager, lifeCycle: androidx.lifecycle.Lifecycle
 ) : FragmentStateAdapter(fragmentManager, lifeCycle) {
 
     override fun getItemCount(): Int {
@@ -18,7 +16,7 @@ class VpMain(
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> { HomeFragment(fab) }
+            0 -> { HomeFragment() }
             1 -> { FavoritesFragment() }
             else -> throw IllegalStateException("Invalid position")
         }

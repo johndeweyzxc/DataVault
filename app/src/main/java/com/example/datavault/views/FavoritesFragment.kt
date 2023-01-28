@@ -9,18 +9,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.datavault.MainActivity
 import com.example.datavault.R
+import com.example.datavault.databinding.FragmentFavoritesBinding
 
 class FavoritesFragment : Fragment() {
 
+    private lateinit var binding: FragmentFavoritesBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.fragment_favorites, container, false)
+        binding = FragmentFavoritesBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val scrollableView: RecyclerView = view.findViewById(R.id.rvFavoriteScrollableView)
-        scrollableView.adapter = (activity as MainActivity).FavoriteFrag().favoriteAdapter()
+        scrollableView.adapter = (activity as MainActivity).favoriteAdapter
         scrollableView.layoutManager = LinearLayoutManager(context)
     }
 }

@@ -11,16 +11,36 @@ class MainViewModel: ViewModel() {
 
     private var listDataModel = mutableListOf<SeedSchema>()
     private var listFavorites = mutableListOf<SeedSchema>()
+    private var editSeedCurrentData: SeedSchema? = null
 
     fun countSeed(): Int { return listDataModel.size }
-
-    private fun countFavorites(): Int { return listFavorites.size }
-
     fun getListSeed(): MutableList<SeedSchema> { return listDataModel }
-
     fun getListFavorites(): MutableList<SeedSchema> { return listFavorites }
-
     fun getSeed(fireStoreDocId: String): SeedSchema { return listDataModel[indexLocationList(fireStoreDocId)] }
+    fun getEditSeedCurrentData(): SeedSchema? { return editSeedCurrentData }
+    fun setEditSeedCurrentData(currentData: SeedSchema) { editSeedCurrentData = currentData }
+
+    private fun indexLocationList(docId: String): Int {
+        var i = -1
+        for((index, seed) in listDataModel.withIndex()){
+            if (seed.fireStoreDocId == docId) {
+                i = index
+                break
+            }
+        }
+        return i
+    }
+
+    private fun indexLocationFavorite(docId: String): Int {
+        var i = -1
+        for((index, seed) in listFavorites.withIndex()){
+            if (seed.fireStoreDocId == docId) {
+                i = index
+                break
+            }
+        }
+        return i
+    }
 
     fun convertToModel(changes: DocumentChange): SeedSchema {
         return SeedSchema(
@@ -37,7 +57,7 @@ class MainViewModel: ViewModel() {
         if (dataItem.favorite) {
             listFavorites.add(dataItem)
             Log.i("devlog", "Returning with indexOfFavorites")
-            return listOf(countSeed() - 1, countFavorites() - 1)
+            return listOf(countSeed() - 1, listFavorites.size - 1)
         }
         return listOf(countSeed() - 1, -1)
     }
@@ -70,10 +90,8 @@ class MainViewModel: ViewModel() {
             Log.i("devlog", "Not present in favorites, adding data")
             if (updatedItem.favorite) {
                 listFavorites.add(updatedItem)
-                listOf(indexOfSeed, countFavorites() - 1)
-            } else {
-                listOf(indexOfSeed, -1)
             }
+            listOf(indexOfSeed, listFavorites.size - 1)
         } else {
             Log.i("devlog", "Present in favorites, modifying existing data")
             if (updatedItem.favorite) {
@@ -83,27 +101,5 @@ class MainViewModel: ViewModel() {
             }
             listOf(indexOfSeed, indexOfFavorites)
         }
-    }
-
-    private fun indexLocationList(docId: String): Int {
-        var i = -1
-        for((index, seed) in listDataModel.withIndex()){
-            if (seed.fireStoreDocId == docId) {
-                i = index
-                break
-            }
-        }
-        return i
-    }
-
-    private fun indexLocationFavorite(docId: String): Int {
-        var i = -1
-        for((index, seed) in listFavorites.withIndex()){
-            if (seed.fireStoreDocId == docId) {
-                i = index
-                break
-            }
-        }
-        return i
     }
 }

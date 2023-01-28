@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.example.datavault.Database
 import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.schema.SeedSchema
@@ -18,11 +19,9 @@ import com.example.datavault.views.EditSeedDialog
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 
-// Adapter for recycler view in HomeFragment to render list of document.
-class RvHome(
-    private val listOfDataModel: MutableList<SeedSchema>,
-    private val activity: MainActivity,
-    ) : RecyclerView.Adapter<RvHome.SeedViewHolder>() {
+class RvHome(private val mainActivity: MainActivity) : RecyclerView.Adapter<RvHome.SeedViewHolder>(), Database {
+
+    private val listOfData: List<SeedSchema> = mainActivity.viewModel.getListSeed()
 
     class SeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardViewSeed: MaterialCardView = itemView.findViewById(R.id.cardViewSeed)
@@ -40,12 +39,12 @@ class RvHome(
     }
 
     override fun onBindViewHolder(holder: SeedViewHolder, position: Int) {
-        val currentData = listOfDataModel[position]
+        val currentData = listOfData[position]
         updateContentOfView(holder, currentData)
     }
 
     override fun getItemCount(): Int {
-        return listOfDataModel.size
+        return listOfData.size
     }
 
     private fun updateContentOfView(holder: SeedViewHolder, currentData: SeedSchema) {
@@ -59,25 +58,27 @@ class RvHome(
 
             ivSeedFavorite.setOnClickListener {
                 if (currentData.favorite) {
-                    activity.EditSeed().addToFavorites(itemView.context, currentData.fireStoreDocId, false)
+                    addToFavorites(itemView.context, currentData.fireStoreDocId, false)
                 } else {
-                    activity.EditSeed().addToFavorites(itemView.context, currentData.fireStoreDocId, true)
+                    addToFavorites(itemView.context, currentData.fireStoreDocId, true)
                 }
             }
 
             cardViewSeed.setOnClickListener {
-                val totalFragments = activity.supportFragmentManager.backStackEntryCount
+                mainActivity.viewModel.setEditSeedCurrentData(currentData)
+
+                val totalFragments = mainActivity.supportFragmentManager.backStackEntryCount
                 if (totalFragments > 0) {
                     // Prevent adding duplicate fragment to the stack when the user clicks twice on the card
-                    val latestFragment = activity.supportFragmentManager.getBackStackEntryAt(totalFragments - 1)
+                    val latestFragment = mainActivity.supportFragmentManager.getBackStackEntryAt(totalFragments - 1)
                     if (latestFragment.name == "EditSeedDialog") {
-                        activity.supportFragmentManager.popBackStack()
+                        mainActivity.supportFragmentManager.popBackStack()
                     }
                 }
 
-                activity.supportFragmentManager.beginTransaction().apply {
+                mainActivity.supportFragmentManager.beginTransaction().apply {
                     setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    add(R.id.frameLayoutActivityMain, EditSeedDialog(itemView, currentData))
+                    add(R.id.frameLayoutActivityMain, EditSeedDialog())
                     addToBackStack("EditSeedDialog")
                     commit()
                 }
@@ -112,7 +113,8 @@ class RvHome(
     private fun copyFromChip(itemView: View, label: String, chip: Chip) {
         chip.setOnClickListener {
             val clip = ClipData.newPlainText(label, chip.text)
-            val clipBoardManager: ClipboardManager = activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipBoardManager: ClipboardManager = mainActivity.getSystemService(
+                Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipBoardManager.setPrimaryClip(clip)
             Toast.makeText(itemView.context, label, Toast.LENGTH_SHORT).show()
         }

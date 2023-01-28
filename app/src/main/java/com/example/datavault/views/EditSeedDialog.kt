@@ -10,19 +10,23 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.get
 import androidx.fragment.app.DialogFragment
+import com.example.datavault.Database
 import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogEditBinding
 import com.example.datavault.schema.SeedSchema
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class EditSeedDialog(
-    private val itemView: View,
-    private val currentData: SeedSchema
-    ) : DialogFragment() {
+class EditSeedDialog : DialogFragment(), Database {
 
     private lateinit var binding: FragmentDialogEditBinding
+    private lateinit var mainActivity: MainActivity
+    private var currentData: SeedSchema? = null
 
     private lateinit var ilAppName: TextInputLayout
     private lateinit var ilUserName: TextInputLayout
@@ -47,6 +51,12 @@ class EditSeedDialog(
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentDialogEditBinding.inflate(layoutInflater)
+        mainActivity = (activity as MainActivity)
+        currentData = mainActivity.viewModel.getEditSeedCurrentData()
+
+        // If the system needs to reclaim memory, the app process is terminated.
+        // It may destroy the ViewModel along with other resources.
+        if (currentData == null) { dismiss() }
         return binding.root
     }
 
@@ -72,7 +82,7 @@ class EditSeedDialog(
     }
 
     private fun setDefaultValues() {
-        val seedData = (activity as MainActivity).EditSeed().getSeedViaFirestoreDocId(currentData.fireStoreDocId)
+        val seedData = (activity as MainActivity).viewModel.getSeed(currentData!!.fireStoreDocId)
 
         etAppName.setText(seedData.appName)
         etUserName.setText(seedData.userName)
@@ -87,21 +97,36 @@ class EditSeedDialog(
         ilEmail.setEndIconOnClickListener { etEmail.text?.clear() }
         ilPhoneNumber.setEndIconOnClickListener { etPhoneNumber.text?.clear() }
 
-        binding.editToolBar.setOnClickListener { dismiss() }
-        binding.editBackButton.setOnClickListener { dismiss() }
+        val scope = CoroutineScope(Dispatchers.IO)
+
+        binding.editToolBar.setOnClickListener {
+            closeActiveKeyboard()
+            scope.launch {
+                delay(200)
+                dismiss()
+            }
+        }
+        binding.editBackButton.setOnClickListener {
+            closeActiveKeyboard()
+            scope.launch {
+                delay(200)
+                dismiss()
+            }
+        }
 
         binding.editSaveChangesButton.setOnClickListener {
             if (checkForBlankOrNull() == 0) {
                 if (checkForBlankOrNull() == -1) {
                     return@setOnClickListener
                 }
-                (activity as MainActivity).EditSeed().updateData(currentData.fireStoreDocId, binding)
+                mainActivity.userMightBeNull(mainActivity.currentUser)
+                updateData(requireActivity(), mainActivity.viewModel.getSeed(currentData!!.fireStoreDocId), binding)
                 closeActiveKeyboard()
                 dismiss()
             }
         }
 
-        if (currentData.favorite) {
+        if (currentData!!.favorite) {
             binding.editToolBar.menu[0].setIcon(R.drawable.ic_edit_seed_dialog_fav)
         } else {
             binding.editToolBar.menu[0].setIcon(R.drawable.ic_edit_seed_dialog_not_fav)
@@ -110,24 +135,20 @@ class EditSeedDialog(
         binding.editToolBar.setOnMenuItemClickListener { listener ->
             when (listener.title) {
                 "Favorite" -> {
-                    if (currentData.favorite) {
-                        (activity as MainActivity).EditSeed().addToFavorites(
-                            requireActivity(), currentData.fireStoreDocId, false
-                        )
+                    if (currentData!!.favorite) {
+                        addToFavorites(
+                            requireActivity(), currentData!!.fireStoreDocId, false)
                         Log.i("devlog", "Removed from favorite")
                     } else {
-                        (activity as MainActivity).EditSeed().addToFavorites(
-                            requireActivity(), currentData.fireStoreDocId, true
-                        )
+                        addToFavorites(
+                            requireActivity(), currentData!!.fireStoreDocId, true)
                         Log.i("devlog", "Added to favorite")
                     }
                     dismiss()
                     true
                 }
                 "Delete" -> {
-                    (activity as MainActivity).EditSeed().deleteData(
-                        itemView.context, currentData.fireStoreDocId, currentData.appName
-                    )
+                    deleteData(requireActivity(), currentData!!, this)
                     true
                 }
                 else -> false
