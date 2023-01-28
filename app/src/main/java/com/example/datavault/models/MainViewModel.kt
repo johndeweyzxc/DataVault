@@ -13,27 +13,28 @@ class MainViewModel: ViewModel() {
     private var listFavorites = mutableListOf<SeedSchema>()
     private var editSeedCurrentData: SeedSchema? = null
 
-    fun countSeed(): Int { return listDataModel.size }
-    fun getListSeed(): MutableList<SeedSchema> { return listDataModel }
-    fun getListFavorites(): MutableList<SeedSchema> { return listFavorites }
-    fun getSeed(fireStoreDocId: String): SeedSchema { return listDataModel[indexLocationList(fireStoreDocId)] }
-    fun getEditSeedCurrentData(): SeedSchema? { return editSeedCurrentData }
-    fun setEditSeedCurrentData(currentData: SeedSchema) { editSeedCurrentData = currentData }
-
-    private fun indexLocationList(docId: String): Int {
-        var i = -1
-        for((index, seed) in listDataModel.withIndex()){
-            if (seed.fireStoreDocId == docId) {
-                i = index
-                break
-            }
-        }
-        return i
+    fun countSeed(): Int {
+        return listDataModel.size
+    }
+    fun getListSeed(): MutableList<SeedSchema> {
+        return listDataModel
+    }
+    fun getListFavorites(): MutableList<SeedSchema> {
+        return listFavorites
+    }
+    fun getSeed(fireStoreDocId: String): SeedSchema {
+        return listDataModel[linearSearch(fireStoreDocId, listDataModel)]
+    }
+    fun getEditSeedCurrentData(): SeedSchema? {
+        return editSeedCurrentData
+    }
+    fun setEditSeedCurrentData(currentData: SeedSchema) {
+        editSeedCurrentData = currentData
     }
 
-    private fun indexLocationFavorite(docId: String): Int {
+    private fun linearSearch(docId: String, list: List<SeedSchema>): Int {
         var i = -1
-        for((index, seed) in listFavorites.withIndex()){
+        for((index, seed) in list.withIndex()) {
             if (seed.fireStoreDocId == docId) {
                 i = index
                 break
@@ -63,10 +64,10 @@ class MainViewModel: ViewModel() {
     }
 
     fun deleteData(deletedItem: SeedSchema): List<Int> {
-        val indexOfSeed = indexLocationList(deletedItem.fireStoreDocId)
+        val indexOfSeed = linearSearch(deletedItem.fireStoreDocId, listDataModel)
         if (deletedItem.favorite) {
             listDataModel.removeAt(indexOfSeed)
-            val indexOfFavorites = indexLocationFavorite(deletedItem.fireStoreDocId)
+            val indexOfFavorites = linearSearch(deletedItem.fireStoreDocId, listFavorites)
             Log.i("devlog", "Target index of favorites $indexOfFavorites")
             return if (indexOfFavorites != -1) {
                 Log.i("devlog", "Present in favorites, deleting existing data")
@@ -83,8 +84,8 @@ class MainViewModel: ViewModel() {
     }
 
     fun modifyData(updatedItem: SeedSchema): List<Int> {
-        val indexOfSeed = indexLocationList(updatedItem.fireStoreDocId)
-        val indexOfFavorites = indexLocationFavorite(updatedItem.fireStoreDocId)
+        val indexOfSeed = linearSearch(updatedItem.fireStoreDocId, listDataModel)
+        val indexOfFavorites = linearSearch(updatedItem.fireStoreDocId, listFavorites)
         listDataModel[indexOfSeed] = updatedItem
         return if (indexOfFavorites == -1) {
             Log.i("devlog", "Not present in favorites, adding data")

@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        // This handles the configuration change of the screen to prevent restart of MainActivity
+        // This handles the configuration change of the screen to prevent restart of MainActivity.
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Log.i("devlog", "Screen orientation changed to landscape in MainActivity")
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
