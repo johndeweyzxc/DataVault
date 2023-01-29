@@ -43,7 +43,7 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/datavault_icon_orange_500"
+                    android:background="@mipmap/ic_datavault_icon_orange_500"
                     app:shapeAppearanceOverlay="@style/rounded_corner"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
