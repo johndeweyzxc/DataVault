@@ -107,6 +107,8 @@ interface Database {
         val targetDocument = dataColRef.document(fireStoreDocId)
 
         targetDocument.update("favorite", value).addOnSuccessListener {
+            if (!value) return@addOnSuccessListener
+
             Toast.makeText(context, "Added to favorites", Toast.LENGTH_LONG).show()
         }.addOnCanceledListener {
             Toast.makeText(context, "Canceled saving to favorite", Toast.LENGTH_LONG).show()

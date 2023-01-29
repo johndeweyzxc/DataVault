@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         super.onCreate(savedInstanceState)
+        Log.i("devlog", "[onCreate()] MainActivity launched")
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -50,20 +51,33 @@ class MainActivity : AppCompatActivity() {
         // If the user presses back button, pop the fragment stack or pause the activity
         // if there is only one fragment.
         override fun handleOnBackPressed() {
-            if (supportFragmentManager.backStackEntryCount == 0) {
+            val countStack = supportFragmentManager.backStackEntryCount
+            val latestFragment = supportFragmentManager.getBackStackEntryAt(countStack - 1)
+
+            Log.i("devlog", "[handleOnBackPressed()] Back button is pressed")
+            if (countStack == 0) {
                 moveTaskToBack(true)
             } else {
                 supportFragmentManager.popBackStack()
             }
+            Log.i("devlog",
+                "[handleOnBackPressed()] Current fragment back stack count in MainActivity -> $countStack"
+            )
+            Log.i("devlog",
+                "[handleOnBackPressed()] Current top of fragment stack in MainActivity " +
+                        "-> ${latestFragment.name}"
+            )
         }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         // This handles the configuration change of the screen to prevent restart of MainActivity.
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Log.i("devlog", "Screen orientation changed to landscape in MainActivity")
+            Log.w("devlog",
+                "[onConfigurationChanged()] Screen orientation changed to landscape in MainActivity")
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Log.i("devlog", "Screen orientation changed to portrait in MainActivity")
+            Log.w("devlog",
+                "[onConfigurationChanged()] Screen orientation changed to portrait in MainActivity")
         }
         super.onConfigurationChanged(newConfig)
     }
@@ -73,8 +87,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun userMightBeNull(user: FirebaseUser?) {
+        // If the current user is null, navigate to AuthActivity
         if (user == null) {
-            Log.i("devlog", "User is null, navigating to AuthActivity")
+            Log.w("devlog", "[userMightBeNull()] User is null, navigate to AuthActivity")
             val intent = Intent(this, AuthActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
@@ -92,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         // appending new data, modifying existing data or deleting existing data.
         query.addSnapshotListener{ snapshot, exception ->
             if (exception?.message != null) {
-                Log.i("devlog", exception.message!!)
+                Log.w("devlog", exception.message!!)
             } else {
                 for (changes in snapshot?.documentChanges!!) {
                     when (changes.type) {
@@ -106,59 +121,95 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleNewData(changes: DocumentChange) {
+        Log.i("devlog", "--------------- NEW DATABASE UPDATE ---------------")
         val dataModel: SeedSchema = viewModel.convertToModel(changes)
+        val appName: String = dataModel.appName
+        Log.i("devlog", "[handleNewData()] New data from database -> $appName")
+
         // Append data in the view model, returns a list, the first item is the index
         // position of added data, the last item is the index position of the added
         // data in favorites.
         val addedPos: List<Int> = viewModel.addData(dataModel)
+        val seedIndex: Int = addedPos.first()
+        val favoriteIndex: Int = addedPos.last()
+
         // addedPos might return -1, this means that there is no need to notify
         // the adapter about the change.
 
+        Log.i("devlog",
+            "[handleNewData()] Notifying seedAdapter about $appName inserted at $seedIndex"
+        )
         seedAdapter.notifyItemInserted(addedPos.first())
 
         if (addedPos.last() != -1) {
+            Log.i("devlog",
+                "[handleNewData()] Notifying favoriteAdapter about $appName inserted at $favoriteIndex"
+            )
             favoriteAdapter.notifyItemInserted(addedPos.last())
-            Log.i("devlog", "Added [${dataModel.appName}] to favorites")
         }
+        Log.i("devlog", "--------------- END OF DATABASE UPDATE ---------------")
     }
 
     private fun handleModifiedData(changes: DocumentChange) {
+        Log.i("devlog", "--------------- NEW DATABASE UPDATE ---------------")
         val dataModel: SeedSchema = viewModel.convertToModel(changes)
+        val appName: String = dataModel.appName
+        Log.i("devlog", "[handleModifiedData()] New modified data from database -> $appName")
+
         // Modify the data in the view model, returns a list, the first item is the index position
         // of modified data in home the last item is the index position of the modified
         // data in favorites.
         val modifiedPos: List<Int> = viewModel.modifyData(dataModel)
+        val seedIndex: Int = modifiedPos.first()
+        val favoriteIndex: Int = modifiedPos.last()
+
         // modifiedPos might return -1, this means that there is no need to notify
         // the adapter about the change.
 
         if (modifiedPos.first() != -1) {
+            Log.i("devlog",
+                "[handleModifiedData()] Notifying seedAdapter about $appName inserted at $seedIndex"
+            )
             seedAdapter.notifyItemChanged(modifiedPos.first())
-            Log.i("devlog", "Document [${dataModel.appName}] has been modified")
         }
 
         if (modifiedPos.last() != -1) {
+            Log.i("devlog",
+                "[handleModifiedData()] Notifying favoriteAdapter about $appName inserted at $favoriteIndex"
+            )
             favoriteAdapter.notifyItemRemoved(modifiedPos.last())
-            Log.i("devlog", "Document [${dataModel.appName}] has also been modified in favorites")
         }
+        Log.i("devlog", "--------------- END OF DATABASE UPDATE ---------------")
     }
 
     private fun handleRemovedData(changes: DocumentChange) {
+        Log.i("devlog", "--------------- NEW DATABASE UPDATE ---------------")
         val dataModel: SeedSchema = viewModel.convertToModel(changes)
+        val appName: String = dataModel.appName
+
         // Delete the data in the view model, returns a list, the first item is the index position
         // of deleted data in home, the last item is the index position of the deleted
         // data in favorites.
         val deletedPos: List<Int> = viewModel.deleteData(dataModel)
+        val seedIndex: Int = deletedPos.first()
+        val favoriteIndex: Int = deletedPos.last()
+
         // deletedPos might return -1, this means that there is no need to notify
         // the adapter about the change.
 
         if (deletedPos.first() != -1) {
+            Log.i("devlog",
+                "[handleRemovedData()] Notifying seedAdapter about $appName inserted at $seedIndex"
+            )
             seedAdapter.notifyItemRemoved(deletedPos.first())
-            Log.i("devlog", "Document [${dataModel.appName}] has been deleted")
         }
 
         if (deletedPos.last() != -1) {
+            Log.i("devlog",
+                "[handleRemovedData()] Notifying favoriteAdapter about $appName inserted at $favoriteIndex"
+            )
             favoriteAdapter.notifyItemRemoved(deletedPos.last())
-            Log.i("devlog", "Document [${dataModel.appName}] has also been deleted in favorites")
         }
+        Log.i("devlog", "--------------- END OF DATABASE UPDATE ---------------")
     }
 }

@@ -29,9 +29,12 @@ class MainViewModel: ViewModel() {
         return editSeedCurrentData
     }
     fun setEditSeedCurrentData(currentData: SeedSchema) {
+        Log.i("devlog",
+            "[setEditSeedCurrentData()] Setting current data for EditSeedDialog -> ${currentData.appName}")
         editSeedCurrentData = currentData
     }
 
+    // Returns -1 if it does not found the item in the list
     private fun linearSearch(docId: String, list: List<SeedSchema>): Int {
         var i = -1
         for((index, seed) in list.withIndex()) {
@@ -57,9 +60,15 @@ class MainViewModel: ViewModel() {
         listDataModel.add(dataItem)
         if (dataItem.favorite) {
             listFavorites.add(dataItem)
-            Log.i("devlog", "Returning with indexOfFavorites")
+
+            Log.d("devlog",
+                "[addData()] Size of seed -> ${countSeed()}, size of favorites -> ${listFavorites.size}"
+            )
             return listOf(countSeed() - 1, listFavorites.size - 1)
         }
+        Log.d("devlog",
+            "[addData()] Size of seed -> ${countSeed()}, size of favorites -> ${listFavorites.size}"
+        )
         return listOf(countSeed() - 1, -1)
     }
 
@@ -68,18 +77,26 @@ class MainViewModel: ViewModel() {
         if (deletedItem.favorite) {
             listDataModel.removeAt(indexOfSeed)
             val indexOfFavorites = linearSearch(deletedItem.fireStoreDocId, listFavorites)
-            Log.i("devlog", "Target index of favorites $indexOfFavorites")
+
             return if (indexOfFavorites != -1) {
-                Log.i("devlog", "Present in favorites, deleting existing data")
                 listFavorites.removeAt(indexOfFavorites)
+
+                Log.d("devlog",
+                    "[deleteData()] Size of seed -> ${countSeed()}, size of favorites -> ${listFavorites.size}"
+                )
                 listOf(indexOfSeed, indexOfFavorites)
             } else {
-                Log.i("devlog", "Not present in favorites, returning -1")
+                Log.d("devlog",
+                    "[deleteData()] Size of seed -> ${countSeed()}, size of favorites -> ${listFavorites.size}"
+                )
                 listOf(indexOfSeed,  -1)
             }
         }
 
         listDataModel.removeAt(indexOfSeed)
+        Log.d("devlog",
+            "[deleteData()] Size of seed -> ${countSeed()}, size of favorites -> ${listFavorites.size}"
+        )
         return listOf(indexOfSeed, -1)
     }
 
@@ -87,19 +104,26 @@ class MainViewModel: ViewModel() {
         val indexOfSeed = linearSearch(updatedItem.fireStoreDocId, listDataModel)
         val indexOfFavorites = linearSearch(updatedItem.fireStoreDocId, listFavorites)
         listDataModel[indexOfSeed] = updatedItem
+
         return if (indexOfFavorites == -1) {
-            Log.i("devlog", "Not present in favorites, adding data")
             if (updatedItem.favorite) {
                 listFavorites.add(updatedItem)
             }
+
+            Log.d("devlog",
+                "[modifyData()] Size of seed -> ${countSeed()}, size of favorites -> ${listFavorites.size}"
+            )
             listOf(indexOfSeed, listFavorites.size - 1)
         } else {
-            Log.i("devlog", "Present in favorites, modifying existing data")
             if (updatedItem.favorite) {
                 listFavorites[indexOfFavorites] = updatedItem
             } else {
                 listFavorites.removeAt(indexOfFavorites)
             }
+
+            Log.d("devlog",
+                "[modifyData()] Size of seed -> ${countSeed()}, size of favorites -> ${listFavorites.size}"
+            )
             listOf(indexOfSeed, indexOfFavorites)
         }
     }

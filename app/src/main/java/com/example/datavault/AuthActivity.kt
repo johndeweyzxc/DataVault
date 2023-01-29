@@ -1,6 +1,5 @@
 package com.example.datavault
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -23,47 +22,65 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 class AuthActivity : AppCompatActivity() {
 
-    private lateinit var googleSignInClient: GoogleSignInClient
-    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    lateinit var googleSignInClient: GoogleSignInClient
+    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         authListener()
 
         setContentView(R.layout.activity_auth)
         super.onCreate(savedInstanceState)
+        Log.i("devlog", "[onCreate()] AuthActivity launched")
 
         configureGoogleSignIn()
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         // Set the MainFragment as the first fragment to appear on the activity
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.frameLayoutActivityAuth, LoginFragment(googleSignInClient, activityResultLauncher))
+            replace(R.id.frameLayoutActivityAuth, LoginFragment())
             commit()
         }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
+        // This handles the configuration change of the screen to prevent restart of MainActivity.
+        Log.w("devlog", "[onConfigurationChanged()] Device configurate changed")
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Log.i("devlog", "Screen orientation changed to landscape in AuthActivity")
+            Log.w("devlog",
+                "[onConfigurationChanged()] Screen orientation changed to landscape in AuthActivity")
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Log.i("devlog", "Screen orientation changed to portrait in AuthActivity")
+            Log.w("devlog",
+                "[onConfigurationChanged()] Screen orientation changed to portrait in AuthActivity")
         }
         super.onConfigurationChanged(newConfig)
     }
 
     private val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        // If the user presses back button, pop the fragment stack or pause the activity
+        // if there is only one fragment.
         override fun handleOnBackPressed() {
-            if (supportFragmentManager.backStackEntryCount == 0) {
+            val countStack = supportFragmentManager.backStackEntryCount
+            val latestFragment = supportFragmentManager.getBackStackEntryAt(countStack - 1)
+
+            Log.i("devlog", "[handleOnBackPressed()] Back button is pressed")
+            if (countStack == 0) {
                 moveTaskToBack(true)
             } else {
                 supportFragmentManager.popBackStack()
             }
+            Log.i("devlog",
+                "[handleOnBackPressed()] Current fragment back stack count in MainActivity -> $countStack"
+            )
+            Log.i("devlog",
+                "[handleOnBackPressed()] Current top of fragment stack in MainActivity " +
+                        "-> ${latestFragment.name}"
+            )
         }
     }
 
     private fun userNotNullUpdateUi(user: FirebaseUser?) {
+        // If the current user is not null, then user is logged in. Navigate to MainActivity
         if (user != null) {
-            Log.i("devlog", "User is logged in, navigating to MainActivity")
+            Log.w("devlog", "[userMightBeNull()] User is not null, navigate to MainActivity")
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
@@ -94,23 +111,25 @@ class AuthActivity : AppCompatActivity() {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(ActivityResult.data)
                 val account = task.getResult(ApiException::class.java)!!
                 // Authenticate in firebase with google using the token
-                authWithGoogle(account.idToken!!, this)
+                authWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
                 if (e.message != null) {
-                    Log.i("devlog", e.message!!)
+                    Log.e("devlog", "[configureGoogleSignIn()] ERROR AUTHENTICATING WITH GOOGLE")
+                    Log.e("devlog", e.message!!)
                 }
-                Toast.makeText(this, "Failed getting result from google sign in", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "There is a problem signing in with google", Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun authWithGoogle(idToken: String, mainContext: Context) {
+    private fun authWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Toast.makeText(mainContext, "Successfully signed in with google", Toast.LENGTH_SHORT).show()
+                Log.i("devlog", "[authWithGoogle()] Client successfully signed in with google")
             } else {
-                Toast.makeText(mainContext, "Failed signing in with google", Toast.LENGTH_LONG).show()
+                Log.e("devlog", "[authWithGoogle()] ERROR AUTHENTICATING WITH GOOGLE IN FIREBASE")
+                Toast.makeText(this, "There is a problem signing in with google", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -141,12 +160,14 @@ class AuthActivity : AppCompatActivity() {
 
         signIn.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                email.text?.clear(); password.text?.clear()
+                email.text?.clear()
+                password.text?.clear()
             } else {
-                if (task.exception != null) {
-                    Log.i("devlog", task.exception.toString())
+                if (task.exception?.message != null) {
+                    Log.e("devlog", "[signInWithEmail()] ERROR SIGNING IN WITH EMAIL")
+                    Log.e("devlog", task.exception?.message!!)
                 }
-                Toast.makeText(applicationContext, "There is a problem signing in", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "There is a problem signing in with email", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -183,12 +204,15 @@ class AuthActivity : AppCompatActivity() {
 
         signUp.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                email.text?.clear(); password.text?.clear(); confirmPassword.text?.clear()
+                email.text?.clear()
+                password.text?.clear()
+                confirmPassword.text?.clear()
             } else {
-                if (task.exception != null) {
-                    Log.i("devlog", task.exception.toString())
+                if (task.exception?.message != null) {
+                    Log.e("devlog", "[signUpWithEmail()] ERROR SIGNING UP WITH EMAIL")
+                    Log.e("devlog", task.exception?.message!!)
                 }
-                Toast.makeText(applicationContext, "There is a problem signing up", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "There is a problem signing up with email", Toast.LENGTH_LONG).show()
             }
         }
     }

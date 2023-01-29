@@ -56,7 +56,11 @@ class EditSeedDialog : DialogFragment(), Database {
 
         // If the system needs to reclaim memory, the app process is terminated.
         // It may destroy the ViewModel along with other resources.
-        if (currentData == null) { dismiss() }
+        if (currentData == null) {
+            Log.w("devlog",
+                "[onCreateView] When EditSeedDialog is created, the current data is null. Dismiss this fragment")
+            dismiss()
+        }
         return binding.root
     }
 
