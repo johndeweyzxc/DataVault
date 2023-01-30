@@ -85,16 +85,16 @@ class RvHome(private val mainActivity: MainActivity) : RecyclerView.Adapter<RvHo
             }
 
             // When user touch on chips, it copies its content on the clipboard
-            copyFromChip(itemView, "Copied username", seedChipUsernameInfo)
+            copyFromChip(itemView, "Copied username", currentData.userName, seedChipUsernameInfo)
             setTextContent(seedChipUsernameInfo, currentData.userName)
 
-            copyFromChip(itemView, "Copied email", seedChipEmailInfo)
+            copyFromChip(itemView, "Copied email", currentData.email, seedChipEmailInfo)
             setTextContent(seedChipEmailInfo, currentData.email)
 
-            copyFromChip(itemView, "Copied phone number", seedChipPhoneNumberInfo)
+            copyFromChip(itemView, "Copied phone number", currentData.phoneNumber, seedChipPhoneNumberInfo)
             setTextContent(seedChipPhoneNumberInfo, currentData.phoneNumber)
 
-            copyFromChip(itemView, "Copied password", seedChipPasswordInfo)
+            copyFromChip(itemView, "Copied password", currentData.password, seedChipPasswordInfo)
             setTextContent(seedChipPasswordInfo, currentData.password)
 
             tvSeedAppName.text = currentData.appName
@@ -103,18 +103,17 @@ class RvHome(private val mainActivity: MainActivity) : RecyclerView.Adapter<RvHo
 
     private fun setTextContent(chip: TextView, text: String) {
         if (text.length > 8) {
-            val data = "${text.take(4)}...${text.takeLast(4)}"
-            chip.text = data
+            val hiddenData = "${text.take(4)}...${text.takeLast(4)}"
+            chip.text = hiddenData
         } else {
             chip.text = text
         }
     }
 
-    private fun copyFromChip(itemView: View, label: String, chip: Chip) {
+    private fun copyFromChip(itemView: View, label: String, data: String, chip: Chip) {
         chip.setOnClickListener {
-            val clip = ClipData.newPlainText(label, chip.text)
-            val clipBoardManager: ClipboardManager = mainActivity.getSystemService(
-                Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText(label, data)
+            val clipBoardManager = mainActivity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipBoardManager.setPrimaryClip(clip)
             Toast.makeText(itemView.context, label, Toast.LENGTH_SHORT).show()
         }

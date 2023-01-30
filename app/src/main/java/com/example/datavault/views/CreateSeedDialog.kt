@@ -15,6 +15,7 @@ import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogCreateBinding
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.*
 
 class CreateSeedDialog : DialogFragment(), Database {
 
@@ -76,8 +77,22 @@ class CreateSeedDialog : DialogFragment(), Database {
         ilEmail.setEndIconOnClickListener { binding.createEtEmail.text?.clear() }
         ilPhoneNumber.setEndIconOnClickListener { binding.createEtPassword.text?.clear() }
 
-        binding.createEditToolBar.setOnClickListener { dismiss() }
-        binding.createBackButton.setOnClickListener { dismiss() }
+        val scope = CoroutineScope(Dispatchers.IO)
+
+        binding.createEditToolBar.setOnClickListener {
+            closeActiveKeyboard()
+            scope.launch {
+                delay(200)
+                dismiss()
+            }
+        }
+        binding.createBackButton.setOnClickListener {
+            closeActiveKeyboard()
+            scope.launch {
+                delay(200)
+                dismiss()
+            }
+        }
 
         saveDataButton.setOnClickListener {
             clearHelperText()

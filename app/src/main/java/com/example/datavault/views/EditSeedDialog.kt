@@ -58,7 +58,7 @@ class EditSeedDialog : DialogFragment(), Database {
         // It may destroy the ViewModel along with other resources.
         if (currentData == null) {
             Log.w("devlog",
-                "[onCreateView] When EditSeedDialog is created, the current data is null. Dismiss this fragment")
+                "[onCreateView] EditSeedDialog is created but current data is null. Popping this fragment")
             dismiss()
         }
         return binding.root
@@ -142,13 +142,14 @@ class EditSeedDialog : DialogFragment(), Database {
                     if (currentData!!.favorite) {
                         addToFavorites(
                             requireActivity(), currentData!!.fireStoreDocId, false)
+                        binding.editToolBar.menu[0].setIcon(R.drawable.ic_edit_seed_dialog_not_fav)
                         Log.i("devlog", "Removed from favorite")
                     } else {
                         addToFavorites(
                             requireActivity(), currentData!!.fireStoreDocId, true)
+                        binding.editToolBar.menu[0].setIcon(R.drawable.ic_edit_seed_dialog_fav)
                         Log.i("devlog", "Added to favorite")
                     }
-                    dismiss()
                     true
                 }
                 "Delete" -> {
