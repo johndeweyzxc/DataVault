@@ -68,8 +68,16 @@
     <string name="edit_top_app_bar_delete_desc">Delete this document</string>
     <string name="edit_back">back</string>
 
-    <string name="default_user_photo">https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Android_symbol_green_2.max-1500x1500.png</string>
+    <string name="user_profile_head_text">Edit your profile</string>
+    <string name="user_profile_picture_description">Profile picture of user</string>
+    <string name="user_profile_hint_name">Name</string>
+    <string name="user_profile_edit_name_text">Edit your name</string>
+    <string name="user_profile_save_button">Save changes</string>
+    <string name="user_profile_back_button">back</string>
+
     <string name="favorites_favorite_text">Favorites</string>
     <string name="favorite_app_name">Twitter</string>
     <string name="favorite_icon_indicator">Icon for indicating that this item is added to favorites</string>
+
+    <string name="default_user_photo">https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Android_symbol_green_2.max-1500x1500.png</string>
 </resources>

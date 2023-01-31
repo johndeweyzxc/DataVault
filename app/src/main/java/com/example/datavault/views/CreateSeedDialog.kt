@@ -15,7 +15,10 @@ import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.databinding.FragmentDialogCreateBinding
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class CreateSeedDialog : DialogFragment(), Database {
 

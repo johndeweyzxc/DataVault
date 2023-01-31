@@ -90,6 +90,8 @@ class MainFragment : Fragment() {
         val username: TextView = headerView.findViewById(R.id.tvNavHeaderUsername)
         val email: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
 
+        // Set the username, name and profile picture of the user
+        email.text = mainActivity.currentUser?.email
         mainActivity.userMightBeNull(mainActivity.currentUser)
         if (mainActivity.currentUser?.photoUrl == null) {
             Glide.with(this).load(getString(R.string.default_user_photo)).into(avatar)
@@ -100,8 +102,16 @@ class MainFragment : Fragment() {
             val createName = mainActivity.currentUser?.email.toString().split("@")
             username.text = createName.first()
         }
-        email.text = mainActivity.currentUser?.email
+        avatar.setOnClickListener {
+            mainActivity.supportFragmentManager.beginTransaction().apply {
+                add(R.id.frameLayoutActivityMain, UserProfileFragment())
+                addToBackStack("UserProfileFragment")
+                commit()
+            }
+            binding.drawerLayout.close()
+        }
 
+        // Set click listeners on navigation drawer items
         binding.mainToolBar.setNavigationOnClickListener { binding.drawerLayout.open() }
 
         binding.navView.setNavigationItemSelectedListener { menuItem ->
@@ -132,6 +142,11 @@ class MainFragment : Fragment() {
                 }
 
                 R.id.menuAccountSettings -> {
+                    mainActivity.supportFragmentManager.beginTransaction().apply {
+                        add(R.id.frameLayoutActivityMain, UserProfileFragment())
+                        addToBackStack("UserProfileFragment")
+                        commit()
+                    }
                     binding.drawerLayout.close()
                     true
                 }
