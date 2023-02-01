@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.example.datavault.Database
 import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.adapters.VpMain
@@ -20,7 +21,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), Database {
 
     private lateinit var binding: FragmentMainBinding
     private lateinit var mainActivity: MainActivity
@@ -91,17 +92,12 @@ class MainFragment : Fragment() {
         val email: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
 
         // Set the username, name and profile picture of the user
-        email.text = mainActivity.currentUser?.email
-        mainActivity.userMightBeNull(mainActivity.currentUser)
-        if (mainActivity.currentUser?.photoUrl == null) {
-            Glide.with(this).load(getString(R.string.default_user_photo)).into(avatar)
-        } else {
-            Glide.with(this).load(mainActivity.currentUser?.photoUrl).into(avatar)
+        mainActivity.viewModel.userEmail.observe(viewLifecycleOwner) { email.text = it }
+        mainActivity.viewModel.userName.observe(viewLifecycleOwner) { username.text = it }
+        mainActivity.viewModel.userPhotoUrlLink.observe(viewLifecycleOwner) {
+            Glide.with(this).load(it).into(avatar)
         }
-        if (mainActivity.currentUser?.displayName.isNullOrBlank()) {
-            val createName = mainActivity.currentUser?.email.toString().split("@")
-            username.text = createName.first()
-        }
+
         avatar.setOnClickListener {
             mainActivity.supportFragmentManager.beginTransaction().apply {
                 add(R.id.frameLayoutActivityMain, UserProfileFragment())

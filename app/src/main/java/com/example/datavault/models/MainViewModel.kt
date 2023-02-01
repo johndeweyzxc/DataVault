@@ -1,6 +1,7 @@
 package com.example.datavault.models
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.datavault.schema.SeedSchema
 import com.google.firebase.Timestamp
@@ -12,6 +13,10 @@ class MainViewModel: ViewModel() {
     private var listDataModel = mutableListOf<SeedSchema>()
     private var listFavorites = mutableListOf<SeedSchema>()
     private var editSeedCurrentData: SeedSchema? = null
+
+    var userName = MutableLiveData<String>()
+    var userPhotoUrlLink =  MutableLiveData<String>()
+    var userEmail =  MutableLiveData<String>()
 
     fun countSeed(): Int {
         return listDataModel.size

@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.datavault.Database
+import com.example.datavault.MainActivity
 import com.example.datavault.R
 import com.example.datavault.databinding.FragmentUserProfileBinding
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class UserProfileFragment : Fragment() {
+class UserProfileFragment : Fragment(), Database {
 
     private lateinit var binding: FragmentUserProfileBinding
 
@@ -35,21 +38,32 @@ class UserProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.btnUserProfileBack.setOnClickListener { finishFragment() }
+        binding.userProfileEditToolBar.setOnClickListener { finishFragment() }
+
+        // Save the data to firebase storage and update the firestore document.
+        binding.btnUserProfileSave.setOnClickListener {
+            if (binding.etUserProfileName.text.isNullOrBlank()) {
+                Toast.makeText(requireActivity(), "Name cannot be empty", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            val mainActivity = (activity as MainActivity)
+            mainActivity.userMightBeNull(mainActivity.currentUser)
+
+            updateUserProfileData(requireActivity(), binding)
+            finishFragment()
+        }
+    }
+
+    private fun finishFragment() {
         val scope = CoroutineScope(Dispatchers.IO)
 
-        binding.btnUserProfileBack.setOnClickListener {
-            closeActiveKeyboard()
-            scope.launch {
-                delay(200)
-                parentFragmentManager.popBackStack()
-            }
-        }
-        binding.userProfileEditToolBar.setOnClickListener {
-            closeActiveKeyboard()
-            scope.launch {
-                delay(200)
-                parentFragmentManager.popBackStack()
-            }
+        closeActiveKeyboard()
+        scope.launch {
+            delay(200)
+            parentFragmentManager.popBackStack()
         }
     }
 

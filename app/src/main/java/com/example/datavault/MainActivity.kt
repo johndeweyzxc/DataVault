@@ -18,7 +18,7 @@ import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Database {
 
     var currentUser: FirebaseUser? = null
     lateinit var viewModel: MainViewModel
@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         seedAdapter = RvHome(this)
 
         subscribeToRealtimeUpdates()
+        subscribeUserProfileUpdates()
 
         // Set the MainFragment as the first fragment to appear on the activity
         supportFragmentManager.beginTransaction().apply {
@@ -93,6 +94,42 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, AuthActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
+        }
+    }
+
+    private fun subscribeUserProfileUpdates() {
+        userMightBeNull(currentUser)
+        viewModel.userEmail.value = currentUser?.email
+
+        if (currentUser?.photoUrl == null) {
+            viewModel.userPhotoUrlLink.value = getString(R.string.default_user_photo)
+        } else {
+            viewModel.userPhotoUrlLink.value = currentUser?.photoUrl.toString()
+        }
+
+        if (currentUser?.displayName.isNullOrBlank()) {
+            val createName = currentUser?.email.toString().split("@")
+            viewModel.userName.value = createName.first()
+        } else {
+            viewModel.userName.value = currentUser?.displayName
+        }
+
+        val generatedUserData = Firebase.firestore.collection("generatedUserData")
+        val userIdDocRef = generatedUserData.document(currentUser!!.uid)
+        val dataColRef = userIdDocRef.collection("profile")
+        val targetDocument = dataColRef.document("user")
+
+        targetDocument.addSnapshotListener{ snapshot, exception ->
+            if (exception != null) {
+                Log.i("devlog", exception.message.toString())
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                viewModel.userName.value = snapshot.get("name").toString()
+            } else {
+                uploadInitialUserProfileData(applicationContext, viewModel.userName.toString())
+            }
         }
     }
 

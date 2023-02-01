@@ -5,8 +5,10 @@ import android.util.Log
 import android.widget.Toast
 import com.example.datavault.databinding.FragmentDialogCreateBinding
 import com.example.datavault.databinding.FragmentDialogEditBinding
+import com.example.datavault.databinding.FragmentUserProfileBinding
 import com.example.datavault.schema.SeedSchema
 import com.example.datavault.schema.SeedSchemaUpload
+import com.example.datavault.schema.UserProfile
 import com.example.datavault.views.EditSeedDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.Timestamp
@@ -117,6 +119,43 @@ interface Database {
                 Log.i("devlog", exception.message!!)
             }
             Toast.makeText(context, "Failed to add to favorites", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    fun uploadInitialUserProfileData(context: Context, name: String) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val userIdDocRef = generatedUserDataColRef().document(currentUser!!.uid)
+        val dataColRef = userIdDocRef.collection("profile")
+        val userProfile = UserProfile(name, "testing", Timestamp(Date()), Timestamp(Date()))
+        val task = dataColRef.document("user").set(userProfile)
+
+        task.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.i("devlog", exception.message!!)
+            }
+            Toast.makeText(context, "Failed to save data", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    fun updateUserProfileData(context: Context, binding: FragmentUserProfileBinding) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val userIdDocRef = generatedUserDataColRef().document(currentUser!!.uid)
+        val dataColRef = userIdDocRef.collection("profile")
+        val userProfile = UserProfile(
+            binding.etUserProfileName.text.toString(), "testing",
+            Timestamp(Date()), Timestamp(Date())
+        )
+        val task = dataColRef.document("user").set(userProfile)
+
+        task.addOnSuccessListener {
+            Toast.makeText(context, "Successfully saved changes", Toast.LENGTH_LONG).show()
+        }.addOnCanceledListener {
+            Toast.makeText(context, "Canceled saving data", Toast.LENGTH_LONG).show()
+        }.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.i("devlog", exception.message!!)
+            }
+            Toast.makeText(context, "Failed to save data", Toast.LENGTH_LONG).show()
         }
     }
 }
