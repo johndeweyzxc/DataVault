@@ -14,5 +14,5 @@
 .externalNativeBuild
 .cxx
 local.properties
-app/firebaseApiKey/
+app/firebase/
 keystore.properties
