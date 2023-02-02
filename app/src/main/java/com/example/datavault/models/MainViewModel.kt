@@ -1,5 +1,6 @@
 package com.example.datavault.models
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,9 +15,11 @@ class MainViewModel: ViewModel() {
     private var listFavorites = mutableListOf<SeedSchema>()
     private var editSeedCurrentData: SeedSchema? = null
 
+    var userProfileExists = MutableLiveData<Boolean>()
     var userName = MutableLiveData<String>()
-    var userPhotoUrlLink =  MutableLiveData<String>()
     var userEmail =  MutableLiveData<String>()
+
+    var currentUserProfileImage: Bitmap? = null
 
     fun countSeed(): Int {
         return listDataModel.size

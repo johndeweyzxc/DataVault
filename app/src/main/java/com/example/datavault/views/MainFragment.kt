@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -85,20 +86,42 @@ class MainFragment : Fragment(), Database {
         }
     }
 
+    private fun setDefaultUserProfileImage(imageView: CircleImageView) {
+        if (mainActivity.currentUser?.photoUrl == null) {
+            Glide.with(this).load(getString(R.string.default_user_photo)).into(imageView)
+        } else {
+            Glide.with(this).load(mainActivity.currentUser?.photoUrl).into(imageView)
+        }
+    }
+
     private fun setNavigationDrawer() {
+        mainActivity.userMightBeNull(mainActivity.currentUser)
         val headerView: View = binding.navView.getHeaderView(0)
         val avatar: CircleImageView = headerView.findViewById(R.id.ivNavHeaderAvatar)
         val username: TextView = headerView.findViewById(R.id.tvNavHeaderUsername)
         val email: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
 
-        // Set the username, name and profile picture of the user
-        mainActivity.viewModel.userEmail.observe(viewLifecycleOwner) { email.text = it }
-        mainActivity.viewModel.userName.observe(viewLifecycleOwner) { username.text = it }
-        mainActivity.viewModel.userPhotoUrlLink.observe(viewLifecycleOwner) {
-            Glide.with(this).load(it).into(avatar)
+        mainActivity.viewModel.userProfileExists.observe(viewLifecycleOwner) { exists ->
+            if (!exists) {
+                // Upload user profile document in firestore if it does not exists.
+                uploadInitialUserProfileData(requireActivity(), mainActivity.currentUser?.displayName!!)
+            }
         }
 
+        // Set the default profile image of user
+        setDefaultUserProfileImage(avatar)
+
+        // Get the profile image of user if it exists in the storage and update the UI accordingly.
+        // This overrides value set by setDefaultUserProfile().
+        overrideDefaultUserProfileImage(this, avatar, mainActivity.currentUser!!.uid)
+
+        // Observe any change in the view model and update UI accordingly.
+        mainActivity.viewModel.userEmail.observe(viewLifecycleOwner) { email.text = it }
+        mainActivity.viewModel.userName.observe(viewLifecycleOwner) { username.text = it }
+
+        // Set a click listener on the circle image view in header
         avatar.setOnClickListener {
+            mainActivity.viewModel.currentUserProfileImage = avatar.drawable.toBitmap()
             mainActivity.supportFragmentManager.beginTransaction().apply {
                 add(R.id.frameLayoutActivityMain, UserProfileFragment())
                 addToBackStack("UserProfileFragment")
@@ -139,6 +162,7 @@ class MainFragment : Fragment(), Database {
 
                 R.id.menuAccountSettings -> {
                     mainActivity.supportFragmentManager.beginTransaction().apply {
+                        mainActivity.viewModel.currentUserProfileImage = avatar.drawable.toBitmap()
                         add(R.id.frameLayoutActivityMain, UserProfileFragment())
                         addToBackStack("UserProfileFragment")
                         commit()

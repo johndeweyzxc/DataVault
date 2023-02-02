@@ -1,21 +1,29 @@
 package com.example.datavault
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.example.datavault.databinding.FragmentDialogCreateBinding
 import com.example.datavault.databinding.FragmentDialogEditBinding
 import com.example.datavault.databinding.FragmentUserProfileBinding
+import com.example.datavault.models.MainViewModel
 import com.example.datavault.schema.SeedSchema
 import com.example.datavault.schema.SeedSchemaUpload
 import com.example.datavault.schema.UserProfile
 import com.example.datavault.views.EditSeedDialog
+import com.example.datavault.views.MainFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import de.hdodenhof.circleimageview.CircleImageView
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 interface Database {
@@ -126,36 +134,82 @@ interface Database {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userIdDocRef = generatedUserDataColRef().document(currentUser!!.uid)
         val dataColRef = userIdDocRef.collection("profile")
-        val userProfile = UserProfile(name, "testing", Timestamp(Date()), Timestamp(Date()))
+        val userProfile = UserProfile(name, Timestamp(Date()), Timestamp(Date()))
+        val targetDocument = dataColRef.document("user")
+
+        // Before uploading initial user data, check if it exists
+        targetDocument.get().addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.d("devlog", "[uploadInitialUserProfileData()] ${exception.message}")
+            }
+        }
+
+        val task = targetDocument.set(userProfile)
+
+        task.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.w("devlog", "[uploadInitialUserProfileData()] ${exception.message}")
+            }
+            Toast.makeText(context, "Failed to save data", Toast.LENGTH_LONG).show()
+        }.addOnSuccessListener {
+            Log.d("devlog",
+                "[uploadInitialUserProfileData()] Successfully saved INITIAL user information in firestore.")
+        }
+    }
+
+    fun updateUserProfileData(context: Context, binding: FragmentUserProfileBinding, viewModel: MainViewModel, uid: String) {
+        val storageRef = Firebase.storage.reference
+        val userProfileImageRef = storageRef.child("ProfileImage/${uid}.jpg")
+
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val userIdDocRef = generatedUserDataColRef().document(currentUser!!.uid)
+        val dataColRef = userIdDocRef.collection("profile")
+        val userProfile = UserProfile(binding.etUserProfileName.text.toString(), Timestamp(Date()), Timestamp(Date())
+        )
         val task = dataColRef.document("user").set(userProfile)
 
         task.addOnFailureListener { exception ->
             if (exception.message != null) {
-                Log.i("devlog", exception.message!!)
+                Log.w("devlog", "[updateUserProfileData()] ${exception.message}")
             }
-            Toast.makeText(context, "Failed to save data", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Failed to save changes", Toast.LENGTH_LONG).show()
+        }.addOnSuccessListener {
+            Log.d("devlog", "[updateUserProfileData()] Successfully saved new user information in firestore.")
+        }
+
+        val bitmap = (binding.ivUserProfileImage.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+        val uploadTask = userProfileImageRef.putBytes(data)
+
+        uploadTask.addOnFailureListener { exception ->
+            if (exception.message != null) {
+                Log.w("devlog", "[updateUserProfileData()] ${exception.message}")
+            }
+            Toast.makeText(context, "Failed to upload image", Toast.LENGTH_LONG).show()
+        }.addOnSuccessListener { taskSnapshot ->
+            Log.d(
+                "devlog",
+                "[updateUserProfileData()] Successfully saved new user profile image in storage " +
+                        "(${taskSnapshot.bytesTransferred})"
+            )
         }
     }
 
-    fun updateUserProfileData(context: Context, binding: FragmentUserProfileBinding) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val userIdDocRef = generatedUserDataColRef().document(currentUser!!.uid)
-        val dataColRef = userIdDocRef.collection("profile")
-        val userProfile = UserProfile(
-            binding.etUserProfileName.text.toString(), "testing",
-            Timestamp(Date()), Timestamp(Date())
-        )
-        val task = dataColRef.document("user").set(userProfile)
+    fun overrideDefaultUserProfileImage(fragment: MainFragment, imageView: CircleImageView, uid: String) {
+        val storageRef = Firebase.storage.reference
+        val userProfileImageRef = storageRef.child("ProfileImage/${uid}.jpg")
 
-        task.addOnSuccessListener {
-            Toast.makeText(context, "Successfully saved changes", Toast.LENGTH_LONG).show()
-        }.addOnCanceledListener {
-            Toast.makeText(context, "Canceled saving data", Toast.LENGTH_LONG).show()
-        }.addOnFailureListener { exception ->
+        userProfileImageRef.downloadUrl.addOnFailureListener { exception ->
             if (exception.message != null) {
-                Log.i("devlog", exception.message!!)
+                Log.w("devlog", "[overrideDefaultUserProfileImage()] USER PROFILE IMAGE NOT FOUND IN STORAGE.")
             }
-            Toast.makeText(context, "Failed to save data", Toast.LENGTH_LONG).show()
+        }.addOnSuccessListener { uri ->
+            Log.i("devlog", "[overrideDefaultUserProfileImage()] Successfully downloaded the profile image from storage.")
+
+            // Successfully downloaded the image, update the UI
+            Glide.with(fragment).load(uri).into(imageView)
         }
     }
 }

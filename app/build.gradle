@@ -67,7 +67,8 @@ android {
 }
 
 dependencies {
-
+    implementation "androidx.activity:activity-ktx:1.6.1"
+    implementation "androidx.fragment:fragment-ktx:1.5.5"
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.7.0-alpha01'
     implementation 'androidx.activity:activity-ktx:1.7.0-alpha03'
@@ -77,16 +78,19 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    // Import the BoM for the Firebase platform
+    // Import the BoM for the Firebase platform so app will always use compatible versions of Firebase Android libraries
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     // Add the dependency for the Firebase Authentication library
     implementation 'com.google.firebase:firebase-auth'
     // Add the dependency for the Firebase Authentication library
     implementation 'com.google.firebase:firebase-auth-ktx'
-    // Also add the dependency for the Google Play services library and specify its version
-    implementation 'com.google.android.gms:play-services-auth:20.4.0'
     // Declare the dependency for the Firebase Firestore library
     implementation 'com.google.firebase:firebase-firestore-ktx'
+    // Add the dependency for the Cloud Storage library
+    implementation 'com.google.firebase:firebase-storage-ktx'
+
+    // Add the dependency for the Google Play services library and specify its version
+    implementation 'com.google.android.gms:play-services-auth:20.4.0'
 
     // Add glide dependency for image loading and caching library
     // https://github.com/bumptech/glide
@@ -94,10 +98,15 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
 
     // Add dependency for creating circle image view
+    // https://github.com/hdodenhof/CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     // Dependency for view pager
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    // Dependency for getting image from gallery or camera
+    // https://github.com/Dhaval2404/ImagePicker
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
 }
 
 task deleteGoogleServicesJson(type: Delete) {

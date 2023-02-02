@@ -99,37 +99,44 @@ class MainActivity : AppCompatActivity(), Database {
 
     private fun subscribeUserProfileUpdates() {
         userMightBeNull(currentUser)
-        viewModel.userEmail.value = currentUser?.email
+        val generatedUserData = Firebase.firestore.collection("generatedUserData")
+        val userIdDocRef = generatedUserData.document(currentUser!!.uid)
+        val dataColRef = userIdDocRef.collection("profile")
+        val targetDocument = dataColRef.document("user")
 
-        if (currentUser?.photoUrl == null) {
-            viewModel.userPhotoUrlLink.value = getString(R.string.default_user_photo)
-        } else {
-            viewModel.userPhotoUrlLink.value = currentUser?.photoUrl.toString()
+        // Set default user profile data in the view model
+        setDefaultUserProfileValue()
+
+        // Listens to any change on the document, overrides value set by setDefaultUserProfileValue().
+        targetDocument.addSnapshotListener{ snapshot, exception ->
+            if (exception != null) {
+                Log.w("devlog", "[subscribeUserProfileUpdates()] SNAPSHOT ERROR ${exception.message.toString()}")
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                // A user profile exists in firestore, update the view model and also set userProfileExists to true so that
+                // MainFragment does not have to upload an initial data.
+                viewModel.userName.value = snapshot.get("name").toString()
+                viewModel.userProfileExists.value = true
+            } else {
+                // A user profile does not exists in firestore, set userProfileExists to false so that MainFragment upload
+                // initial data.
+                Log.w("devlog", "[subscribeUserProfileUpdates()] USER PROFILE DOES NOT EXISTS IN FIRESTORE" )
+                viewModel.userProfileExists.value = false
+            }
         }
+    }
+
+    private fun setDefaultUserProfileValue() {
+        // This set the initial value for user profile
+        viewModel.userEmail.value = currentUser?.email
 
         if (currentUser?.displayName.isNullOrBlank()) {
             val createName = currentUser?.email.toString().split("@")
             viewModel.userName.value = createName.first()
         } else {
             viewModel.userName.value = currentUser?.displayName
-        }
-
-        val generatedUserData = Firebase.firestore.collection("generatedUserData")
-        val userIdDocRef = generatedUserData.document(currentUser!!.uid)
-        val dataColRef = userIdDocRef.collection("profile")
-        val targetDocument = dataColRef.document("user")
-
-        targetDocument.addSnapshotListener{ snapshot, exception ->
-            if (exception != null) {
-                Log.i("devlog", exception.message.toString())
-                return@addSnapshotListener
-            }
-
-            if (snapshot != null && snapshot.exists()) {
-                viewModel.userName.value = snapshot.get("name").toString()
-            } else {
-                uploadInitialUserProfileData(applicationContext, viewModel.userName.toString())
-            }
         }
     }
 
@@ -144,7 +151,7 @@ class MainActivity : AppCompatActivity(), Database {
         // appending new data, modifying existing data or deleting existing data.
         query.addSnapshotListener{ snapshot, exception ->
             if (exception?.message != null) {
-                Log.w("devlog", exception.message!!)
+                Log.w("devlog", "[subscribeToRealtimeUpdates()] SNAPSHOT ERROR ${exception.message.toString()}")
             } else {
                 for (changes in snapshot?.documentChanges!!) {
                     when (changes.type) {
@@ -236,14 +243,14 @@ class MainActivity : AppCompatActivity(), Database {
 
         if (deletedPos.first() != -1) {
             Log.i("devlog",
-                "[handleRemovedData()] Notifying seedAdapter about $appName inserted at $seedIndex"
+                "[handleRemovedData()] Notifying seedAdapter about $appName deleted at $seedIndex"
             )
             seedAdapter.notifyItemRemoved(deletedPos.first())
         }
 
         if (deletedPos.last() != -1) {
             Log.i("devlog",
-                "[handleRemovedData()] Notifying favoriteAdapter about $appName inserted at $favoriteIndex"
+                "[handleRemovedData()] Notifying favoriteAdapter about $appName deleted at $favoriteIndex"
             )
             favoriteAdapter.notifyItemRemoved(deletedPos.last())
         }
