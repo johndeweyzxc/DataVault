@@ -99,7 +99,7 @@ class AuthActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        // Set up activity result launcher for getting result from an activiy.
+        // Set up activity result launcher for getting result from an activity.
         activityResultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) { ActivityResult ->
 
