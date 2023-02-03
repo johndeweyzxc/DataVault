@@ -114,14 +114,14 @@ task deleteGoogleServicesJson(type: Delete) {
 }
 
 task switchToDebug(type: Copy) {
-    def sourceDir = "$rootDir/app/firebaseApiKey/debug/google-services.json"
+    def sourceDir = "$rootDir/app/firebase/debug/google-services.json"
     def destDir = "$rootDir/app"
     from sourceDir
     into destDir
 }
 
 task switchToRelease(type: Copy) {
-    def sourceDir = "$rootDir/app/firebaseApiKey/release/google-services.json"
+    def sourceDir = "$rootDir/app/firebase/release/google-services.json"
     def destDir = "$rootDir/app"
     from sourceDir
     into destDir
