@@ -95,6 +95,11 @@ class MainFragment : Fragment(), Database {
     }
 
     private fun setNavigationDrawer() {
+        val gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
         mainActivity.userMightBeNull(mainActivity.currentUser)
         val headerView: View = binding.navView.getHeaderView(0)
         val avatar: CircleImageView = headerView.findViewById(R.id.ivNavHeaderAvatar)
@@ -135,11 +140,6 @@ class MainFragment : Fragment(), Database {
 
         binding.navView.setNavigationItemSelectedListener { menuItem ->
 
-            val gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
-
             when (menuItem.itemId) {
                 R.id.menuHome -> {
                     binding.viewPager.setCurrentItem(0, true)
@@ -148,10 +148,6 @@ class MainFragment : Fragment(), Database {
                 }
                 R.id.menuFavorites -> {
                     binding.viewPager.setCurrentItem(1, true)
-                    binding.drawerLayout.close()
-                    true
-                }
-                R.id.menuFind -> {
                     binding.drawerLayout.close()
                     true
                 }

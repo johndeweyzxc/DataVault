@@ -29,7 +29,6 @@
             android:layout_height="wrap_content"
             app:navigationIcon="@drawable/ic_main_navigation_menu"
             app:title="DataVault"
-            app:menu="@menu/top_app_bar_menu"
             style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

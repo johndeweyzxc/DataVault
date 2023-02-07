@@ -15,10 +15,6 @@
                             android:title="@string/main_menu_favorites"
                             android:icon="@drawable/ic_menu_favorite" />
                         <item
-                            android:id="@+id/menuFind"
-                            android:title="@string/main_drawer_find"
-                            android:icon="@drawable/ic_menu_find" />
-                        <item
                             android:id="@+id/menuSettings"
                             android:title="@string/main_menu_strings"
                             android:icon="@drawable/ic_menu_settings"/>
