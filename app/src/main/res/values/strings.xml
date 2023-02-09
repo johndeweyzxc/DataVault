@@ -79,5 +79,29 @@
     <string name="favorite_app_name">Twitter</string>
     <string name="favorite_icon_indicator">Icon for indicating that this item is added to favorites</string>
 
+    <string name="about_header">About DataVault</string>
+    <string name="about_body">
+        Introducing our latest app, the ultimate password manager. With this app, you can store all your passwords and notes in one secure place. You can simply retrieve your password with just one tap. The app will automatically copy the information to your clipboard, making it easier for you to access your accounts. You can create an account or log in with your Google account.You also have the option to change your profile information. Keep your passwords safe and secure with our password manager app!
+    </string>
+
+    <string name="privacy_policy_header">DataVault Privacy Policy</string>
+    <string name="privacy_policy_last_updated">Last updated: February 07, 2023</string>
+    <string name="privacy_policy_body">This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</string>
+    <string name="privacy_policy_url">https://www.privacypolicies.com/live/ce871163-c3eb-4857-88fb-dfa143785671</string>
+    <string name="privacy_policy_text_button">View privacy policy</string>
+
+    <string name="terms_of_use_header">DataVault Terms of Use</string>
+    <string name="terms_of_use_introduction">Introduction: These Terms of Use govern your use of the app and all services offered through it. By downloading, accessing or using the app, you agree to be bound by these Terms of Use. If you do not agree to these terms, do not use the app.</string>
+    <string name="terms_of_use_license">License to Use: We grant you a personal, limited, non-exclusive, non-transferable license to use the app for your personal, non-commercial purposes.</string>
+    <string name="terms_of_use_user_content">User Content: The app may allow you to submit, upload, publish or otherwise make available content, including but not limited to text, photographs and videos ("User Content"). You retain all rights in, and are solely responsible for, the User Content you make available through the app.</string>
+    <string name="terms_of_use_user_conduct">User Conduct: You agree not to use the app to upload, post, transmit or otherwise make available any User Content that: (a) is false, misleading, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, sexually explicit, or offensive; (b) violates any law or regulation; or (c) infringes the intellectual property or other rights of any third party.</string>
+    <string name="terms_of_use_intellectual_property">Intellectual Property: The app and all its content, features, and functionality (including but not limited to all information, software, text, displays, images, video, and audio, and the design, selection, and arrangement thereof), are owned by us, our licensors, or other providers of such material and are protected by United States and international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws. These terms do not grant you any rights to use our trademarks, logos, domain names, or other distinctive brand features.</string>
+    <string name="terms_of_use_disclaimer_warranties">Disclaimer of Warranties: The app and all content, materials, information, software, products, and services included in or available through the app are provided on an "as is" and "as available" basis, and are subject to change at any time without notice to you. We make no representations or warranties of any kind, express or implied, as to the operation of the app or the information, content, materials, or products included in the app.</string>
+    <string name="terms_of_use_limitation_of_liability">Limitation of Liability: To the fullest extent permitted by law, in no event shall we be liable for any indirect, incidental, special, consequential or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses, resulting from: (a) your access to or use of or inability to access or use the app; (b) any conduct or content of any third party on the app; (c) any content obtained from the app; and (d) unauthorized access, use or alteration of your transmissions or content.</string>
+    <string name="terms_of_use_termination">Termination: We reserve the right, in our sole discretion, to terminate or suspend all or a portion of the app, or your use of all or a portion of the app, at any time and with or without notice and with or without cause.</string>
+    <string name="terms_of_use_governing_law">Governing Law: These Terms of Use shall be governed by and construed in accordance with the laws of the United States, without giving effect to any principles of conflicts of law.</string>
+    <string name="terms_of_use_contact_info">Contact Information: If you have any questions about these Terms of Use, please contact us using email at johndeweydev@gmail.com</string>
+
     <string name="default_user_photo">https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Android_symbol_green_2.max-1500x1500.png</string>
+    <string name="designed_by_john_dewey">DataVault Designed by John Dewey</string>
 </resources>

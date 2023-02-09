@@ -95,11 +95,6 @@ class MainFragment : Fragment(), Database {
     }
 
     private fun setNavigationDrawer() {
-        val gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-
         mainActivity.userMightBeNull(mainActivity.currentUser)
         val headerView: View = binding.navView.getHeaderView(0)
         val avatar: CircleImageView = headerView.findViewById(R.id.ivNavHeaderAvatar)
@@ -157,43 +152,66 @@ class MainFragment : Fragment(), Database {
                 }
 
                 R.id.menuAccountSettings -> {
-                    mainActivity.supportFragmentManager.beginTransaction().apply {
-                        mainActivity.viewModel.currentUserProfileImage = avatar.drawable.toBitmap()
-                        add(R.id.frameLayoutActivityMain, UserProfileFragment())
-                        addToBackStack("UserProfileFragment")
-                        commit()
-                    }
+                    navigateToUserProfileFragment(avatar)
                     binding.drawerLayout.close()
                     true
                 }
                 R.id.menuSignOut -> {
-                    try {
-                        FirebaseAuth.getInstance().signOut()
-                        GoogleSignIn.getClient(requireActivity(), gso).signOut()
-                    } catch (e: Exception) {
-                        if (e.message != null) {
-                            Log.i("devlog", e.message!!)
-                        }
-                        Toast.makeText(requireActivity(), "There is a problem signing out", Toast.LENGTH_LONG).show()
-                    }
+                    signOutUser()
                     true
                 }
 
                 R.id.menuAbout -> {
-                    Log.i("devlog", "About is pressed")
+                    navigateToAboutAppFragment()
                     binding.drawerLayout.close()
                     true
                 }
                 R.id.menuPrivacyPolicy -> {
+                    navigateToAboutAppFragment()
                     binding.drawerLayout.close()
                     true
                 }
                 R.id.menuTermsOfUse -> {
+                    navigateToAboutAppFragment()
                     binding.drawerLayout.close()
                     true
                 }
                 else -> false
             }
+        }
+    }
+
+    private fun signOutUser() {
+        val gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        try {
+            FirebaseAuth.getInstance().signOut()
+            GoogleSignIn.getClient(requireActivity(), gso).signOut()
+        } catch (e: Exception) {
+            if (e.message != null) {
+                Log.i("devlog", e.message!!)
+            }
+            Toast.makeText(requireActivity(), "There is a problem signing out", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun navigateToAboutAppFragment() {
+        mainActivity.supportFragmentManager.beginTransaction().apply {
+            add(R.id.frameLayoutActivityMain, AboutAppFragment())
+            addToBackStack("AboutAppFragment")
+            commit()
+        }
+    }
+
+    private fun navigateToUserProfileFragment(avatar: CircleImageView) {
+        mainActivity.supportFragmentManager.beginTransaction().apply {
+            mainActivity.viewModel.currentUserProfileImage = avatar.drawable.toBitmap()
+            add(R.id.frameLayoutActivityMain, UserProfileFragment())
+            addToBackStack("UserProfileFragment")
+            commit()
         }
     }
 }
