@@ -38,13 +38,16 @@ class MainActivity : AppCompatActivity(), Database {
         favoriteAdapter = RvFavorite(this)
         seedAdapter = RvHome(this)
 
-        subscribeToRealtimeUpdates()
-        subscribeUserProfileUpdates()
+        // Listen to any changes in the database if user is logged in
+        if (currentUser != null) {
+            subscribeToRealtimeUpdates()
+            subscribeUserProfileUpdates()
 
-        // Set the MainFragment as the first fragment to appear on the activity
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.frameLayoutActivityMain, MainFragment())
-            commit()
+            // Set the MainFragment as the first fragment to appear on the activity
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.frameLayoutActivityMain, MainFragment())
+                commit()
+            }
         }
     }
 
@@ -83,22 +86,22 @@ class MainActivity : AppCompatActivity(), Database {
         super.onConfigurationChanged(newConfig)
     }
 
-    private fun authListener() {
-        FirebaseAuth.getInstance().addAuthStateListener { auth -> userMightBeNull(auth.currentUser) }
+    fun navigateToAuthActivity() {
+        val intent = Intent(this, AuthActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
-    fun userMightBeNull(user: FirebaseUser?) {
-        // If the current user is null, navigate to AuthActivity
-        if (user == null) {
-            Log.w("devlog", "[userMightBeNull()] User is null, navigate to AuthActivity")
-            val intent = Intent(this, AuthActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+    private fun authListener() {
+        FirebaseAuth.getInstance().addAuthStateListener { auth ->
+            if (auth.currentUser == null) {
+                Log.w("devlog", "[authListener()] User is null, navigate to AuthActivity")
+                navigateToAuthActivity()
+            }
         }
     }
 
     private fun subscribeUserProfileUpdates() {
-        userMightBeNull(currentUser)
         val generatedUserData = Firebase.firestore.collection("generatedUserData")
         val userIdDocRef = generatedUserData.document(currentUser!!.uid)
         val dataColRef = userIdDocRef.collection("profile")
@@ -141,7 +144,6 @@ class MainActivity : AppCompatActivity(), Database {
     }
 
     private fun subscribeToRealtimeUpdates() {
-        userMightBeNull(currentUser)
         val generatedUserData = Firebase.firestore.collection("generatedUserData")
         val userUid = generatedUserData.document(currentUser!!.uid)
         val data = userUid.collection("data")
@@ -181,13 +183,13 @@ class MainActivity : AppCompatActivity(), Database {
         // the adapter about the change.
 
         Log.i("devlog",
-            "[handleNewData()] Notifying seedAdapter about $appName inserted at $seedIndex"
+            "[handleNewData()] Notifying seed adapter about $appName inserted at index position $seedIndex"
         )
         seedAdapter.notifyItemInserted(addedPos.first())
 
         if (addedPos.last() != -1) {
             Log.i("devlog",
-                "[handleNewData()] Notifying favoriteAdapter about $appName inserted at $favoriteIndex"
+                "[handleNewData()] Notifying favorite adapter about $appName inserted at index position $favoriteIndex"
             )
             favoriteAdapter.notifyItemInserted(addedPos.last())
         }

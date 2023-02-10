@@ -95,7 +95,8 @@ class MainFragment : Fragment(), Database {
     }
 
     private fun setNavigationDrawer() {
-        mainActivity.userMightBeNull(mainActivity.currentUser)
+        if (mainActivity.currentUser == null) { mainActivity.navigateToAuthActivity() }
+
         val headerView: View = binding.navView.getHeaderView(0)
         val avatar: CircleImageView = headerView.findViewById(R.id.ivNavHeaderAvatar)
         val username: TextView = headerView.findViewById(R.id.tvNavHeaderUsername)
@@ -103,8 +104,18 @@ class MainFragment : Fragment(), Database {
 
         mainActivity.viewModel.userProfileExists.observe(viewLifecycleOwner) { exists ->
             if (!exists) {
+
+                // Set a default name if the user does not sign up using gmail. Signing up using email
+                // does not provide a default name for the user
+                val name = if (mainActivity.currentUser?.displayName == null) {
+                    val newName = mainActivity.currentUser?.email?.split("@")
+                    newName!!.first()
+                } else {
+                    mainActivity.currentUser?.displayName!!
+                }
+
                 // Upload user profile document in firestore if it does not exists.
-                uploadInitialUserProfileData(requireActivity(), mainActivity.currentUser?.displayName!!)
+                uploadInitialUserProfileData(requireActivity(), name)
             }
         }
 

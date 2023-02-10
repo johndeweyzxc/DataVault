@@ -104,7 +104,7 @@ class CreateSeedDialog : DialogFragment(), Database {
             if (checkForBlankOrNull() == -1) { return@setOnClickListener; }
 
             val mainActivity = (activity as MainActivity)
-            mainActivity.userMightBeNull(mainActivity.currentUser)
+            if (mainActivity.currentUser == null) { mainActivity.navigateToAuthActivity() }
             uploadData(requireActivity(), binding)
 
             clearEditText()

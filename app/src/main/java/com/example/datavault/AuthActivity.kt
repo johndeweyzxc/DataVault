@@ -165,9 +165,9 @@ class AuthActivity : AppCompatActivity() {
             } else {
                 if (task.exception?.message != null) {
                     Log.e("devlog", "[signInWithEmail()] ERROR SIGNING IN WITH EMAIL")
-                    Log.e("devlog", task.exception?.message!!)
+                    Log.e("devlog", "[signInWithEmail()] ${task.exception?.message!!}")
                 }
-                Toast.makeText(applicationContext, "There is a problem signing in with email", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, task.exception?.message!!, Toast.LENGTH_LONG).show()
             }
         }
     }

@@ -120,10 +120,9 @@ class EditSeedDialog : DialogFragment(), Database {
 
         binding.editSaveChangesButton.setOnClickListener {
             if (checkForBlankOrNull() == 0) {
-                if (checkForBlankOrNull() == -1) {
-                    return@setOnClickListener
-                }
-                mainActivity.userMightBeNull(mainActivity.currentUser)
+                if (checkForBlankOrNull() == -1) { return@setOnClickListener }
+
+                if (mainActivity.currentUser == null) { mainActivity.navigateToAuthActivity() }
                 updateData(requireActivity(), mainActivity.viewModel.getSeed(currentData!!.fireStoreDocId), binding)
                 closeActiveKeyboard()
                 dismiss()

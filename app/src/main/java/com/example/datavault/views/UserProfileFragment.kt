@@ -69,7 +69,8 @@ class UserProfileFragment : Fragment(), Database {
                 Toast.makeText(requireActivity(), "Name cannot be empty", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            mainActivity.userMightBeNull(mainActivity.currentUser)
+
+            if (mainActivity.currentUser == null) { mainActivity.navigateToAuthActivity() }
             updateUserProfileData(requireActivity(), binding, mainActivity.viewModel ,mainActivity.currentUser!!.uid)
             finishFragment()
         }
