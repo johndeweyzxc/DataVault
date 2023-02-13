@@ -31,6 +31,16 @@ class LoginFragment : Fragment() {
         val loginButton: Button = binding.btnLogin
         val loginWithGoogleButton: Button = binding.btnLoginWithGoogle
         val loginSignUpTextView: TextView = binding.tvLoginSignUp
+        val privacyAndTerms: TextView = binding.textPrivacyAndTerms
+        val forgotPassword: TextView = binding.tvLoginForgotPassword
+
+        forgotPassword.setOnClickListener {
+            parentFragmentManager.beginTransaction().apply {
+                add(R.id.frameLayoutActivityAuth, ForgotPasswordFragment(), "ForgotPasswordFragment")
+                addToBackStack("ForgotPasswordFragment")
+                commit()
+            }
+        }
         loginButton.setOnClickListener {
             (activity as AuthActivity).signInWithEmail(
                 binding.etLoginEmail, binding.ilLoginEmail,
@@ -44,6 +54,13 @@ class LoginFragment : Fragment() {
             parentFragmentManager.beginTransaction().apply {
                 add(R.id.frameLayoutActivityAuth, SignUpFragment(), "SignUpFragment")
                 addToBackStack("SignUpFragment")
+                commit()
+            }
+        }
+        privacyAndTerms.setOnClickListener {
+            parentFragmentManager.beginTransaction().apply {
+                add(R.id.frameLayoutActivityAuth, AboutAppFragment(), "AboutAppFragment")
+                addToBackStack("AboutAppFragment")
                 commit()
             }
         }

@@ -102,6 +102,7 @@
     <string name="terms_of_use_governing_law">Governing Law: These Terms of Use shall be governed by and construed in accordance with the laws of the United States, without giving effect to any principles of conflicts of law.</string>
     <string name="terms_of_use_contact_info">Contact Information: If you have any questions about these Terms of Use, please contact us using email at johndeweydev@gmail.com</string>
 
+    <string name="reset_password_text">This feature is currently not available</string>
     <string name="default_user_photo">https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Android_symbol_green_2.max-1500x1500.png</string>
     <string name="designed_by_john_dewey">DataVault Designed by John Dewey</string>
 </resources>
