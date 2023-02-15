@@ -158,6 +158,7 @@ class MainFragment : Fragment(), Database {
                     true
                 }
                 R.id.menuSettings -> {
+                    navigateToSettings()
                     binding.drawerLayout.close()
                     true
                 }
@@ -213,6 +214,14 @@ class MainFragment : Fragment(), Database {
         mainActivity.supportFragmentManager.beginTransaction().apply {
             add(R.id.frameLayoutActivityMain, AboutAppFragment())
             addToBackStack("AboutAppFragment")
+            commit()
+        }
+    }
+
+    private fun navigateToSettings() {
+        mainActivity.supportFragmentManager.beginTransaction().apply {
+            add(R.id.frameLayoutActivityMain, SettingsFragment())
+            addToBackStack("SettingsFragment")
             commit()
         }
     }
