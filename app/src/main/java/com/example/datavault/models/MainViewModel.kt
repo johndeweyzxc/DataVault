@@ -21,25 +21,20 @@ class MainViewModel: ViewModel() {
 
     var currentUserProfileImage: Bitmap? = null
 
-    fun countSeed(): Int {
-        return listDataModel.size
-    }
-    fun getListSeed(): MutableList<SeedSchema> {
-        return listDataModel
-    }
-    fun getListFavorites(): MutableList<SeedSchema> {
-        return listFavorites
-    }
-    fun getSeed(fireStoreDocId: String): SeedSchema {
-        return listDataModel[linearSearch(fireStoreDocId, listDataModel)]
-    }
-    fun getEditSeedCurrentData(): SeedSchema? {
-        return editSeedCurrentData
-    }
-    fun setEditSeedCurrentData(currentData: SeedSchema) {
-        Log.i("devlog",
-            "[setEditSeedCurrentData()] Setting current data for EditSeedDialog -> ${currentData.appName}")
-        editSeedCurrentData = currentData
+    // Returns -1 if it does not found the item in the list
+    // This binary search is only use when retrieving data
+    private fun binarySearch(list: List<SeedSchema>, keyInt: Int): Int {
+        var low = 0
+        var high = list.size - 1
+        while (low <= high) {
+            val mid = (low + high) / 2
+            when {
+                list[mid].indexId < keyInt -> low = mid + 1
+                list[mid].indexId > keyInt -> high = mid - 1
+                else -> return mid
+            }
+        }
+        return -1
     }
 
     // Returns -1 if it does not found the item in the list
@@ -54,17 +49,39 @@ class MainViewModel: ViewModel() {
         return i
     }
 
+    fun countSeed(): Int {
+        return listDataModel.size
+    }
+    fun getListSeed(): MutableList<SeedSchema> {
+        return listDataModel
+    }
+    fun getListFavorites(): MutableList<SeedSchema> {
+        return listFavorites
+    }
+    fun getSeed(keyInt: Int): SeedSchema {
+        return listDataModel[binarySearch(listDataModel, keyInt)]
+    }
+    fun getEditSeedCurrentData(): SeedSchema? {
+        return editSeedCurrentData
+    }
+    fun setEditSeedCurrentData(currentData: SeedSchema) {
+        Log.i("devlog",
+            "[setEditSeedCurrentData()] Setting current data for EditSeedDialog -> ${currentData.appName}")
+        editSeedCurrentData = currentData
+    }
+
     fun convertToModel(changes: DocumentChange): SeedSchema {
         return SeedSchema(
             changes.document.get("appName") as String, changes.document.get("userName") as String,
             changes.document.get("email") as String, changes.document.get("password") as String,
             changes.document.get("phoneNumber") as String, changes.document.get("favorite") as Boolean,
-            changes.document.id, changes.document.get("createdAt") as Timestamp?,
+            changes.document.id, 0, changes.document.get("createdAt") as Timestamp?,
             changes.document.get("updatedAt") as Timestamp?,
         )
     }
 
     fun addData(dataItem: SeedSchema): List<Int> {
+        dataItem.indexId = listDataModel.size - 1
         listDataModel.add(dataItem)
         if (dataItem.favorite) {
             listFavorites.add(dataItem)

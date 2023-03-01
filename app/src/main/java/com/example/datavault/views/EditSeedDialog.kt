@@ -86,7 +86,7 @@ class EditSeedDialog : DialogFragment(), Database {
     }
 
     private fun setDefaultValues() {
-        val seedData = (activity as MainActivity).viewModel.getSeed(currentData!!.fireStoreDocId)
+        val seedData = (activity as MainActivity).viewModel.getSeed(currentData!!.indexId)
 
         etAppName.setText(seedData.appName)
         etUserName.setText(seedData.userName)
@@ -123,7 +123,7 @@ class EditSeedDialog : DialogFragment(), Database {
                 if (checkForBlankOrNull() == -1) { return@setOnClickListener }
 
                 if (mainActivity.currentUser == null) { mainActivity.navigateToAuthActivity() }
-                updateData(requireActivity(), mainActivity.viewModel.getSeed(currentData!!.fireStoreDocId), binding)
+                updateData(requireActivity(), mainActivity.viewModel.getSeed(currentData!!.indexId), binding)
                 closeActiveKeyboard()
                 dismiss()
             }

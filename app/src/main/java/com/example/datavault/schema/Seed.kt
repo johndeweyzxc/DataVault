@@ -23,6 +23,7 @@ data class SeedSchema(
     var phoneNumber: String,
     var favorite: Boolean,
     var fireStoreDocId: String,
+    var indexId: Int,
     var createdAt: Timestamp?,
     var updatedAt: Timestamp?,
 )
