@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/favoriteCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="4dp"
+    app:cardMaxElevation="4dp"
+    app:cardPreventCornerOverlap="false"
+    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Large">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/tvFavoriteAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/roboto_mono_medium"
+            android:text="@string/favorite_app_name"
+            android:textColor="@color/grey_900"
+            android:textSize="22sp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/ivFavoriteIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/favorite_icon_indicator"
+            android:src="@drawable/ic_favorite_fav_icon"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</com.google.android.material.card.MaterialCardView>

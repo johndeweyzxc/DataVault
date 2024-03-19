@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/editSeedFavorite"
+        android:title="@string/edit_top_app_bar_favorite_title"
+        android:contentDescription="@string/edit_top_app_bar_favorite_desc"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/editSeedDelete"
+        android:icon="@drawable/ic_edit_seed_dialog_delete"
+        android:title="@string/edit_top_app_bar_delete_title"
+        android:contentDescription="@string/edit_top_app_bar_delete_desc"
+        app:showAsAction="ifRoom" />
+</menu>

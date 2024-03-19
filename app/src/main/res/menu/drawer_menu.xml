@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+        <item android:title="@string/main_menu_application">
+                <menu>
+                        <item
+                            android:id="@+id/menuHome"
+                            android:title="@string/main_drawer_home"
+                            android:icon="@drawable/ic_menu_home" />
+                        <item
+                            android:id="@+id/menuFavorites"
+                            android:title="@string/main_menu_favorites"
+                            android:icon="@drawable/ic_menu_favorite" />
+                        <item
+                            android:id="@+id/menuSettings"
+                            android:title="@string/main_menu_strings"
+                            android:icon="@drawable/ic_menu_settings"/>
+                </menu>
+        </item>
+
+        <item android:title="@string/main_menu_account_settings">
+                <menu>
+                        <item
+                            android:id="@+id/menuAccountSettings"
+                            android:title="@string/main_drawer_account"
+                            android:icon="@drawable/ic_menu_account" />
+                        <item
+                            android:id="@+id/menuSignOut"
+                            android:title="@string/main_menu_sign_out"
+                            android:icon="@drawable/ic_menu_logout"/>
+                </menu>
+        </item>
+
+        <item android:title="@string/main_menu_privacy_terms">
+                <menu>
+                        <item
+                            android:id="@+id/menuAbout"
+                            android:title="@string/main_menu_about"
+                            android:icon="@drawable/ic_menu_about" />
+                        <item
+                            android:id="@+id/menuPrivacyPolicy"
+                            android:title="@string/main_menu_privacy"
+                            android:icon="@drawable/ic_menu_privacy"/>
+
+                        <item
+                            android:id="@+id/menuTermsOfUse"
+                            android:title="@string/main_menu_terms"
+                            android:icon="@drawable/ic_menu_terms"/>
+                </menu>
+        </item>
+</menu>

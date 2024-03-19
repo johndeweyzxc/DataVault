@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="font_large">22sp</string>
+    <string name="font_main">18sp</string>
+    <string name="font_secondary">16sp</string>
+    <string name="font_small">14sp</string>
+</resources>

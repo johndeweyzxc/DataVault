@@ -1,0 +1,110 @@
+<resources>
+    <string name="app_name">DataVault</string>
+    <string name="create_edit_text_hint_application_name">App name</string>
+    <string name="create_edit_text_hint_username">Username</string>
+    <string name="create_edit_text_hint_email">Email</string>
+    <string name="create_edit_text_hint_password">Password</string>
+    <string name="create_edit_text_hint_phone_number">Phone Number</string>
+    <string name="create_data_button_text_save_data">Save Data</string>
+    <string name="create_headline">Create document</string>
+    <string name="create_back_text">back</string>
+
+    <string name="login_brand_name_datavault">DATAVAULT</string>
+    <string name="login_edit_text_email">Email</string>
+    <string name="login_edit_text_password">Password</string>
+    <string name="login_text_view_forgot_password">Forgot your password?</string>
+    <string name="login_button_text">Login</string>
+    <string name="login_text_view_not_have_account">I don\'t have an account</string>
+    <string name="login_agree_policy">By logging in you agree to DataVault\'s</string>
+    <string name="login_privacy_terms">Privacy Policy and Terms of Use</string>
+    <string name="login_text_view_sign_up">Sign Up</string>
+    <string name="login_text_view_login_with">or</string>
+    <string name="login_button_text_google">Login with Google</string>
+
+    <string name="sign_up_headline">Create an account</string>
+    <string name="sign_up_forgot_password">Forgot your password?</string>
+    <string name="sign_up_login_instead">Login instead</string>
+    <string name="sign_up_agree">By signing up you agree to DataVault\'s</string>
+    <string name="sign_up_privacy_terms">Privacy Policy and Terms of Use</string>
+    <string name="sign_up_email">Email</string>
+    <string name="sign_up_password">Password</string>
+    <string name="sign_up_confirm_password">Confirm Password</string>
+    <string name="sign_up_create_button">Sign Up</string>
+
+    <string name="seed_container_text_view_facebook">Facebook</string>
+    <string name="seed_container_text_view_username">johndewey.123</string>
+    <string name="seed_container_text_view_email">johndewey02003@gmail.com</string>
+    <string name="seed_container_chip_name_phone">Phone Number</string>
+    <string name="seed_container_chip_info_phone">09385747532</string>
+    <string name="seed_container_chip_name_password">Password</string>
+    <string name="seed_container_chip_info_password">Password123</string>
+    <string name="seed_field_header_username">Username</string>
+    <string name="seed_field_header_email">Email</string>
+    <string name="seed_favorite_icon_description">A placeholder to show if this document is added to favorite</string>
+
+    <string name="main_header_text_view_name">John Dewey</string>
+    <string name="main_header_text_view_email">johndewey@email.com</string>
+    <string name="main_menu_application">Application</string>
+    <string name="main_menu_about">About</string>
+    <string name="main_menu_privacy_terms">Privacy and Terms of Use</string>
+    <string name="main_menu_privacy">Privacy Policy</string>
+    <string name="main_menu_terms">Terms of Use</string>
+    <string name="main_menu_account_settings">Account</string>
+    <string name="main_menu_strings">Settings</string>
+    <string name="main_menu_favorites">Favorites</string>
+    <string name="main_menu_sign_out">Sign Out</string>
+    <string name="main_bottom_nav_home">Home</string>
+    <string name="main_bottom_nav_favorites">Favorites</string>
+    <string name="main_drawer_account">Account Settings</string>
+    <string name="main_drawer_home">Home</string>
+    <string name="main_drawer_find">Find</string>
+    <string name="main_create_fab">Create</string>
+
+    <string name="edit_button_save_changes">Save changes</string>
+    <string name="edit_headline_text">Edit document</string>
+    <string name="edit_top_app_bar_favorite_title">Favorite</string>
+    <string name="edit_top_app_bar_delete_title">Delete</string>
+    <string name="edit_top_app_bar_favorite_desc">Add this document to favorite</string>
+    <string name="edit_top_app_bar_delete_desc">Delete this document</string>
+    <string name="edit_back">back</string>
+
+    <string name="user_profile_head_text">Edit your profile</string>
+    <string name="user_profile_picture_description">Profile picture of user</string>
+    <string name="user_profile_hint_name">Name</string>
+    <string name="user_profile_edit_name_text">Edit your name</string>
+    <string name="user_profile_save_button">Save changes</string>
+    <string name="user_profile_back_button">back</string>
+
+    <string name="favorites_favorite_text">Favorites</string>
+    <string name="favorite_app_name">Twitter</string>
+    <string name="favorite_icon_indicator">Icon for indicating that this item is added to favorites</string>
+
+    <string name="about_header">About DataVault</string>
+    <string name="about_body">
+        Introducing our latest app, the ultimate password manager. With this app, you can store all your passwords and notes in one secure place. You can simply retrieve your password with just one tap. The app will automatically copy the information to your clipboard, making it easier for you to access your accounts. You can create an account or log in with your Google account.You also have the option to change your profile information. Keep your passwords safe and secure with our password manager app!
+    </string>
+
+    <string name="privacy_policy_header">DataVault Privacy Policy</string>
+    <string name="privacy_policy_last_updated">Last updated: February 07, 2023</string>
+    <string name="privacy_policy_body">This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</string>
+    <string name="privacy_policy_url">https://www.privacypolicies.com/live/ce871163-c3eb-4857-88fb-dfa143785671</string>
+    <string name="privacy_policy_text_button">View privacy policy</string>
+
+    <string name="terms_of_use_header">DataVault Terms of Use</string>
+    <string name="terms_of_use_introduction">Introduction: These Terms of Use govern your use of the app and all services offered through it. By downloading, accessing or using the app, you agree to be bound by these Terms of Use. If you do not agree to these terms, do not use the app.</string>
+    <string name="terms_of_use_license">License to Use: We grant you a personal, limited, non-exclusive, non-transferable license to use the app for your personal, non-commercial purposes.</string>
+    <string name="terms_of_use_user_content">User Content: The app may allow you to submit, upload, publish or otherwise make available content, including but not limited to text, photographs and videos ("User Content"). You retain all rights in, and are solely responsible for, the User Content you make available through the app.</string>
+    <string name="terms_of_use_user_conduct">User Conduct: You agree not to use the app to upload, post, transmit or otherwise make available any User Content that: (a) is false, misleading, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, sexually explicit, or offensive; (b) violates any law or regulation; or (c) infringes the intellectual property or other rights of any third party.</string>
+    <string name="terms_of_use_intellectual_property">Intellectual Property: The app and all its content, features, and functionality (including but not limited to all information, software, text, displays, images, video, and audio, and the design, selection, and arrangement thereof), are owned by us, our licensors, or other providers of such material and are protected by United States and international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws. These terms do not grant you any rights to use our trademarks, logos, domain names, or other distinctive brand features.</string>
+    <string name="terms_of_use_disclaimer_warranties">Disclaimer of Warranties: The app and all content, materials, information, software, products, and services included in or available through the app are provided on an "as is" and "as available" basis, and are subject to change at any time without notice to you. We make no representations or warranties of any kind, express or implied, as to the operation of the app or the information, content, materials, or products included in the app.</string>
+    <string name="terms_of_use_limitation_of_liability">Limitation of Liability: To the fullest extent permitted by law, in no event shall we be liable for any indirect, incidental, special, consequential or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses, resulting from: (a) your access to or use of or inability to access or use the app; (b) any conduct or content of any third party on the app; (c) any content obtained from the app; and (d) unauthorized access, use or alteration of your transmissions or content.</string>
+    <string name="terms_of_use_termination">Termination: We reserve the right, in our sole discretion, to terminate or suspend all or a portion of the app, or your use of all or a portion of the app, at any time and with or without notice and with or without cause.</string>
+    <string name="terms_of_use_governing_law">Governing Law: These Terms of Use shall be governed by and construed in accordance with the laws of the United States, without giving effect to any principles of conflicts of law.</string>
+    <string name="terms_of_use_contact_info">Contact Information: If you have any questions about these Terms of Use, please contact us using email at johndeweydev@gmail.com</string>
+
+    <string name="settings_text">This page is currently under development</string>
+    <string name="reset_password_text">This feature is currently not available</string>
+
+    <string name="default_user_photo">https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Android_symbol_green_2.max-1500x1500.png</string>
+    <string name="designed_by_john_dewey">DataVault Designed by John Dewey</string>
+</resources>

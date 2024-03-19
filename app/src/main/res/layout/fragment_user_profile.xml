@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/userProfileDataAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/userProfileEditToolBar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_create_back"
+            app:navigationIconTint="@color/grey_200"
+            app:title="back" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileDataAppBar">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_profile_head_text"
+                android:layout_gravity="center"
+                android:textColor="@color/orange_700"
+                android:layout_marginBottom="32dp"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_medium" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivUserProfileImage"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="bottom"
+                    android:src="@drawable/ic_launcher_foreground"
+                    app:civ_border_color="@color/light_blue_600"
+                    app:civ_border_width="2dp" />
+
+                <ImageView
+                    android:id="@+id/ivUserProfileEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:contentDescription="@string/user_profile_picture_description"
+                    android:src="@drawable/ic_user_profile_edit" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ilUserProfileName"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:hint="@string/user_profile_hint_name"
+                app:boxBackgroundColor="@color/white"
+                app:endIconDrawable="@drawable/ic_create_clear_button"
+                app:endIconMode="custom"
+                app:helperTextEnabled="true"
+                app:helperTextTextColor="@color/red_400"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+                app:startIconDrawable="@drawable/ic_user_profile_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etUserProfileName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:inputType="text"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="@string/user_profile_edit_name_text" />
+
+            <Button
+                android:id="@+id/btnUserProfileSave"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/roboto_medium"
+                android:padding="12dp"
+                android:text="@string/user_profile_save_button"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small" />
+
+            <Button
+                android:id="@+id/btnUserProfileBack"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:padding="12dp"
+                android:text="@string/user_profile_back_button"
+                android:textColor="@color/grey_800"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

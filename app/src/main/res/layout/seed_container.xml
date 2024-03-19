@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardViewSeed"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:checkable="true"
+    android:clickable="true"
+    android:focusable="true"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="4dp"
+    app:cardMaxElevation="4dp"
+    app:cardPreventCornerOverlap="false"
+    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Large">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="15dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="5dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvSeedAppName"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_mono_medium"
+                android:text="@string/seed_container_text_view_facebook"
+                android:textColor="@color/grey_900"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ivSeedFavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/seed_favorite_icon_description"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/seed_field_header_username"
+                android:textColor="@color/grey_600"
+                android:textSize="18sp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/seedChipUsernameInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/seed_container_text_view_username"
+                android:textSize="14sp"
+                app:chipIcon="@drawable/ic_seed_user"
+                app:chipIconSize="15dp"
+                app:iconStartPadding="5dp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/seed_field_header_email"
+                android:textColor="@color/grey_600"
+                android:textSize="18sp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/seedChipEmailInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/seed_container_text_view_email"
+                android:textSize="14sp"
+                app:chipIcon="@drawable/ic_seed_email"
+                app:chipIconSize="15dp"
+                app:iconStartPadding="5dp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/seed_container_chip_name_phone"
+                android:textColor="@color/grey_600"
+                android:textSize="18sp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/seedChipPhoneNumberInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/seed_container_chip_info_phone"
+                android:textSize="14sp"
+                app:chipIcon="@drawable/ic_seed_phone"
+                app:chipIconSize="15dp"
+                app:iconStartPadding="5dp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/seed_container_chip_name_password"
+                android:textColor="@color/grey_600"
+                android:textSize="18sp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/seedChipPasswordInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/seed_container_chip_info_password"
+                android:textSize="14sp"
+                app:chipIcon="@drawable/ic_seed_password"
+                app:chipIconSize="15dp"
+                app:iconStartPadding="5dp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</com.google.android.material.card.MaterialCardView>

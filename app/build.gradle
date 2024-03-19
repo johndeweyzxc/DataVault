@@ -1,0 +1,114 @@
+//file:noinspection SpellCheckingInspection
+
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+}
+
+android {
+    namespace 'com.johndeweydev.datavault'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.johndeweydev"
+        minSdk 24
+        //noinspection EditedTargetSdkVersion
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        def keystorePropertiesFile = rootProject.file("keystore.properties")
+        def keystoreProperties = new Properties()
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+        debug {
+            storeFile file(keystoreProperties["debugStoreFile"])
+            storePassword keystoreProperties["debugPassword"]
+            keyAlias keystoreProperties["debugKeyAlias"]
+            keyPassword keystoreProperties["debugKeyPassword"]
+        }
+        release {
+            storeFile file(keystoreProperties["releaseStoreFile"])
+            storePassword keystoreProperties["releasePassword"]
+            keyAlias keystoreProperties["releaseKeyAlias"]
+            keyPassword keystoreProperties["releaseKeyPassword"]
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            applicationIdSuffix ".debug.datavault"
+        }
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            applicationIdSuffix ".release.datavault"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation "androidx.activity:activity-ktx:1.6.1"
+    implementation "androidx.fragment:fragment-ktx:1.5.5"
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha01'
+    implementation 'androidx.activity:activity-ktx:1.7.0-alpha03'
+    implementation 'com.google.android.material:material:1.8.0-rc01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'com.google.truth:truth:1.1.3'
+    androidTestImplementation 'com.google.truth:truth:1.1.3'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // Import the BoM for the Firebase platform so app will always use compatible versions of Firebase Android libraries
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
+    // Add the dependency for the Firebase Authentication library
+    implementation 'com.google.firebase:firebase-auth'
+    // Add the dependency for the Firebase Authentication library
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    // Declare the dependency for the Firebase Firestore library
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+    // Add the dependency for the Cloud Storage library
+    implementation 'com.google.firebase:firebase-storage-ktx'
+
+    // Add the dependency for the Google Play services library and specify its version
+    implementation 'com.google.android.gms:play-services-auth:20.4.0'
+
+    // Add glide dependency for image loading and caching library
+    // https://github.com/bumptech/glide
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
+
+    // Add dependency for creating circle image view
+    // https://github.com/hdodenhof/CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // Dependency for view pager
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    // Dependency for getting image from gallery or camera
+    // https://github.com/Dhaval2404/ImagePicker
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+}
